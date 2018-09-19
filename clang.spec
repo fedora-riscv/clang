@@ -38,7 +38,7 @@
 
 Name:		clang
 Version:	%{maj_ver}.%{min_ver}.%{patch_ver}
-Release:	1%{?dist}
+Release:	2%{?dist}
 Summary:	A C language family front-end for LLVM
 
 License:	NCSA
@@ -280,7 +280,6 @@ make %{?_smp_mflags} check || :
 
 
 %files
-%{_libdir}/clang/
 %{clang_binaries}
 %{_bindir}/c-index-test
 %{_mandir}/man1/clang.1.gz
@@ -289,6 +288,7 @@ make %{?_smp_mflags} check || :
 %{_datadir}/clang/clang-format-diff.py*
 
 %files libs
+%{_libdir}/clang/
 %{_libdir}/*.so.*
 %{_libdir}/*.so
 
@@ -327,6 +327,9 @@ make %{?_smp_mflags} check || :
 %{python2_sitelib}/clang/
 
 %changelog
+* Wed Sep 19 2018 Tom Stellard <tstellar@redhat.com> - 6.0.1-2
+- Move builtin headers into clang-libs sub-package
+
 * Tue Jun 26 2018 Tom Stellard <tstellar@redhat.com> - 6.0.1-1
 - 6.0.1 Release
 
