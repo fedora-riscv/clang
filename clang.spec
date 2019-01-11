@@ -38,7 +38,7 @@
 
 Name:		clang
 Version:	%{maj_ver}.%{min_ver}.%{patch_ver}
-Release:	2%{?dist}
+Release:	3%{?dist}
 Summary:	A C language family front-end for LLVM
 
 License:	NCSA
@@ -50,7 +50,6 @@ Source2:	http://llvm.org/releases/%{version}/%{test_suite_srcdir}.tar.xz
 Source100:	clang-config.h
 
 Patch0:		0001-lit.cfg-Add-hack-so-lit-can-find-not-and-FileCheck.patch
-Patch1:		0001-GCC-compatibility-Ignore-fstack-clash-protection.patch
 Patch2:		0001-Driver-Prefer-vendor-supplied-gcc-toolchain.patch
 
 BuildRequires:	cmake
@@ -172,7 +171,6 @@ Requires: python2
 
 %setup -q -n %{clang_srcdir}
 %patch0 -p1 -b .lit-search-path
-%patch1 -p1 -b .fstack-clash-protection
 %patch2 -p1 -b .vendor-gcc
 
 mv ../%{clang_tools_srcdir} tools/extra
@@ -327,6 +325,9 @@ make %{?_smp_mflags} check || :
 %{python2_sitelib}/clang/
 
 %changelog
+* Fri Jan 11 2019 sguelton@redhat.com - 6.0.1-3
+- No longer ignore -fstack-clash-protect
+
 * Wed Sep 19 2018 Tom Stellard <tstellar@redhat.com> - 6.0.1-2
 - Move builtin headers into clang-libs sub-package
 
