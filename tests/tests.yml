@@ -21,3 +21,4 @@
       - rhbz#1657544:
           dir: ./from_chars
           run: clang++ from_chars.cpp && ./a.out 100 | grep 100
+      - rhbz_1647130

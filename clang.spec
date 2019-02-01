@@ -58,7 +58,7 @@
 
 Name:		%pkg_name
 Version:	%{maj_ver}.%{min_ver}.%{patch_ver}
-Release:	3%{?rc_ver:.rc%{rc_ver}}%{?dist}
+Release:	4%{?rc_ver:.rc%{rc_ver}}%{?dist}
 Summary:	A C language family front-end for LLVM
 
 License:	NCSA
@@ -421,6 +421,9 @@ false
 
 %endif
 %changelog
+* Mon Feb 25 2019 sguelton@redhat.com - 7.0.1-4
+- Update patch for Python3 port of scan-view
+
 * Mon Feb 19 2019 sguelton@redhat.com - 7.0.1-3
 - Fix for rhbz#1672798
 
