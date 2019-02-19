@@ -58,7 +58,7 @@
 
 Name:		%pkg_name
 Version:	%{maj_ver}.%{min_ver}.%{patch_ver}
-Release:	2%{?rc_ver:.rc%{rc_ver}}%{?dist}
+Release:	3%{?rc_ver:.rc%{rc_ver}}%{?dist}
 Summary:	A C language family front-end for LLVM
 
 License:	NCSA
@@ -113,6 +113,8 @@ BuildRequires:	libatomic
 
 # We need python3-devel for pathfix.py.
 BuildRequires:	python3-devel
+# We still need python2-devel for python2-clang
+BuildRequires: 	python2-devel
 
 # Needed for %%multilib_fix_c_header
 BuildRequires:	multilib-rpm-config
@@ -419,6 +421,9 @@ false
 
 %endif
 %changelog
+* Mon Feb 19 2019 sguelton@redhat.com - 7.0.1-3
+- Fix for rhbz#1672798
+
 * Wed Dec 19 2018 Tom Stellard <tstellar@redhat.com> - 7.0.1-2
 - Fix for rhbz#1657544
 
