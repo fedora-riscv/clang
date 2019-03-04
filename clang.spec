@@ -58,7 +58,7 @@
 
 Name:		%pkg_name
 Version:	%{maj_ver}.%{min_ver}.%{patch_ver}
-Release:	4%{?rc_ver:.rc%{rc_ver}}%{?dist}
+Release:	5%{?rc_ver:.rc%{rc_ver}}%{?dist}
 Summary:	A C language family front-end for LLVM
 
 License:	NCSA
@@ -76,6 +76,8 @@ Patch6:		0001-Convert-clang-format-diff.py-to-python3-using-2to3.patch
 Patch7:		0001-Convert-scan-view-to-python3-using-2to3.patch
 #rhbz#1657544
 Patch8:		0001-CodeGen-Handle-mixed-width-ops-in-mixed-sign-mul-wit.patch
+#rhbz#1472437
+Patch9:		0001-Fix-isInSystemMacro-to-handle-pasted-macros.patch
 
 # clang-tools-extra patches
 Patch100:	0001-Convert-run-find-all-symbols.py-to-python3-using-2to.patch
@@ -421,10 +423,13 @@ false
 
 %endif
 %changelog
+* Tue Feb 26 2019 sguelton@redhat.com - 7.0.1-5
+- Fix for rhbz#1472437
+
 * Mon Feb 25 2019 sguelton@redhat.com - 7.0.1-4
 - Update patch for Python3 port of scan-view
 
-* Mon Feb 19 2019 sguelton@redhat.com - 7.0.1-3
+* Tue Feb 19 2019 sguelton@redhat.com - 7.0.1-3
 - Fix for rhbz#1672798
 
 * Wed Dec 19 2018 Tom Stellard <tstellar@redhat.com> - 7.0.1-2
