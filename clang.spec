@@ -381,6 +381,7 @@ false
 %{_includedir}/clang/
 %{_includedir}/clang-c/
 %{_libdir}/cmake/*
+%{_libdir}/llvm/*
 %dir %{_datadir}/clang/
 %else
 %{pkg_libdir}/*.so
