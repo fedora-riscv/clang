@@ -224,6 +224,7 @@ pathfix.py -i %{__python3} -pn \
 %patch6 -p1 -b .clang-format-diff-py3
 %patch7 -p1 -b .scan-view-py3
 %patch8 -p1 -b .mul-overflow-fix
+%patch9 -p1 -b .in-macro-fix
 
 mv ../%{clang_tools_srcdir} tools/extra
 
