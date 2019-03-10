@@ -29,8 +29,8 @@ diff --git a/include/clang/Basic/SourceManager.h b/include/clang/Basic/SourceMan
 index ba829a8773..b45357e645 100644
 --- a/include/clang/Basic/SourceManager.h
 +++ b/include/clang/Basic/SourceManager.h
-@@ -1440,6 +1440,12 @@ public:
-     return Filename.equals("<command line>");
+@@ -1428,6 +1428,12 @@ public:
+     return getFileID(Loc) == getMainFileID();
    }
  
 +  /// Returns whether \p Loc is located in a <scratch space> file.
@@ -42,7 +42,7 @@ index ba829a8773..b45357e645 100644
    /// Returns if a SourceLocation is in a system header.
    bool isInSystemHeader(SourceLocation Loc) const {
      return isSystem(getFileCharacteristic(Loc));
-@@ -1452,7 +1458,17 @@ public:
+@@ -1440,7 +1446,17 @@
  
    /// Returns whether \p Loc is expanded from a macro in a system header.
    bool isInSystemMacro(SourceLocation loc) const {
