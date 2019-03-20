@@ -3,7 +3,7 @@
 %global maj_ver 8
 %global min_ver 0
 %global patch_ver 0
-%global rc_ver 3
+#%%global rc_ver 4
 
 %global clang_tools_binaries \
 	%{_bindir}/clangd \
@@ -61,7 +61,7 @@
 
 Name:		%pkg_name
 Version:	%{maj_ver}.%{min_ver}.%{patch_ver}
-Release:	0.5%{?rc_ver:.rc%{rc_ver}}%{?dist}
+Release:	1%{?rc_ver:.rc%{rc_ver}}%{?dist}
 Summary:	A C language family front-end for LLVM
 
 License:	NCSA
@@ -420,6 +420,9 @@ false
 
 %endif
 %changelog
+* Wed Mar 20 2019 sguelton@redhat.com - 8.0.0-1
+- 8.0.0 final
+
 * Mon Mar 4 2019 sguelton@redhat.com - 8.0.0-0.5.rc3
 - Cleanup specfile after llvm dependency update
 
