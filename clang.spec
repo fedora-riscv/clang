@@ -38,7 +38,7 @@
 
 Name:		clang
 Version:	%{maj_ver}.%{min_ver}.%{patch_ver}
-Release:	3%{?dist}
+Release:	4%{?dist}
 Summary:	A C language family front-end for LLVM
 
 License:	NCSA
@@ -325,6 +325,9 @@ make %{?_smp_mflags} check || :
 %{python2_sitelib}/clang/
 
 %changelog
+* Tue Apr 2 2019 sguelton@redhat.com - 6.0.1-4
+- Rebuild
+
 * Fri Jan 11 2019 sguelton@redhat.com - 6.0.1-3
 - No longer ignore -fstack-clash-protect
 
