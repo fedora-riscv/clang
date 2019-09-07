@@ -61,7 +61,7 @@
 
 Name:		%pkg_name
 Version:	%{maj_ver}.%{min_ver}.%{patch_ver}
-Release:	2%{?rc_ver:.rc%{rc_ver}}%{?dist}
+Release:	3%{?rc_ver:.rc%{rc_ver}}%{?dist}
 Summary:	A C language family front-end for LLVM
 
 License:	NCSA
@@ -75,6 +75,7 @@ Patch4:		0002-gtest-reorg.patch
 Patch9:		0001-Fix-uninitialized-value-in-ABIArgInfo.patch
 Patch10:	0001-Workaround-GCC-9-bug-when-handling-bitfields.patch
 Patch11:	0001-ToolChain-Add-lgcc_s-to-the-linker-flags-when-using-.patch
+Patch12:	0001-Driver-Prefer-gcc-toolchains-with-libgcc_s.so-when-n.patch
 
 BuildRequires:	gcc
 BuildRequires:	gcc-c++
@@ -218,6 +219,7 @@ pathfix.py -i %{__python3} -pn \
 %patch9 -p1 -b .abi-arginfo
 %patch10 -p1 -b .bitfields
 %patch11 -p1 -b .libcxx-fix
+%patch12 -p2 -b .gcc-detection
 
 mv ../%{clang_tools_srcdir} tools/extra
 
@@ -424,6 +426,9 @@ false
 
 %endif
 %changelog
+* Tue Sep 24 2019 Tom Stellard <tstellar@redhat.com> - 8.0.0-3
+- Fix gcc detection when cross-compiler is installed
+
 * Wed Sep 11 2019 Tom Stellard <tstellar@redhat.com> - 8.0.0-2
 - Reduce debug info verbosity on ppc64le to avoid OOM errors in koji
 
