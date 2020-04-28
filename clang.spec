@@ -4,7 +4,7 @@
 %global min_ver 0
 %global patch_ver 1
 #%%global rc_ver 3
-%global baserelease 3
+%global baserelease 4
 
 %global clang_tools_binaries \
 	%{_bindir}/clangd \
@@ -84,6 +84,7 @@ Patch11:	0001-ToolChain-Add-lgcc_s-to-the-linker-flags-when-using-.patch
 Patch13:	0001-Make-funwind-tables-the-default-for-all-archs.patch
 # Fix crash with kernel bpf self-tests
 Patch14:	0001-BPF-annotate-DIType-metadata-for-builtin-preseve_arr.patch
+Patch15:	0001-Driver-Prefer-gcc-toolchains-with-libgcc_s.so-when-n.patch
 Patch16:	0001-clang-fix-undefined-behaviour-in-RawComment-getForma.patch
 
 BuildRequires:	gcc
@@ -228,6 +229,7 @@ pathfix.py -i %{__python3} -pn \
 %patch4 -p1 -b .gtest
 %patch11 -p1 -b .libcxx-fix
 %patch14 -p2 -b .bpf-fix
+%patch15 -p2 -b .gcc-toolchains
 %patch16 -p2 -b .clangd
 
 mv ../%{clang_tools_srcdir} tools/extra
@@ -444,6 +446,10 @@ LD_LIBRARY_PATH=%{buildroot}%{_libdir} ninja check-all -C _build || \
 
 %endif
 %changelog
+* Tue Jun 26 2020 Tom Stellard <tstellar@redhat.com> - 9.0.1-4
+- Fix gcc toolchain detection
+- rhbz#1824365
+
 * Tue May 19 2020 sguelton@redhat.com - 9.0.1-3
 - Backport ad7211df6f257e39da2e5a11b2456b4488f32a1e, see rhbz#1825593
 
