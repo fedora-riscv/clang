@@ -250,7 +250,6 @@ pathfix.py -i %{__python3} -pn \
 %patch4 -p1 -b .gtest
 %patch11 -p1 -b .libcxx-fix
 %patch13 -p2 -b .unwind-all
-%patch14 -p2 -b .clangd
 %patch15 -p2 -b .no-install-static
 
 mv ../%{clang_tools_srcdir} tools/extra
