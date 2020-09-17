@@ -4,7 +4,7 @@
 %global min_ver 0
 %global patch_ver 1
 #%%global rc_ver 6
-%global baserelease 1
+%global baserelease 2
 
 %global clang_tools_binaries \
 	%{_bindir}/clang-apply-replacements \
@@ -469,6 +469,9 @@ LD_LIBRARY_PATH=%{buildroot}%{_libdir} ninja check-all -C _build || \
 
 %endif
 %changelog
+* Thu Sep 17 2020 sguelton@redhat.com - 10.0.1-2
+- rebuilt with gating.yaml update
+
 * Mon Jul 27 2020 sguelton@redhat.com - 10.0.1-1
 - 10.0.1
 
