@@ -101,6 +101,7 @@ Patch13:	0001-Make-funwind-tables-the-default-for-all-archs.patch
 # Not Upstream
 Patch15:	0001-clang-Don-t-install-static-libraries.patch
 Patch16:	0001-clang-Fix-spurious-test-failure.patch
+Patch17:	0001-Driver-Prefer-gcc-toolchains-with-libgcc_s.so-when-n.patch
 
 BuildRequires:	gcc
 BuildRequires:	gcc-c++
@@ -272,6 +273,7 @@ pathfix.py -i %{__python3} -pn \
 %patch13 -p2 -b .unwind-all
 %patch15 -p2 -b .no-install-static
 %patch16 -p2 -b .test-fix2
+%patch17 -p1 -b .check-gcc_s
 
 mv ../%{clang_tools_srcdir} tools/extra
 
@@ -506,6 +508,7 @@ false
 %changelog
 * Thu Oct 29 2020 sguelton@redhat.com - 11.0.0-2
 - Prevent ABI conflict with release candidate
+- Prefer gcc toolchains with libgcc_s
 
 * Thu Oct 15 2020 sguelton@redhat.com - 11.0.0-1
 - Fix NVR
