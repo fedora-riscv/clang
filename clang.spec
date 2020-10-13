@@ -3,8 +3,8 @@
 %global maj_ver 11
 %global min_ver 0
 %global patch_ver 0
-%global rc_ver 1
-%global baserelease 0.2
+#%%global rc_ver 1
+%global baserelease 0.3
 
 %global clang_tools_binaries \
 	%{_bindir}/clang-apply-replacements \
@@ -97,8 +97,6 @@ Source4:	https://prereleases.llvm.org/%{version}/hans-gpg-key.asc
 Patch4:		0002-gtest-reorg.patch
 Patch11:	0001-ToolChain-Add-lgcc_s-to-the-linker-flags-when-using-.patch
 Patch13:	0001-Make-funwind-tables-the-default-for-all-archs.patch
-# This is already in the release/11.x branch and will be included in -rc2.
-Patch14:	0001-analyzer-Fix-out-of-tree-only-clang-build-by-not-rel.patch
 
 # Not Upstream
 Patch15:	0001-clang-Don-t-install-static-libraries.patch
@@ -270,7 +268,6 @@ pathfix.py -i %{__python3} -pn \
 %patch4 -p1 -b .gtest
 %patch11 -p1 -b .libcxx-fix
 %patch13 -p2 -b .unwind-all
-%patch14 -p2 -b .test-fix
 %patch15 -p2 -b .no-install-static
 %patch16 -p2 -b .test-fix2
 
@@ -505,6 +502,9 @@ false
 
 %endif
 %changelog
+* Tue Oct 13 2020 sguelton@redhat.com - 11.0.0-0.3
+- llvm 11.0.0 - final release
+
 * Tue Aug 11 2020 Tom Stellard <tstellar@redhat.com> - 11.0.0-0.2.rc1
 - Fix test failures
 
