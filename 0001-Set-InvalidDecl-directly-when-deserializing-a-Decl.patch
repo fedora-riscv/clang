@@ -1,0 +1,67 @@
+From d8e7f7b61fc82c2296986d6742e3dc62eceae44b Mon Sep 17 00:00:00 2001
+From: Aaron Puchert <aaronpuchert@alice-dsl.net>
+Date: Sat, 5 Sep 2020 14:23:54 +0200
+Subject: [PATCH] Set InvalidDecl directly when deserializing a Decl
+
+When parsing a C++17 binding declaration, we first create the
+BindingDecls in Sema::ActOnDecompositionDeclarator, and then build the
+DecompositionDecl in Sema::ActOnVariableDeclarator, so the contained
+BindingDecls are never null. But when deserializing, we read the
+DecompositionDecl with all properties before filling in the Bindings.
+Among other things, reading a declaration reads whether it's invalid,
+then calling setInvalidDecl which assumes that all bindings of the
+DecompositionDecl are available, but that isn't the case.
+
+Deserialization should just set all properties directly without invoking
+subsequent functions, so we just set the flag without using the setter.
+
+Fixes PR34960.
+
+Reviewed By: rsmith
+
+Differential Revision: https://reviews.llvm.org/D86207
+---
+ clang/lib/Serialization/ASTReaderDecl.cpp | 2 +-
+ clang/test/PCH/cxx1z-decomposition.cpp    | 6 ++++--
+ 2 files changed, 5 insertions(+), 3 deletions(-)
+
+diff --git a/clang/lib/Serialization/ASTReaderDecl.cpp b/clang/lib/Serialization/ASTReaderDecl.cpp
+index e3eea3c6f86..461dbf3051c 100644
+--- a/clang/lib/Serialization/ASTReaderDecl.cpp
++++ b/clang/lib/Serialization/ASTReaderDecl.cpp
+@@ -578,7 +578,7 @@ void ASTDeclReader::VisitDecl(Decl *D) {
+                            Reader.getContext());
+   }
+   D->setLocation(ThisDeclLoc);
+-  D->setInvalidDecl(Record.readInt());
++  D->InvalidDecl = Record.readInt();
+   if (Record.readInt()) { // hasAttrs
+     AttrVec Attrs;
+     Record.readAttributes(Attrs);
+diff --git a/clang/test/PCH/cxx1z-decomposition.cpp b/clang/test/PCH/cxx1z-decomposition.cpp
+index e033577162a..311306f2741 100644
+--- a/clang/test/PCH/cxx1z-decomposition.cpp
++++ b/clang/test/PCH/cxx1z-decomposition.cpp
+@@ -2,8 +2,8 @@
+ // RUN: %clang_cc1 -pedantic -std=c++1z -include %s -verify %s
+ //
+ // With PCH:
+-// RUN: %clang_cc1 -pedantic -std=c++1z -emit-pch %s -o %t
+-// RUN: %clang_cc1 -pedantic -std=c++1z -include-pch %t -verify %s
++// RUN: %clang_cc1 -pedantic -std=c++1z -emit-pch -fallow-pch-with-compiler-errors %s -o %t
++// RUN: %clang_cc1 -pedantic -std=c++1z -include-pch %t -fallow-pch-with-compiler-errors -verify %s
+ 
+ #ifndef HEADER
+ #define HEADER
+@@ -19,6 +19,8 @@ constexpr int foo(Q &&q) {
+   return a * 10 + b;
+ }
+ 
++auto [noinit]; // expected-error{{decomposition declaration '[noinit]' requires an initializer}}
++
+ #else
+ 
+ int arr[2];
+-- 
+2.25.2
+

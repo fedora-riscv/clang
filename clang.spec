@@ -4,7 +4,7 @@
 %global min_ver 0
 %global patch_ver 1
 #%%global rc_ver 6
-%global baserelease 2
+%global baserelease 3
 
 %global clang_tools_binaries \
 	%{_bindir}/clang-apply-replacements \
@@ -98,6 +98,7 @@ Source4:	https://prereleases.llvm.org/%{version}/hans-gpg-key.asc
 Patch4:		0002-gtest-reorg.patch
 Patch11:	0001-ToolChain-Add-lgcc_s-to-the-linker-flags-when-using-.patch
 Patch13:	0001-Make-funwind-tables-the-default-for-all-archs.patch
+Patch19:	0001-Set-InvalidDecl-directly-when-deserializing-a-Decl.patch
 
 # Not Upstream
 Patch15:	0001-clang-Don-t-install-static-libraries.patch
@@ -250,6 +251,7 @@ pathfix.py -i %{__python3} -pn \
 %patch4 -p1 -b .gtest
 %patch11 -p1 -b .libcxx-fix
 %patch13 -p2 -b .unwind-all
+%patch19 -p2 -b .invalid-decl
 %patch15 -p2 -b .no-install-static
 
 mv ../%{clang_tools_srcdir} tools/extra
@@ -469,6 +471,9 @@ LD_LIBRARY_PATH=%{buildroot}%{_libdir} ninja check-all -C _build || \
 
 %endif
 %changelog
+* Wed Oct 14 2020 sguelton@redhat.com - 10.0.1-3
+- Apply upstream patch for rhbz#1876796
+
 * Thu Sep 17 2020 sguelton@redhat.com - 10.0.1-2
 - rebuilt with gating.yaml update
 
