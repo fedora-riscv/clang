@@ -4,7 +4,7 @@
 %global min_ver 0
 %global patch_ver 0
 #%%global rc_ver 1
-%global baserelease 1
+%global baserelease 2
 
 %global clang_tools_binaries \
 	%{_bindir}/clang-apply-replacements \
@@ -164,6 +164,8 @@ Requires:	%{name}-libs%{?_isa} = %{version}-%{release}
 # - https://bugzilla.redhat.com/show_bug.cgi?id=1158594
 Requires:	libstdc++-devel
 Requires:	gcc-c++
+
+Requires:	llvm-libs >= %{version}-1
 
 Provides:	clang(major) = %{maj_ver}
 
@@ -502,6 +504,9 @@ false
 
 %endif
 %changelog
+* Thu Oct 29 2020 sguelton@redhat.com - 11.0.0-2
+- Prevent ABI conflict with release candidate
+
 * Thu Oct 15 2020 sguelton@redhat.com - 11.0.0-1
 - Fix NVR
 
