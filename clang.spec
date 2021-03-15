@@ -4,7 +4,7 @@
 %global min_ver 0
 %global patch_ver 0
 %global rc_ver 1
-%global baserelease 1
+%global baserelease 2
 
 %global clang_tools_binaries \
 	%{_bindir}/clang-apply-replacements \
@@ -97,6 +97,7 @@ Patch11:	0001-ToolChain-Add-lgcc_s-to-the-linker-flags-when-using-.patch
 Patch13:    0001-Make-funwind-tables-the-default-for-all-archs.patch
 Patch15:    0001-clang-Don-t-install-static-libraries.patch
 Patch17:    0001-Driver-Prefer-gcc-toolchains-with-libgcc_s.so-when-n.patch
+Patch20:    0007-PATCH-clang-Allow-__ieee128-as-an-alias-to-__float12.patch
 
 BuildRequires:	gcc
 BuildRequires:	gcc-c++
@@ -283,6 +284,8 @@ pathfix.py -i %{__python3} -pn \
 %patch13 -p1 -b .unwind-default
 %patch15 -p2 -b .no-install-static
 %patch17 -p1 -b .check-gcc_s
+%patch20 -p2 -b .ieee128
+
 
 # failing test case
 rm test/CodeGen/profile-filter.c
@@ -538,6 +541,9 @@ false
 
 %endif
 %changelog
+* Mon Mar 15 2021 sguelton@redhat.com - 12.0.0-0.2.rc1
+- Apply patch D97846 to fix rhbz#1934065
+
 * Sun Feb 14 2021 sguelton@redhat.com - 12.0.0-0.1.rc1
 - 12.0.0-rc1 release
 
