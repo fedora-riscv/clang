@@ -4,7 +4,7 @@
 %global min_ver 0
 %global patch_ver 0
 %global rc_ver 1
-%global baserelease 2
+%global baserelease 3
 
 %global clang_tools_binaries \
 	%{_bindir}/clang-apply-replacements \
@@ -541,6 +541,9 @@ false
 
 %endif
 %changelog
+* Tue Mar 30 2021 Jonathan Wakely <jwakely@redhat.com> - 12.0.0-0.3.rc1
+- Rebuilt for removed libstdc++ symbol (#1937698)
+
 * Mon Mar 15 2021 sguelton@redhat.com - 12.0.0-0.2.rc1
 - Apply patch D97846 to fix rhbz#1934065
 
