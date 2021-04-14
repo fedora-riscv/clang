@@ -19,6 +19,9 @@
       - libcxx-devel
       - glibc-devel
       - gcc
+      # Required for clang-format-diff
+      - clang-tools-extra
+
     repositories:
     - repo: "https://src.fedoraproject.org/tests/llvm-test-suite.git"
       dest: "llvm-test-suite"
@@ -33,3 +36,4 @@
       - clang/rhbz_1657544
       - clang/rhbz_1647130
       - clang/llvm-toolchain
+      - clang-format-diff
