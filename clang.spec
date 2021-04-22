@@ -7,6 +7,19 @@
 %global rc_ver 1
 %global clang_version %{maj_ver}.%{min_ver}.%{patch_ver}
 
+%global clang_srcdir clang-%{version}%{?rc_ver:rc%{rc_ver}}.src
+%global clang_tools_srcdir clang-tools-extra-%{version}%{?rc_ver:rc%{rc_ver}}.src
+
+%if %{with snapshot_build}
+%undefine rc_ver
+%global llvm_snapshot_vers pre%{llvm_snapshot_yyyymmdd}.g%{llvm_snapshot_git_revision_short}
+%global clang_srcdir clang-%{llvm_snapshot_version_major}.%{llvm_snapshot_version_minor}.%{llvm_snapshot_version_patch}.src
+%global clang_tools_srcdir clang-tools-extra-%{llvm_snapshot_version_major}.%{llvm_snapshot_version_minor}.%{llvm_snapshot_version_patch}.src
+%global maj_ver %{llvm_snapshot_version_major}
+%global min_ver %{llvm_snapshot_version_minor}
+%global patch_ver %{llvm_snapshot_version_patch}
+%endif
+
 %global clang_tools_binaries \
 	%{_bindir}/clang-apply-replacements \
 	%{_bindir}/clang-change-namespace \
@@ -71,19 +84,25 @@
 %endif
 
 Name:		%pkg_name
-Version:	%{clang_version}%{?rc_ver:~rc%{rc_ver}}
+Version:	%{clang_version}%{?rc_ver:~rc%{rc_ver}}%{?llvm_snapshot_vers:~%{llvm_snapshot_vers}}
 Release:	1%{?dist}
 Summary:	A C language family front-end for LLVM
 
 License:	NCSA
 URL:		http://llvm.org
+%if %{with snapshot_build}
+Source0:    %{llvm_snapshot_source_prefix}clang-%{llvm_snapshot_yyyymmdd}.src.tar.xz
+Source1:    %{llvm_snapshot_source_prefix}clang-tools-extra-%{llvm_snapshot_yyyymmdd}.src.tar.xz
+%else
 Source0:	https://github.com/llvm/llvm-project/releases/download/llvmorg-%{clang_version}%{?rc_ver:-rc%{rc_ver}}/%{clang_srcdir}.tar.xz
 Source3:	https://github.com/llvm/llvm-project/releases/download/llvmorg-%{clang_version}%{?rc_ver:-rc%{rc_ver}}/%{clang_srcdir}.tar.xz.sig
 %if %{without compat_build}
 Source1:	https://github.com/llvm/llvm-project/releases/download/llvmorg-%{clang_version}%{?rc_ver:-rc%{rc_ver}}/%{clang_tools_srcdir}.tar.xz
 Source2:	https://github.com/llvm/llvm-project/releases/download/llvmorg-%{clang_version}%{?rc_ver:-rc%{rc_ver}}/%{clang_tools_srcdir}.tar.xz.sig
 %endif
+%if %{without snapshot_build}
 Source4:	tstellar-gpg-key.asc
+%endif
 %if %{without compat_build}
 Source5:	macros.%{name}
 %endif
@@ -261,13 +280,17 @@ Requires:      python3
 
 
 %prep
+%if %{without snapshot_build}
 %{gpgverify} --keyring='%{SOURCE4}' --signature='%{SOURCE3}' --data='%{SOURCE0}'
+%endif
 
 %if %{with compat_build}
 %autosetup -n %{clang_srcdir} -p2
 %else
 
+%if ! %{with snapshot_build}
 %{gpgverify} --keyring='%{SOURCE4}' --signature='%{SOURCE2}' --data='%{SOURCE1}'
+%endif
 %setup -T -q -b 1 -n %{clang_tools_srcdir}
 %autopatch -m200 -p2
 
@@ -345,6 +368,10 @@ sed -i 's/\@FEDORA_LLVM_LIB_SUFFIX\@//g' test/lit.cfg.py
 %else
 	-DLLVM_LIBDIR_SUFFIX= \
 %endif
+%endif
+	\
+%if %{with snapshot_build}
+	-DLLVM_VERSION_SUFFIX="%{llvm_snapshot_vers}" \
 %endif
 	\
 %if %{with compat_build}
@@ -461,6 +488,7 @@ rm -Rvf %{buildroot}%{_includedir}/clang-tidy/
 
 %if %{without compat_build}
 # Add a symlink in /usr/bin to clang-format-diff
+%if %{without compat_build}
 ln -s %{_datadir}/clang/clang-format-diff.py %{buildroot}%{_bindir}/clang-format-diff
 %endif
 
@@ -516,9 +544,9 @@ false
 %files resource-filesystem
 %dir %{pkg_libdir}/clang/%{version}/
 %dir %{pkg_libdir}/clang/%{version}/include/
+%if %{without compat_build}
 %dir %{pkg_libdir}/clang/%{version}/lib/
 %dir %{pkg_libdir}/clang/%{version}/share/
-%if %{without compat_build}
 %{pkg_libdir}/clang/%{maj_ver}
 %endif
 
@@ -548,6 +576,7 @@ false
 %{_bindir}/find-all-symbols
 %{_bindir}/modularize
 %{_bindir}/clang-format-diff
+%{_bindir}/clang-nvlink-wrapper
 %{_mandir}/man1/diagtool.1.gz
 %{_emacs_sitestartdir}/clang-format.el
 %{_emacs_sitestartdir}/clang-rename.el
@@ -569,6 +598,11 @@ false
 
 %endif
 %changelog
+%if %{with snapshot_build}
+* %{lua: print(os.date("%a %b %d %Y"))} LLVM snapshot build bot
+- Snapshot build of %{version}
+%endif
+
 * Wed Jan 12 2022 Nikita Popov <npopov@redhat.com> - 13.0.1~rc1-1
 - Update to LLVM 13.0.1rc1
 
