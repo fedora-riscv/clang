@@ -1,10 +1,9 @@
-%global compat_build 0
+%bcond_with compat_build
 
 %global maj_ver 12
 %global min_ver 0
 %global patch_ver 0
-%global rc_ver 1
-%global baserelease 3
+#%%global rc_ver 5
 
 %global clang_tools_binaries \
 	%{_bindir}/clang-apply-replacements \
@@ -36,28 +35,22 @@
 	%{_bindir}/clang-cl \
 	%{_bindir}/clang-cpp \
 
-%if 0%{?compat_build}
-%global pkg_name clang%{maj_ver}.%{min_ver}
+%if %{with compat_build}
+%global pkg_name clang%{maj_ver}
 # Install clang to same prefix as llvm, so that apps that use llvm-config
 # will also be able to find clang libs.
-%global install_prefix %{_libdir}/llvm%{maj_ver}.%{min_ver}
+%global install_prefix %{_libdir}/llvm%{maj_ver}
 %global install_bindir %{install_prefix}/bin
 %global install_includedir %{install_prefix}/include
 %global install_libdir %{install_prefix}/lib
 
 %global pkg_bindir %{install_bindir}
-%global pkg_includedir %{_includedir}/llvm%{maj_ver}.%{min_ver}
+%global pkg_includedir %{install_includedir}
 %global pkg_libdir %{install_libdir}
 %else
 %global pkg_name clang
 %global install_prefix /usr
 %global pkg_libdir %{_libdir}
-%endif
-
-%if 0%{?fedora} || 0%{?rhel} > 7
-%bcond_without python3
-%else
-%bcond_with python3
 %endif
 
 %global build_install_prefix %{buildroot}%{install_prefix}
@@ -71,41 +64,40 @@
 %global clang_tools_srcdir clang-tools-extra-%{version}%{?rc_ver:rc%{rc_ver}}.src
 
 Name:		%pkg_name
-Version:	%{maj_ver}.%{min_ver}.%{patch_ver}
-Release:	%{?rc_ver:0.}%{baserelease}%{?rc_ver:.rc%{rc_ver}}%{?dist}
+Version:	%{maj_ver}.%{min_ver}.%{patch_ver}%{?rc_ver:~rc%{rc_ver}}
+Release:	1%{?dist}
 Summary:	A C language family front-end for LLVM
 
 License:	NCSA
 URL:		http://llvm.org
 Source0:	https://github.com/llvm/llvm-project/releases/download/llvmorg-%{version}%{?rc_ver:-rc%{rc_ver}}/%{clang_srcdir}.tar.xz
 Source3:	https://github.com/llvm/llvm-project/releases/download/llvmorg-%{version}%{?rc_ver:-rc%{rc_ver}}/%{clang_srcdir}.tar.xz.sig
-%if !0%{?compat_build}
+%if %{without compat_build}
 Source1:	https://github.com/llvm/llvm-project/releases/download/llvmorg-%{version}%{?rc_ver:-rc%{rc_ver}}/%{clang_tools_srcdir}.tar.xz
 Source2:	https://github.com/llvm/llvm-project/releases/download/llvmorg-%{version}%{?rc_ver:-rc%{rc_ver}}/%{clang_tools_srcdir}.tar.xz.sig
 %endif
 Source4:	tstellar-gpg-key.asc
 
+# Patches for clang
+Patch0:     0001-PATCH-clang-Reorganize-gtest-integration.patch
+Patch1:     0002-PATCH-clang-Make-funwind-tables-the-default-on-all-a.patch
+Patch2:     0003-PATCH-clang-Don-t-install-static-libraries.patch
+Patch3:     0004-PATCH-clang-Prefer-gcc-toolchains-with-libgcc_s.so-w.patch
+Patch4:     0005-PATCH-clang-Partially-Revert-scan-view-Remove-Report.patch
+Patch5:     0006-PATCH-clang-Allow-__ieee128-as-an-alias-to-__float12.patch
 
-%if !0%{?compat_build}
-Patch21:	completion-model-cmake.patch
-Patch22:	clang-tidy.patch
+# Patches for clang-tools-extra
+%if %{without compat_build}
+Patch201:	0001-PATCH-clang-tools-extra-Make-clangd-CompletionModel-.patch
 %endif
-
-# Not Upstream
-Patch4:		0002-gtest-reorg.patch
-Patch11:	0001-ToolChain-Add-lgcc_s-to-the-linker-flags-when-using-.patch
-Patch13:    0001-Make-funwind-tables-the-default-for-all-archs.patch
-Patch15:    0001-clang-Don-t-install-static-libraries.patch
-Patch17:    0001-Driver-Prefer-gcc-toolchains-with-libgcc_s.so-when-n.patch
-Patch20:    0007-PATCH-clang-Allow-__ieee128-as-an-alias-to-__float12.patch
 
 BuildRequires:	gcc
 BuildRequires:	gcc-c++
 BuildRequires:	cmake
 BuildRequires:	ninja-build
-%if 0%{?compat_build}
-BuildRequires:	llvm%{maj_ver}.%{min_ver}-devel = %{version}
-BuildRequires:	llvm%{maj_ver}.%{min_ver}-static = %{version}
+%if %{with compat_build}
+BuildRequires:	llvm%{maj_ver}-devel = %{version}
+BuildRequires:	llvm%{maj_ver}-static = %{version}
 %else
 BuildRequires:	llvm-devel = %{version}
 BuildRequires:	llvm-test = %{version}
@@ -122,17 +114,19 @@ BuildRequires:	ncurses-devel
 # should BuildRequires: emacs if it packages emacs integration files.
 BuildRequires:	emacs
 
-# These build dependencies are required for the test suite.
-%if %with python3
 # The testsuite uses /usr/bin/lit which is part of the python3-lit package.
 BuildRequires:	python3-lit
-%endif
 
 BuildRequires:	python3-sphinx
 BuildRequires:	libatomic
 
 # We need python3-devel for pathfix.py.
 BuildRequires:	python3-devel
+
+# For reproducible pyc file generation
+# See https://docs.fedoraproject.org/en-US/packaging-guidelines/Python_Appendix/#_byte_compilation_reproducibility
+BuildRequires: /usr/bin/marshalparser
+%global py_reproducible_pyc_path %{buildroot}%{python3_sitelib}
 
 # Needed for %%multilib_fix_c_header
 BuildRequires:	multilib-rpm-config
@@ -195,7 +189,7 @@ Runtime library for clang.
 
 %package devel
 Summary: Development header files for clang
-%if !0%{?compat_build}
+%if %{without compat_build}
 Requires: %{name}%{?_isa} = %{version}-%{release}
 # The clang CMake files reference tools from clang-tools-extra.
 Requires: %{name}-tools-extra%{?_isa} = %{version}-%{release}
@@ -212,7 +206,7 @@ Provides: %{name}-resource-filesystem(major) = %{maj_ver}
 %description resource-filesystem
 This package owns the clang resouce directory: $libdir/clang/$version/
 
-%if !0%{?compat_build}
+%if %{without compat_build}
 %package analyzer
 Summary:	A source code analysis framework
 License:	NCSA and MIT
@@ -260,32 +254,23 @@ Requires:      python3
 %prep
 %{gpgverify} --keyring='%{SOURCE4}' --signature='%{SOURCE3}' --data='%{SOURCE0}'
 
-%if 0%{?compat_build}
-%autosetup -n %{clang_srcdir} -p1
+%if %{with compat_build}
+%autosetup -n %{clang_srcdir} -p2
 %else
 
 %{gpgverify} --keyring='%{SOURCE4}' --signature='%{SOURCE2}' --data='%{SOURCE1}'
 %setup -T -q -b 1 -n %{clang_tools_srcdir}
-%patch21 -p1 -b .comp-model
-%patch22 -p1 -b .clang-tidy
+%autopatch -m200 -p2
 
 # failing test case
 rm test/clang-tidy/checkers/altera-struct-pack-align.cpp
-
 
 pathfix.py -i %{__python3} -pn \
 	clang-tidy/tool/*.py \
 	clang-include-fixer/find-all-symbols/tool/run-find-all-symbols.py
 
 %setup -q -n %{clang_srcdir}
-
-%patch4 -p1 -b .gtest
-%patch11 -p1 -b .libcxx-fix
-%patch13 -p1 -b .unwind-default
-%patch15 -p2 -b .no-install-static
-%patch17 -p1 -b .check-gcc_s
-%patch20 -p2 -b .ieee128
-
+%autopatch -M200 -p2
 
 # failing test case
 rm test/CodeGen/profile-filter.c
@@ -336,8 +321,9 @@ sed -i 's/\@FEDORA_LLVM_LIB_SUFFIX\@//g' test/lit.cfg.py
 	-DCMAKE_C_FLAGS_RELWITHDEBINFO="%{optflags} -DNDEBUG" \
 	-DCMAKE_CXX_FLAGS_RELWITHDEBINFO="%{optflags} -DNDEBUG" \
 %endif
-%if 0%{?compat_build}
-	-DLLVM_CONFIG:FILEPATH=%{_bindir}/llvm-config-%{maj_ver}.%{min_ver}-%{__isa_bits} \
+%if %{with compat_build}
+	-DCLANG_BUILD_TOOLS:BOOL=OFF \
+	-DLLVM_CONFIG:FILEPATH=%{_bindir}/llvm-config-%{maj_ver}-%{__isa_bits} \
 	-DCMAKE_INSTALL_PREFIX=%{install_prefix} \
 	-DCLANG_INCLUDE_TESTS:BOOL=OFF \
 %else
@@ -352,10 +338,10 @@ sed -i 's/\@FEDORA_LLVM_LIB_SUFFIX\@//g' test/lit.cfg.py
 %endif
 %endif
 	\
-%if !0%{compat_build}
-	-DLLVM_TABLEGEN_EXE:FILEPATH=%{_bindir}/llvm-tblgen \
+%if %{with compat_build}
+	-DLLVM_TABLEGEN_EXE:FILEPATH=%{_bindir}/llvm-tblgen-%{maj_ver} \
 %else
-	-DLLVM_TABLEGEN_EXE:FILEPATH=%{_bindir}/llvm-tblgen-%{maj_ver}.%{min_ver} \
+	-DLLVM_TABLEGEN_EXE:FILEPATH=%{_bindir}/llvm-tblgen \
 %endif
 	-DCLANG_ENABLE_ARCMT:BOOL=ON \
 	-DCLANG_ENABLE_STATIC_ANALYZER:BOOL=ON \
@@ -371,7 +357,8 @@ sed -i 's/\@FEDORA_LLVM_LIB_SUFFIX\@//g' test/lit.cfg.py
 	\
 	-DCLANG_BUILD_EXAMPLES:BOOL=OFF \
 	-DBUILD_SHARED_LIBS=OFF \
-	-DCLANG_REPOSITORY_STRING="%{?fedora:Fedora}%{?rhel:Red Hat} %{version}-%{release}"
+	-DCLANG_REPOSITORY_STRING="%{?fedora:Fedora}%{?rhel:Red Hat} %{version}-%{release}" \
+	-DCLANG_DEFAULT_UNWINDLIB=libgcc
 
 %cmake_build
 
@@ -379,7 +366,7 @@ sed -i 's/\@FEDORA_LLVM_LIB_SUFFIX\@//g' test/lit.cfg.py
 
 %cmake_install
 
-%if 0%{?compat_build}
+%if %{with compat_build}
 
 # Remove binaries/other files
 rm -Rf %{buildroot}%{install_bindir}
@@ -449,8 +436,11 @@ mkdir -p %{buildroot}%{_libdir}/clang/%{version}/{include,lib,share}/
 # Remove clang-tidy headers.  We don't ship the libraries for these.
 rm -Rvf %{buildroot}%{_includedir}/clang-tidy/
 
+# Add a symlink in /usr/bin to clang-format-diff
+ln -s %{_datadir}/clang/clang-format-diff.py %{buildroot}%{_bindir}/clang-format-diff
+
 %check
-%if !0%{?compat_build}
+%if %{without compat_build}
 # requires lit.py from LLVM utilities
 # FIXME: Fix failing ARM tests
 LD_LIBRARY_PATH=%{buildroot}/%{_libdir} %cmake_build --target check-all || \
@@ -463,7 +453,7 @@ false
 %endif
 
 
-%if !0%{?compat_build}
+%if %{without compat_build}
 %files
 %license LICENSE.TXT
 %{clang_binaries}
@@ -474,7 +464,7 @@ false
 %endif
 
 %files libs
-%if !0%{?compat_build}
+%if %{without compat_build}
 %{_libdir}/clang/
 %{_libdir}/*.so.*
 %else
@@ -483,7 +473,7 @@ false
 %endif
 
 %files devel
-%if !0%{?compat_build}
+%if %{without compat_build}
 %{_libdir}/*.so
 %{_includedir}/clang/
 %{_includedir}/clang-c/
@@ -501,11 +491,11 @@ false
 %dir %{pkg_libdir}/clang/%{version}/include/
 %dir %{pkg_libdir}/clang/%{version}/lib/
 %dir %{pkg_libdir}/clang/%{version}/share/
-%if !0%{?compat_build}
+%if %{without compat_build}
 %{pkg_libdir}/clang/%{maj_ver}
 %endif
 
-%if !0%{?compat_build}
+%if %{without compat_build}
 %files analyzer
 %{_bindir}/scan-view
 %{_bindir}/scan-build
@@ -520,6 +510,7 @@ false
 %{_bindir}/c-index-test
 %{_bindir}/find-all-symbols
 %{_bindir}/modularize
+%{_bindir}/clang-format-diff
 %{_mandir}/man1/diagtool.1.gz
 %{_emacs_sitestartdir}/clang-format.el
 %{_emacs_sitestartdir}/clang-rename.el
@@ -541,11 +532,43 @@ false
 
 %endif
 %changelog
-* Tue Mar 30 2021 Jonathan Wakely <jwakely@redhat.com> - 12.0.0-0.3.rc1
-- Rebuilt for removed libstdc++ symbol (#1937698)
+* Fri Apr 16 2021 Tom Stellard <tstellar@redhat.cm> - 12.0.0-1
+- 12.0.0 Release
 
-* Mon Mar 15 2021 sguelton@redhat.com - 12.0.0-0.2.rc1
+* Wed Apr 14 2021 Tom Stellard <tstellar@redhat.com> - 12.0.0-0.12.rc5
+- Add symlink to clang-format-diff in /usr/bin
+- rhbz#1939018
+
+* Thu Apr 08 2021 sguelton@redhat.com - 12.0.0-0.11.rc5
+- New upstream release candidate
+
+* Sat Apr 03 2021 sguelton@redhat.com - 12.0.0-0.10.rc4
+- Make pyc files from python3-clang reproducible
+
+* Fri Apr 02 2021 sguelton@redhat.com - 12.0.0-0.9.rc4
+- New upstream release candidate
+
+* Wed Mar 31 2021 Jonathan Wakely <jwakely@redhat.com> - 12.0.0-0.8.rc3
+- Rebuilt for removed libstdc++ symbols (#1937698)
+
+* Mon Mar 15 2021 sguelton@redhat.com - 12.0.0-0.7.rc3
 - Apply patch D97846 to fix rhbz#1934065
+
+* Mon Mar 15 2021 Timm Bäder <tbaeder@redhat.com> 12.0.0-0.6.rc3
+- Set CLANG_DEFAULT_UNWIND_LIB instead of using custom patch
+- Add toolchains test to the tests.yml
+
+* Thu Mar 11 2021 sguelton@redhat.com - 12.0.0-0.5.rc3
+- LLVM 12.0.0 rc3
+
+* Tue Mar 09 2021 sguelton@redhat.com - 12.0.0-0.4.rc2
+- rebuilt
+
+* Mon Mar 01 2021 sguelton@redhat.com - 12.0.0-0.3.rc2
+- Reapply some wrongly removed patch
+
+* Wed Feb 24 2021 sguelton@redhat.com - 12.0.0-0.2.rc2
+- 12.0.0-rc2 release
 
 * Sun Feb 14 2021 sguelton@redhat.com - 12.0.0-0.1.rc1
 - 12.0.0-rc1 release
