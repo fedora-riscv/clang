@@ -100,6 +100,7 @@ Source3:	https://github.com/llvm/llvm-project/releases/download/llvmorg-%{clang_
 Source1:	https://github.com/llvm/llvm-project/releases/download/llvmorg-%{clang_version}%{?rc_ver:-rc%{rc_ver}}/%{clang_tools_srcdir}.tar.xz
 Source2:	https://github.com/llvm/llvm-project/releases/download/llvmorg-%{clang_version}%{?rc_ver:-rc%{rc_ver}}/%{clang_tools_srcdir}.tar.xz.sig
 %endif
+%endif
 %if %{without snapshot_build}
 Source4:	tstellar-gpg-key.asc
 %endif
@@ -488,7 +489,6 @@ mkdir -p %{buildroot}%{pkg_libdir}/clang/%{version}/{include,lib,share}/
 # Remove clang-tidy headers.  We don't ship the libraries for these.
 rm -Rvf %{buildroot}%{_includedir}/clang-tidy/
 
-%if %{without compat_build}
 # Add a symlink in /usr/bin to clang-format-diff
 %if %{without compat_build}
 ln -s %{_datadir}/clang/clang-format-diff.py %{buildroot}%{_bindir}/clang-format-diff
