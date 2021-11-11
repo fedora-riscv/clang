@@ -108,12 +108,14 @@ Source5:	macros.%{name}
 %endif
 
 # Patches for clang
-Patch0:     0001-PATCH-clang-Reorganize-gtest-integration.patch
-Patch1:     0002-PATCH-clang-Make-funwind-tables-the-default-on-all-a.patch
-Patch2:     0003-PATCH-clang-Don-t-install-static-libraries.patch
-Patch3:     0001-Driver-Add-a-gcc-equivalent-triple-to-the-list-of-tr.patch
-Patch4:     0001-cmake-Allow-shared-libraries-to-customize-the-soname.patch
-Patch5:     0001-PATCH-clang-Fix-scan-build-py-executable-lookup-path.patch
+Patch0:		0001-PATCH-clang-Reorganize-gtest-integration.patch
+Patch1:		0002-PATCH-clang-ToolChain-Add-lgcc_s-to-the-linker-flags.patch
+Patch2:		0003-PATCH-clang-Make-funwind-tables-the-default-on-all-a.patch
+Patch3:		0004-PATCH-clang-Don-t-install-static-libraries.patch
+Patch4:		0005-PATCH-clang-Prefer-gcc-toolchains-with-libgcc_s.so-w.patch
+Patch5:		0006-PATCH-Driver-Add-a-gcc-equivalent-triple-to-the-list.patch
+Patch6:		0007-cmake-Allow-shared-libraries-to-customize-the-soname.patch
+
 
 BuildRequires:	gcc
 BuildRequires:	gcc-c++
