@@ -332,6 +332,11 @@ rm test/CodeGen/profile-filter.c
 # lto builds with gcc 11 fail while running the lit tests.
 %define _lto_cflags %{nil}
 
+# Disable LTO when building snapshots for Fedora 34 or lower
+%if 0%{?fedora} <= 34
+%global _lto_cflags %{nil}
+%endif
+
 %if 0%{?__isa_bits} == 64
 sed -i 's/\@FEDORA_LLVM_LIB_SUFFIX\@/64/g' test/lit.cfg.py
 %else
