@@ -18,6 +18,7 @@
 %global maj_ver %{llvm_snapshot_version_major}
 %global min_ver %{llvm_snapshot_version_minor}
 %global patch_ver %{llvm_snapshot_version_patch}
+%global clang_version %{llvm_snapshot_version_major}.%{llvm_snapshot_version_minor}.%{llvm_snapshot_version_patch}
 %endif
 
 %global clang_tools_binaries \
