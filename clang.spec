@@ -143,6 +143,7 @@ BuildRequires:	emacs
 # The testsuite uses /usr/bin/lit which is part of the python3-lit package.
 BuildRequires:	python3-lit
 
+BuildRequires:	python3-recommonmark
 BuildRequires:	python3-sphinx
 BuildRequires:	libatomic
 
