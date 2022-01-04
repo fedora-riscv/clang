@@ -605,10 +605,7 @@ false
 
 %endif
 %changelog
-%if %{with snapshot_build}
-* %{lua: print(os.date("%a %b %d %Y"))} LLVM snapshot build bot
-- Snapshot build of %{version}
-%endif
+%{?llvm_snapshot_changelog_entry}
 
 * Wed Jan 12 2022 Nikita Popov <npopov@redhat.com> - 13.0.1~rc1-1
 - Update to LLVM 13.0.1rc1
