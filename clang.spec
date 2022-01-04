@@ -12,7 +12,6 @@
 
 %if %{with snapshot_build}
 %undefine rc_ver
-%global llvm_snapshot_vers pre%{llvm_snapshot_yyyymmdd}.g%{llvm_snapshot_git_revision_short}
 %global clang_srcdir clang-%{llvm_snapshot_version_major}.%{llvm_snapshot_version_minor}.%{llvm_snapshot_version_patch}.src
 %global clang_tools_srcdir clang-tools-extra-%{llvm_snapshot_version_major}.%{llvm_snapshot_version_minor}.%{llvm_snapshot_version_patch}.src
 %global maj_ver %{llvm_snapshot_version_major}
@@ -85,7 +84,7 @@
 %endif
 
 Name:		%pkg_name
-Version:	%{clang_version}%{?rc_ver:~rc%{rc_ver}}%{?llvm_snapshot_vers:~%{llvm_snapshot_vers}}
+Version:	%{clang_version}%{?rc_ver:~rc%{rc_ver}}%{?llvm_snapshot_version_suffix:~%{llvm_snapshot_version_suffix}}
 Release:	1%{?dist}
 Summary:	A C language family front-end for LLVM
 
@@ -379,7 +378,7 @@ sed -i 's/\@FEDORA_LLVM_LIB_SUFFIX\@//g' test/lit.cfg.py
 %endif
 	\
 %if %{with snapshot_build}
-	-DLLVM_VERSION_SUFFIX="%{llvm_snapshot_vers}" \
+	-DLLVM_VERSION_SUFFIX="%{llvm_snapshot_version_suffix}" \
 %endif
 	\
 %if %{with compat_build}
