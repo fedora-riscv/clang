@@ -456,6 +456,7 @@ rm -vf %{buildroot}%{_datadir}/clang/clang-format-sublime.py*
 
 # TODO: Package html docs
 rm -Rvf %{buildroot}%{_docdir}/clang/html
+rm -Rvf %{buildroot}%{_docdir}/Clang/clang/html
 rm -Rvf %{buildroot}%{_datadir}/clang/clang-doc-default-stylesheet.css
 rm -Rvf %{buildroot}%{_datadir}/clang/index.js
 
