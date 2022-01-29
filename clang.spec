@@ -115,8 +115,6 @@ Patch2:		0003-PATCH-clang-Make-funwind-tables-the-default-on-all-a.patch
 Patch3:		0004-PATCH-clang-Don-t-install-static-libraries.patch
 Patch4:		0005-PATCH-clang-Prefer-gcc-toolchains-with-libgcc_s.so-w.patch
 Patch5:		0006-PATCH-Driver-Add-a-gcc-equivalent-triple-to-the-list.patch
-Patch6:		0006-PATCH-clang-Default-to-DWARFv4.patch
-
 
 BuildRequires:	gcc
 BuildRequires:	gcc-c++
