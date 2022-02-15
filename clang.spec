@@ -362,6 +362,7 @@ sed -i 's/\@FEDORA_LLVM_LIB_SUFFIX\@//g' test/lit.cfg.py
 	-DCMAKE_BUILD_TYPE=RelWithDebInfo \
 	-DPYTHON_EXECUTABLE=%{__python3} \
 	-DCMAKE_SKIP_RPATH:BOOL=ON \
+	-DLLVM_ENABLE_PLUGINS:BOOL=ON \
 %ifarch s390 s390x %{arm} %ix86 ppc64le
 	-DCMAKE_C_FLAGS_RELWITHDEBINFO="%{optflags} -DNDEBUG" \
 	-DCMAKE_CXX_FLAGS_RELWITHDEBINFO="%{optflags} -DNDEBUG" \
