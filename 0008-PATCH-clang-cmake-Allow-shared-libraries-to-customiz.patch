@@ -1,0 +1,39 @@
+From 2af211858807b2696b6f10fd156616838cbd2e58 Mon Sep 17 00:00:00 2001
+From: Tom Stellard <tstellar@redhat.com>
+Date: Wed, 4 Aug 2021 14:05:38 -0700
+Subject: [PATCH][clang] cmake: Allow shared libraries to customize the soname
+ using LLVM_ABI_REVISION
+
+The LLVM_ABI_REVISION variable is intended to be used for release
+candidates which introduce an ABI change to a shared library.  This
+variable can be specified per library, so there is not one global value
+for all of LLVM.
+
+For example, if we LLVM X.0.0-rc2 introduces an ABI change for a library
+compared with LLVM X.0.0-rc1, then the LLVM_ABI_REVISION number for
+library will be incremented by 1.
+
+In the main branch, LLVM_ABI_REVISION should always be 0, it is only
+meant to be used in the release branch.
+
+Differential Revision: https://reviews.llvm.org/D105594
+---
+ clang/tools/clang-shlib/CMakeLists.txt | 5 +++++
+ 1 file changed, 5 insertions(+)
+
+diff --git a/clang/tools/clang-shlib/CMakeLists.txt b/clang/tools/clang-shlib/CMakeLists.txt
+index 9c1f8ea452b3..4d785924e4bb 100644
+--- a/clang/tools/clang-shlib/CMakeLists.txt
++++ b/clang/tools/clang-shlib/CMakeLists.txt
+@@ -1,3 +1,8 @@
++# In the main branch, LLVM_ABI_REVISION should always be 0.  In the release
++# branches, this should be incremented before each release candidate every
++# time the ABI of libclang-cpp.so changes.
++set(LLVM_ABI_REVISION 0)
++
+ # Building libclang-cpp.so fails if LLVM_ENABLE_PIC=Off
+ if (NOT LLVM_ENABLE_PIC)
+   return()
+-- 
+2.34.1
+

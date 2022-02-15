@@ -4,7 +4,7 @@
 %global maj_ver 13
 %global min_ver 0
 %global patch_ver 1
-%global rc_ver 1
+#global rc_ver 3
 %global clang_version %{maj_ver}.%{min_ver}.%{patch_ver}
 
 %global clang_srcdir clang-%{version}%{?rc_ver:rc%{rc_ver}}.src
@@ -109,12 +109,15 @@ Source5:	macros.%{name}
 %endif
 
 # Patches for clang
-Patch0:		0001-PATCH-clang-Reorganize-gtest-integration.patch
-Patch1:		0002-PATCH-clang-ToolChain-Add-lgcc_s-to-the-linker-flags.patch
-Patch2:		0003-PATCH-clang-Make-funwind-tables-the-default-on-all-a.patch
-Patch3:		0004-PATCH-clang-Don-t-install-static-libraries.patch
-Patch4:		0005-PATCH-clang-Prefer-gcc-toolchains-with-libgcc_s.so-w.patch
-Patch5:		0006-PATCH-Driver-Add-a-gcc-equivalent-triple-to-the-list.patch
+Patch1:		0001-PATCH-clang-Reorganize-gtest-integration.patch
+Patch2:		0002-PATCH-clang-ToolChain-Add-lgcc_s-to-the-linker-flags.patch
+Patch3:		0003-PATCH-clang-Make-funwind-tables-the-default-on-all-a.patch
+Patch4:		0004-PATCH-clang-Don-t-install-static-libraries.patch
+Patch5:		0005-PATCH-clang-Prefer-gcc-toolchains-with-libgcc_s.so-w.patch
+Patch6:		0006-PATCH-Driver-Add-a-gcc-equivalent-triple-to-the-list.patch
+# This patch can be dropped once gcc-12.0.1-0.5.fc36 is in the repo.
+Patch7:		0007-PATCH-clang-Work-around-gcc-miscompile.patch
+Patch8:		0008-PATCH-clang-cmake-Allow-shared-libraries-to-customiz.patch
 
 BuildRequires:	gcc
 BuildRequires:	gcc-c++
@@ -609,6 +612,18 @@ false
 %endif
 %changelog
 %{?llvm_snapshot_changelog_entry}
+
+* Thu Feb 03 2022 Nikita Popov <npopov@redhat.com> - 13.0.1-1
+- Update to LLVM 13.0.1 final
+
+* Tue Feb 01 2022 Nikita Popov <npopov@redhat.com> - 13.0.1~rc3-1
+- Update to LLVM 13.0.1rc3
+
+* Wed Jan 19 2022 Fedora Release Engineering <releng@fedoraproject.org> - 13.0.1~rc2-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_36_Mass_Rebuild
+
+* Fri Jan 14 2022 Nikita Popov <npopov@redhat.com> - 13.0.1~rc2-1
+- Update to LLVM 13.0.1rc2
 
 * Wed Jan 12 2022 Nikita Popov <npopov@redhat.com> - 13.0.1~rc1-1
 - Update to LLVM 13.0.1rc1

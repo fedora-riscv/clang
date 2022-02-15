@@ -1,4 +1,4 @@
-From d36a30dc3d8f61a5c107054b56c8dc431ceab69f Mon Sep 17 00:00:00 2001
+From 5eb0fef781622a69575c29885a430fb8883a5864 Mon Sep 17 00:00:00 2001
 From: serge-sans-paille <sguelton@redhat.com>
 Date: Wed, 23 Sep 2020 12:47:30 +0000
 Subject: [PATCH][clang] Prefer gcc toolchains with libgcc_s.so when not static
@@ -33,10 +33,10 @@ toolchain.
  create mode 100644 clang/test/Driver/Inputs/fedora_28_tree/usr/lib/gcc/x86_64-redhat-linux/7/libgcc_s.so
 
 diff --git a/clang/lib/Driver/ToolChains/Gnu.cpp b/clang/lib/Driver/ToolChains/Gnu.cpp
-index b322a458e48a..d78b514c3f71 100644
+index 8323265ec8e8..12eed9b9cbf1 100644
 --- a/clang/lib/Driver/ToolChains/Gnu.cpp
 +++ b/clang/lib/Driver/ToolChains/Gnu.cpp
-@@ -2532,6 +2532,8 @@ void Generic_GCC::GCCInstallationDetector::ScanLibDirForGCCTriple(
+@@ -2525,6 +2525,8 @@ void Generic_GCC::GCCInstallationDetector::ScanLibDirForGCCTriple(
         TargetTriple.getVendor() == llvm::Triple::Freescale ||
             TargetTriple.getVendor() == llvm::Triple::OpenEmbedded}};
  
@@ -45,7 +45,7 @@ index b322a458e48a..d78b514c3f71 100644
    for (auto &Suffix : Suffixes) {
      if (!Suffix.Active)
        continue;
-@@ -2549,8 +2551,17 @@ void Generic_GCC::GCCInstallationDetector::ScanLibDirForGCCTriple(
+@@ -2542,8 +2544,17 @@ void Generic_GCC::GCCInstallationDetector::ScanLibDirForGCCTriple(
            continue; // Saw this path before; no need to look at it again.
        if (CandidateVersion.isOlderThan(4, 1, 1))
          continue;
@@ -65,7 +65,7 @@ index b322a458e48a..d78b514c3f71 100644
  
        if (!ScanGCCForMultilibs(TargetTriple, Args, LI->path(),
                                 NeedsBiarchSuffix))
-@@ -2564,6 +2575,7 @@ void Generic_GCC::GCCInstallationDetector::ScanLibDirForGCCTriple(
+@@ -2557,6 +2568,7 @@ void Generic_GCC::GCCInstallationDetector::ScanLibDirForGCCTriple(
        GCCInstallPath = (LibDir + "/" + LibSuffix + "/" + VersionText).str();
        GCCParentLibPath = (GCCInstallPath + "/../" + Suffix.ReversePath).str();
        IsValid = true;
@@ -74,7 +74,7 @@ index b322a458e48a..d78b514c3f71 100644
    }
  }
 diff --git a/clang/lib/Driver/ToolChains/Gnu.h b/clang/lib/Driver/ToolChains/Gnu.h
-index 40fd756a5653..0b103c1fc936 100644
+index 4eb7ab0215ab..d692fb031eb8 100644
 --- a/clang/lib/Driver/ToolChains/Gnu.h
 +++ b/clang/lib/Driver/ToolChains/Gnu.h
 @@ -190,6 +190,7 @@ public:
@@ -105,7 +105,7 @@ diff --git a/clang/test/Driver/Inputs/fedora_28_tree/usr/lib/gcc/x86_64-redhat-l
 new file mode 100644
 index 000000000000..e69de29bb2d1
 diff --git a/clang/test/Driver/linux-ld.c b/clang/test/Driver/linux-ld.c
-index bbb54c76e6a4..e3790df20c53 100644
+index b70b712c2eb7..c474cf547e86 100644
 --- a/clang/test/Driver/linux-ld.c
 +++ b/clang/test/Driver/linux-ld.c
 @@ -687,6 +687,18 @@
@@ -128,5 +128,5 @@ index bbb54c76e6a4..e3790df20c53 100644
  // RUN:     --target=arm-unknown-linux-gnueabi -rtlib=platform \
  // RUN:     --gcc-toolchain="" \
 -- 
-2.31.1
+2.34.1
 

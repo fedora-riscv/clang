@@ -1,4 +1,4 @@
-From fa56516c32ff3f56da051a9bc055a37ac812d45e Mon Sep 17 00:00:00 2001
+From cf23ebf69a9a1827d601bc4dbfe9a4ab2db039ed Mon Sep 17 00:00:00 2001
 From: Tom Stellard <tstellar@redhat.com>
 Date: Fri, 31 Jan 2020 11:04:57 -0800
 Subject: [PATCH][clang] Don't install static libraries
@@ -8,10 +8,10 @@ Subject: [PATCH][clang] Don't install static libraries
  1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/clang/cmake/modules/AddClang.cmake b/clang/cmake/modules/AddClang.cmake
-index 5752f4277444..0f52822d91f0 100644
+index 9bbbfc032b7d..dd611c0cf164 100644
 --- a/clang/cmake/modules/AddClang.cmake
 +++ b/clang/cmake/modules/AddClang.cmake
-@@ -113,7 +113,7 @@ macro(add_clang_library name)
+@@ -114,7 +114,7 @@ macro(add_clang_library name)
      if(TARGET ${lib})
        target_link_libraries(${lib} INTERFACE ${LLVM_COMMON_LIBS})
  
@@ -21,5 +21,5 @@ index 5752f4277444..0f52822d91f0 100644
          install(TARGETS ${lib}
            COMPONENT ${lib}
 -- 
-2.31.1
+2.34.1
 
