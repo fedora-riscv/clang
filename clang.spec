@@ -1,3 +1,56 @@
+################################################################################
+# BEGIN SNAPSHOT PREFIX
+################################################################################
+
+# FIXME: Disable running checks for the time being 
+%global _without_check 1
+
+%bcond_without snapshot_build
+
+%if %{with snapshot_build}
+
+# Check if we're building with copr
+%if 0%{?copr_projectname:1}
+
+# Remove the .copr prefix that is added here infront the build ID
+# see https://pagure.io/copr/copr/blob/main/f/rpmbuild/mock.cfg.j2#_22-25
+%global copr_build_id %{lua: print(string.sub(rpm.expand("%buildtag"), 6))}
+
+%global copr_build_link https://copr.fedorainfracloud.org/coprs/build/%{copr_build_id}/
+%endif
+
+%global llvm_snapshot_yyyymmdd           20220214
+%global llvm_snapshot_version            15.0.0
+%global llvm_snapshot_version_major      15
+%global llvm_snapshot_version_minor      0
+%global llvm_snapshot_version_patch      0
+%global llvm_snapshot_git_revision       890beda4e1794f8b5cf13d3fcd158c37b65c684e
+%global llvm_snapshot_git_revision_short 890beda4e1794f
+
+%global llvm_snapshot_version_suffix     pre%{llvm_snapshot_yyyymmdd}.g%{llvm_snapshot_git_revision_short}
+
+%global llvm_snapshot_source_prefix      https://github.com/kwk/llvm-daily-fedora-rpms/releases/download/source-snapshot/
+
+# This prints a multiline string for the changelog entry
+%{lua: function _llvm_snapshot_changelog_entry()
+    assert(os.setlocale('C'))
+    print(string.format("* %s LLVM snapshot - %s\n", os.date("%a %b %d %Y"), rpm.expand("%version")))
+    print("- This is an automated snapshot build")
+    -- TODO(kkleine): Switch to rpm.isdefined() once it is available on copr builders
+    if rpm.expand("%copr_build_link") ~= "%copr_build_link" then
+        print(string.format(" (%s)", rpm.expand("%copr_build_link")))
+    end
+    print("\n\n")
+end}
+
+%global llvm_snapshot_changelog_entry %{lua: _llvm_snapshot_changelog_entry()}
+
+%endif
+
+################################################################################
+# END SNAPSHOT PREFIX
+################################################################################
+
 %bcond_with compat_build
 %bcond_without check
 
@@ -118,6 +171,11 @@ Patch6:		0006-PATCH-Driver-Add-a-gcc-equivalent-triple-to-the-list.patch
 # This patch can be dropped once gcc-12.0.1-0.5.fc36 is in the repo.
 Patch7:		0007-PATCH-clang-Work-around-gcc-miscompile.patch
 Patch8:		0008-PATCH-clang-cmake-Allow-shared-libraries-to-customiz.patch
+Patch9:		0009-Revert-replace-clang-LLVM_ENABLE_PLUGINS-CLANG_PLUGI.patch
+
+# clang-tidy patches
+Patch201:	0201-Revert-replace-clang-LLVM_ENABLE_PLUGINS-CLANG_PLUGI.patch
+Patch202:	0202-Revert-Reland-enable-plugins-for-clang-tidy.patch
 
 BuildRequires:	gcc
 BuildRequires:	gcc-c++
@@ -362,8 +420,6 @@ sed -i 's/\@FEDORA_LLVM_LIB_SUFFIX\@//g' test/lit.cfg.py
 	-DCMAKE_BUILD_TYPE=RelWithDebInfo \
 	-DPYTHON_EXECUTABLE=%{__python3} \
 	-DCMAKE_SKIP_RPATH:BOOL=ON \
-	-DLLVM_ENABLE_PLUGINS:BOOL=ON \
-	-DCLANG_ENABLE_PLUGINS:BOOL=ON \
 %ifarch s390 s390x %{arm} %ix86 ppc64le
 	-DCMAKE_C_FLAGS_RELWITHDEBINFO="%{optflags} -DNDEBUG" \
 	-DCMAKE_CXX_FLAGS_RELWITHDEBINFO="%{optflags} -DNDEBUG" \

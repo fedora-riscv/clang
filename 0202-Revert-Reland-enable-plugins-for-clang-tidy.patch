@@ -1,0 +1,274 @@
+From afbbf7d84be5881097d2bf456985bb8706204d53 Mon Sep 17 00:00:00 2001
+From: Tom Stellard <tstellar@redhat.com>
+Date: Wed, 16 Feb 2022 16:32:28 -0800
+Subject: Revert "Reland "enable plugins for clang-tidy""
+
+This reverts commit 84f137a590e7de25c4105303e5938c40566c2dfb.
+---
+ .../clang-tidy/tool/CMakeLists.txt            | 13 +---
+ .../clang-tidy/tool/ClangTidyMain.cpp         |  6 --
+ .../docs/clang-tidy/Contributing.rst          | 20 ------
+ clang-tools-extra/docs/clang-tidy/index.rst   |  9 ---
+ clang-tools-extra/test/CMakeLists.txt         | 20 ------
+ .../test/clang-tidy/CTTestTidyModule.cpp      | 66 -------------------
+ clang-tools-extra/test/lit.cfg.py             |  6 --
+ clang-tools-extra/test/lit.site.cfg.py.in     |  2 -
+ 8 files changed, 2 insertions(+), 140 deletions(-)
+ delete mode 100644 clang-tools-extra/test/clang-tidy/CTTestTidyModule.cpp
+
+diff --git a/clang-tools-extra/clang-tidy/tool/CMakeLists.txt b/clang-tools-extra/clang-tidy/tool/CMakeLists.txt
+index 3ce552872015..4b8c93801501 100644
+--- a/clang-tools-extra/clang-tidy/tool/CMakeLists.txt
++++ b/clang-tools-extra/clang-tidy/tool/CMakeLists.txt
+@@ -29,17 +29,11 @@ clang_target_link_libraries(clangTidyMain
+   clangToolingCore
+   )
+ 
+-# Support plugins.
+-if(CLANG_PLUGIN_SUPPORT)
+-  set(support_plugins SUPPORT_PLUGINS)
+-endif()
+-
+ add_clang_tool(clang-tidy
+   ClangTidyToolMain.cpp
+-
+-  DEPENDS
++  )
++add_dependencies(clang-tidy
+   clang-resource-headers
+-  ${support_plugins}
+   )
+ clang_target_link_libraries(clang-tidy
+   PRIVATE
+@@ -56,9 +50,6 @@ target_link_libraries(clang-tidy
+   ${ALL_CLANG_TIDY_CHECKS}
+   )
+ 
+-if(CLANG_PLUGIN_SUPPORT)
+-  export_executable_symbols_for_plugins(clang-tidy)
+-endif()
+ 
+ install(PROGRAMS clang-tidy-diff.py
+   DESTINATION "${CMAKE_INSTALL_DATADIR}/clang"
+diff --git a/clang-tools-extra/clang-tidy/tool/ClangTidyMain.cpp b/clang-tools-extra/clang-tidy/tool/ClangTidyMain.cpp
+index 1b0010bdd62a..6147d90eb10b 100644
+--- a/clang-tools-extra/clang-tidy/tool/ClangTidyMain.cpp
++++ b/clang-tools-extra/clang-tidy/tool/ClangTidyMain.cpp
+@@ -20,7 +20,6 @@
+ #include "../GlobList.h"
+ #include "clang/Tooling/CommonOptionsParser.h"
+ #include "llvm/Support/InitLLVM.h"
+-#include "llvm/Support/PluginLoader.h"
+ #include "llvm/Support/Process.h"
+ #include "llvm/Support/Signals.h"
+ #include "llvm/Support/TargetSelect.h"
+@@ -387,11 +386,6 @@ getVfsFromFile(const std::string &OverlayFile,
+ 
+ int clangTidyMain(int argc, const char **argv) {
+   llvm::InitLLVM X(argc, argv);
+-
+-  // Enable help for -load option, if plugins are enabled.
+-  if (cl::Option *LoadOpt = cl::getRegisteredOptions().lookup("load"))
+-    LoadOpt->addCategory(ClangTidyCategory);
+-
+   llvm::Expected<CommonOptionsParser> OptionsParser =
+       CommonOptionsParser::create(argc, argv, ClangTidyCategory,
+                                   cl::ZeroOrMore);
+diff --git a/clang-tools-extra/docs/clang-tidy/Contributing.rst b/clang-tools-extra/docs/clang-tidy/Contributing.rst
+index b1771574950a..b9eb0e7627cc 100644
+--- a/clang-tools-extra/docs/clang-tidy/Contributing.rst
++++ b/clang-tools-extra/docs/clang-tidy/Contributing.rst
+@@ -634,26 +634,6 @@ This keeps the test directory from getting cluttered.
+ .. _FileCheck: https://llvm.org/docs/CommandGuide/FileCheck.html
+ .. _test/clang-tidy/google-readability-casting.cpp: https://reviews.llvm.org/diffusion/L/browse/clang-tools-extra/trunk/test/clang-tidy/google-readability-casting.cpp
+ 
+-Out-of-tree check plugins
+--------------------------
+-
+-Developing an out-of-tree check as a plugin largely follows the steps
+-outlined above. The plugin is a shared library whose code lives outside
+-the clang-tidy build system. Build and link this shared library against
+-LLVM as done for other kinds of Clang plugins.
+-
+-The plugin can be loaded by passing `-load` to `clang-tidy` in addition to the
+-names of the checks to enable.
+-
+-.. code-block:: console
+-
+-  $ clang-tidy --checks=-*,my-explicit-constructor -list-checks -load myplugin.so
+-
+-There is no expectations regarding ABI and API stability, so the plugin must be
+-compiled against the version of clang-tidy that will be loading the plugin.
+-
+-The plugins can use threads, TLS, or any other facilities available to in-tree
+-code which is accessible from the external headers.
+ 
+ Running clang-tidy on LLVM
+ --------------------------
+diff --git a/clang-tools-extra/docs/clang-tidy/index.rst b/clang-tools-extra/docs/clang-tidy/index.rst
+index c76259e02f8d..3231b1528efc 100644
+--- a/clang-tools-extra/docs/clang-tidy/index.rst
++++ b/clang-tools-extra/docs/clang-tidy/index.rst
+@@ -218,15 +218,6 @@ An overview of all the command-line options:
+     --list-checks                  -
+                                      List all enabled checks and exit. Use with
+                                      -checks=* to list all available checks.
+-    -load=<plugin>                 -
+-                                     Load the dynamic object ``plugin``. This
+-                                     object should register new static analyzer
+-                                     or clang-tidy passes. Once loaded, the
+-                                     object will add new command line options
+-                                     to run various analyses. To see the new
+-                                     complete list of passes, use the
+-                                     :option:`--list-checks` and
+-                                     :option:`-load` options together.
+     -p=<string>                    - Build path
+     --quiet                        -
+                                      Run clang-tidy in quiet mode. This suppresses
+diff --git a/clang-tools-extra/test/CMakeLists.txt b/clang-tools-extra/test/CMakeLists.txt
+index 9321457ae1a3..06be00015223 100644
+--- a/clang-tools-extra/test/CMakeLists.txt
++++ b/clang-tools-extra/test/CMakeLists.txt
+@@ -17,8 +17,6 @@ string(REPLACE ${CMAKE_CFG_INTDIR} ${LLVM_BUILD_MODE} CLANG_TOOLS_DIR ${LLVM_RUN
+ 
+ llvm_canonicalize_cmake_booleans(
+   CLANG_TIDY_ENABLE_STATIC_ANALYZER
+-  LLVM_ENABLE_PLUGINS
+-  LLVM_INSTALL_TOOLCHAIN_ONLY
+   )
+ 
+ configure_lit_site_cfg(
+@@ -80,24 +78,6 @@ foreach(dep ${LLVM_UTILS_DEPS})
+   endif()
+ endforeach()
+ 
+-if (NOT LLVM_INSTALL_TOOLCHAIN_ONLY)
+-  llvm_add_library(
+-      CTTestTidyModule
+-      MODULE clang-tidy/CTTestTidyModule.cpp
+-      PLUGIN_TOOL clang-tidy
+-      DEPENDS clang-tidy-headers)
+-
+-  if(TARGET CTTestTidyModule)
+-      list(APPEND CLANG_TOOLS_TEST_DEPS CTTestTidyModule LLVMHello)
+-      target_include_directories(CTTestTidyModule PUBLIC BEFORE "${CLANG_TOOLS_SOURCE_DIR}")
+-      if(LLVM_ENABLE_PLUGINS AND (WIN32 OR CYGWIN))
+-        set(LLVM_LINK_COMPONENTS
+-          Support
+-        )
+-      endif()
+-  endif()
+-endif()
+-
+ add_lit_testsuite(check-clang-tools "Running the Clang extra tools' regression tests"
+   ${CMAKE_CURRENT_BINARY_DIR}
+   DEPENDS ${CLANG_TOOLS_TEST_DEPS}
+diff --git a/clang-tools-extra/test/clang-tidy/CTTestTidyModule.cpp b/clang-tools-extra/test/clang-tidy/CTTestTidyModule.cpp
+deleted file mode 100644
+index c66a94f458cf..000000000000
+--- a/clang-tools-extra/test/clang-tidy/CTTestTidyModule.cpp
++++ /dev/null
+@@ -1,66 +0,0 @@
+-// REQUIRES: plugins
+-// RUN: clang-tidy -checks='-*,mytest*' --list-checks -load %llvmshlibdir/CTTestTidyModule%pluginext -load %llvmshlibdir/LLVMHello%pluginext | FileCheck --check-prefix=CHECK-LIST %s
+-// CHECK-LIST: Enabled checks:
+-// CHECK-LIST-NEXT:    mytest1
+-// CHECK-LIST-NEXT:    mytest2
+-// RUN: clang-tidy -checks='-*,mytest*,misc-definitions-in-headers' -load %llvmshlibdir/CTTestTidyModule%pluginext /dev/null -- -xc 2>&1 | FileCheck %s
+-// CHECK: 3 warnings generated.
+-// CHECK-NEXT: warning: mytest success [misc-definitions-in-headers,mytest1,mytest2]
+-
+-#include "clang-tidy/ClangTidy.h"
+-#include "clang-tidy/ClangTidyCheck.h"
+-#include "clang-tidy/ClangTidyModule.h"
+-#include "clang-tidy/ClangTidyModuleRegistry.h"
+-#include "clang/AST/ASTContext.h"
+-#include "clang/ASTMatchers/ASTMatchFinder.h"
+-
+-using namespace clang;
+-using namespace clang::tidy;
+-using namespace clang::ast_matchers;
+-
+-namespace {
+-class MyTestCheck : public ClangTidyCheck {
+-
+-public:
+-  MyTestCheck(StringRef Name, ClangTidyContext *Context)
+-      : ClangTidyCheck(Name, Context) {}
+-
+-  void registerMatchers(ast_matchers::MatchFinder *Finder) override {
+-    Finder->addMatcher(translationUnitDecl().bind("tu"), this);
+-  }
+-
+-  void check(const ast_matchers::MatchFinder::MatchResult &Result) override {
+-    auto S = Result.Nodes.getNodeAs<TranslationUnitDecl>("tu");
+-    if (S)
+-      diag("mytest success");
+-  }
+-
+-private:
+-};
+-
+-class CTTestModule : public ClangTidyModule {
+-public:
+-  void addCheckFactories(ClangTidyCheckFactories &CheckFactories) override {
+-    CheckFactories.registerCheck<MyTestCheck>("mytest1");
+-    CheckFactories.registerCheck<MyTestCheck>("mytest2");
+-    // intentionally collide with an existing test name, overriding it
+-    CheckFactories.registerCheck<MyTestCheck>("misc-definitions-in-headers");
+-  }
+-};
+-} // namespace
+-
+-namespace tidy1 {
+-// Register the CTTestTidyModule using this statically initialized variable.
+-static ClangTidyModuleRegistry::Add<::CTTestModule>
+-    X("mytest-module", "Adds my checks.");
+-} // namespace tidy1
+-
+-namespace tidy2 {
+-// intentionally collide with an existing test group name, merging with it
+-static ClangTidyModuleRegistry::Add<::CTTestModule>
+-    X("misc-module", "Adds miscellaneous lint checks.");
+-} // namespace tidy2
+-
+-// This anchor is used to force the linker to link in the generated object file
+-// and thus register the CTTestModule.
+-volatile int CTTestModuleAnchorSource = 0;
+diff --git a/clang-tools-extra/test/lit.cfg.py b/clang-tools-extra/test/lit.cfg.py
+index 858e42ace2a8..24cabd823844 100644
+--- a/clang-tools-extra/test/lit.cfg.py
++++ b/clang-tools-extra/test/lit.cfg.py
+@@ -149,9 +149,3 @@ clangd_benchmarks_dir = os.path.join(os.path.dirname(config.clang_tools_dir),
+                                      "clangd", "benchmarks")
+ config.substitutions.append(('%clangd-benchmark-dir',
+                              '%s' % (clangd_benchmarks_dir)))
+-config.substitutions.append(('%llvmshlibdir', config.clang_libs_dir))
+-config.substitutions.append(('%pluginext', config.llvm_plugin_ext))
+-
+-# Plugins (loadable modules)
+-if config.has_plugins and config.llvm_plugin_ext:
+-    config.available_features.add('plugins')
+diff --git a/clang-tools-extra/test/lit.site.cfg.py.in b/clang-tools-extra/test/lit.site.cfg.py.in
+index e7db0e2ef2cb..f8300c1dd39d 100644
+--- a/clang-tools-extra/test/lit.site.cfg.py.in
++++ b/clang-tools-extra/test/lit.site.cfg.py.in
+@@ -4,7 +4,6 @@ import sys
+ 
+ config.llvm_tools_dir = "@LLVM_TOOLS_DIR@"
+ config.llvm_libs_dir = "@LLVM_LIBS_DIR@"
+-config.llvm_plugin_ext = "@LLVM_PLUGIN_EXT@"
+ config.lit_tools_dir = "@LLVM_LIT_TOOLS_DIR@"
+ config.clang_tools_binary_dir = "@CLANG_TOOLS_BINARY_DIR@"
+ config.clang_tools_dir = "@CLANG_TOOLS_DIR@"
+@@ -12,7 +11,6 @@ config.clang_libs_dir = "@SHLIBDIR@"
+ config.python_executable = "@Python3_EXECUTABLE@"
+ config.target_triple = "@TARGET_TRIPLE@"
+ config.clang_tidy_staticanalyzer = @CLANG_TIDY_ENABLE_STATIC_ANALYZER@
+-config.has_plugins = @LLVM_ENABLE_PLUGINS@ & ~@LLVM_INSTALL_TOOLCHAIN_ONLY@
+ 
+ # Support substitution of the tools and libs dirs with user parameters. This is
+ # used when we can't determine the tool dir at configuration time.
+-- 
+2.27.0
+
