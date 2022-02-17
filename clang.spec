@@ -28,6 +28,7 @@
 	%{_bindir}/clang-extdef-mapping \
 	%{_bindir}/clang-format \
 	%{_bindir}/clang-include-fixer \
+	%{_bindir}/clang-linker-wrapper \
 	%{_bindir}/clang-move \
 	%{_bindir}/clang-offload-bundler \
 	%{_bindir}/clang-offload-wrapper \
@@ -36,6 +37,7 @@
 	%{_bindir}/clang-rename \
 	%{_bindir}/clang-reorder-fields \
 	%{_bindir}/clang-repl \
+	%{_bindir}/clang-pseudo \
 	%{_bindir}/clang-scan-deps \
 	%{_bindir}/clang-tidy \
 	%{_bindir}/clangd \
