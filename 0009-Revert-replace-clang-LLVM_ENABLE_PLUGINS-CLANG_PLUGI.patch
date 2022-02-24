@@ -1,4 +1,4 @@
-From 2b71961e5417bdf7a9dd8f0caceaa6ddadb70087 Mon Sep 17 00:00:00 2001
+From 6005ae94e5cbd3e320141ba6a81d1c8a9eaa775e Mon Sep 17 00:00:00 2001
 From: Tom Stellard <tstellar@redhat.com>
 Date: Wed, 16 Feb 2022 16:31:51 -0800
 Subject: Revert "replace clang LLVM_ENABLE_PLUGINS -> CLANG_PLUGIN_SUPPORT in
@@ -8,19 +8,14 @@ This reverts commit 76cad51ba700233d6e3492eddcbb466b6adbc2eb.
 
 We don't install the LLVMHello plugin, so tests should not depend on it.
 ---
- clang-tools-extra/test/CMakeLists.txt            | 13 ++-----------
- clang-tools-extra/test/lit.site.cfg.py.in        |  2 +-
- clang/CMakeLists.txt                             |  4 ----
- clang/examples/AnnotateFunctions/CMakeLists.txt  |  2 +-
- clang/examples/Attribute/CMakeLists.txt          |  2 +-
- clang/examples/CallSuperAttribute/CMakeLists.txt |  2 +-
- clang/examples/PluginsOrder/CMakeLists.txt       |  2 +-
- clang/examples/PrintFunctionNames/CMakeLists.txt |  2 +-
- clang/lib/Analysis/plugins/CMakeLists.txt        |  2 +-
- clang/test/CMakeLists.txt                        |  4 ++--
- clang/test/lit.site.cfg.py.in                    |  2 +-
- clang/tools/driver/CMakeLists.txt                |  2 ++
- 12 files changed, 14 insertions(+), 25 deletions(-)
+ clang-tools-extra/test/CMakeLists.txt     | 13 ++-----------
+ clang-tools-extra/test/lit.site.cfg.py.in |  2 +-
+ clang/CMakeLists.txt                      |  9 ---------
+ clang/lib/Analysis/plugins/CMakeLists.txt |  2 +-
+ clang/test/CMakeLists.txt                 |  4 ++--
+ clang/test/lit.site.cfg.py.in             |  2 +-
+ clang/tools/driver/CMakeLists.txt         |  2 ++
+ 7 files changed, 9 insertions(+), 25 deletions(-)
 
 diff --git a/clang-tools-extra/test/CMakeLists.txt b/clang-tools-extra/test/CMakeLists.txt
 index 170e5f8bd197..9321457ae1a3 100644
@@ -70,93 +65,40 @@ index d30e6664816b..e7db0e2ef2cb 100644
  # Support substitution of the tools and libs dirs with user parameters. This is
  # used when we can't determine the tool dir at configuration time.
 diff --git a/clang/CMakeLists.txt b/clang/CMakeLists.txt
-index 3d42e5182df9..be0d82117aab 100644
+index 9a304db5a2c6..be0d82117aab 100644
 --- a/clang/CMakeLists.txt
 +++ b/clang/CMakeLists.txt
-@@ -470,10 +470,6 @@ add_definitions( -D_GNU_SOURCE )
+@@ -470,15 +470,6 @@ add_definitions( -D_GNU_SOURCE )
  option(CLANG_BUILD_TOOLS
    "Build the Clang tools. If OFF, just generate build targets." ON)
  
+-if(LLVM_ENABLE_PLUGINS OR LLVM_EXPORT_SYMBOLS_FOR_PLUGINS)
+-  set(HAVE_CLANG_PLUGIN_SUPPORT ON)
+-else()
+-  set(HAVE_CLANG_PLUGIN_SUPPORT OFF)
+-endif()
 -CMAKE_DEPENDENT_OPTION(CLANG_PLUGIN_SUPPORT
 -  "Build clang with plugin support" ON
--  "LLVM_ENABLE_PLUGINS OR LLVM_EXPORT_SYMBOLS_FOR_PLUGINS" OFF)
+-  "HAVE_CLANG_PLUGIN_SUPPORT" OFF)
 -
  option(CLANG_ENABLE_ARCMT "Build ARCMT." ON)
  option(CLANG_ENABLE_STATIC_ANALYZER
    "Include static analyzer in clang binary." ON)
-diff --git a/clang/examples/AnnotateFunctions/CMakeLists.txt b/clang/examples/AnnotateFunctions/CMakeLists.txt
-index e6541f7cc62a..e9850b64f08d 100644
---- a/clang/examples/AnnotateFunctions/CMakeLists.txt
-+++ b/clang/examples/AnnotateFunctions/CMakeLists.txt
-@@ -1,6 +1,6 @@
- add_llvm_library(AnnotateFunctions MODULE AnnotateFunctions.cpp PLUGIN_TOOL clang)
- 
--if(CLANG_PLUGIN_SUPPORT AND (WIN32 OR CYGWIN))
-+if(LLVM_ENABLE_PLUGINS AND (WIN32 OR CYGWIN))
-   set(LLVM_LINK_COMPONENTS
-     Support
-   )
-diff --git a/clang/examples/Attribute/CMakeLists.txt b/clang/examples/Attribute/CMakeLists.txt
-index 5392ac0df170..42f04f5039bc 100644
---- a/clang/examples/Attribute/CMakeLists.txt
-+++ b/clang/examples/Attribute/CMakeLists.txt
-@@ -1,6 +1,6 @@
- add_llvm_library(Attribute MODULE Attribute.cpp PLUGIN_TOOL clang)
- 
--if(CLANG_PLUGIN_SUPPORT AND (WIN32 OR CYGWIN))
-+if(LLVM_ENABLE_PLUGINS AND (WIN32 OR CYGWIN))
-   target_link_libraries(Attribute PRIVATE
-     clangAST
-     clangBasic
-diff --git a/clang/examples/CallSuperAttribute/CMakeLists.txt b/clang/examples/CallSuperAttribute/CMakeLists.txt
-index f4284adf289e..922f0cfa797a 100644
---- a/clang/examples/CallSuperAttribute/CMakeLists.txt
-+++ b/clang/examples/CallSuperAttribute/CMakeLists.txt
-@@ -1,6 +1,6 @@
- add_llvm_library(CallSuperAttr MODULE CallSuperAttrInfo.cpp PLUGIN_TOOL clang)
- 
--if(CLANG_PLUGIN_SUPPORT AND (WIN32 OR CYGWIN))
-+if(LLVM_ENABLE_PLUGINS AND (WIN32 OR CYGWIN))
-   set(LLVM_LINK_COMPONENTS
-     Support
-   )
-diff --git a/clang/examples/PluginsOrder/CMakeLists.txt b/clang/examples/PluginsOrder/CMakeLists.txt
-index 612587a6d2fe..289e234ac28c 100644
---- a/clang/examples/PluginsOrder/CMakeLists.txt
-+++ b/clang/examples/PluginsOrder/CMakeLists.txt
-@@ -1,6 +1,6 @@
- add_llvm_library(PluginsOrder MODULE PluginsOrder.cpp PLUGIN_TOOL clang)
- 
--if(CLANG_PLUGIN_SUPPORT AND (WIN32 OR CYGWIN))
-+if(LLVM_ENABLE_PLUGINS AND (WIN32 OR CYGWIN))
-   set(LLVM_LINK_COMPONENTS
-     Support
-   )
-diff --git a/clang/examples/PrintFunctionNames/CMakeLists.txt b/clang/examples/PrintFunctionNames/CMakeLists.txt
-index 67f1b16744ea..63b0c015732c 100644
---- a/clang/examples/PrintFunctionNames/CMakeLists.txt
-+++ b/clang/examples/PrintFunctionNames/CMakeLists.txt
-@@ -11,7 +11,7 @@ endif()
- 
- add_llvm_library(PrintFunctionNames MODULE PrintFunctionNames.cpp PLUGIN_TOOL clang)
- 
--if(CLANG_PLUGIN_SUPPORT AND (WIN32 OR CYGWIN))
-+if(LLVM_ENABLE_PLUGINS AND (WIN32 OR CYGWIN))
-   set(LLVM_LINK_COMPONENTS
-     Support
-   )
 diff --git a/clang/lib/Analysis/plugins/CMakeLists.txt b/clang/lib/Analysis/plugins/CMakeLists.txt
-index 7b754ea3f2bc..bd7314a871fc 100644
+index 157be7e4147b..ffd95e2886bf 100644
 --- a/clang/lib/Analysis/plugins/CMakeLists.txt
 +++ b/clang/lib/Analysis/plugins/CMakeLists.txt
-@@ -1,4 +1,4 @@
--if(CLANG_ENABLE_STATIC_ANALYZER AND CLANG_PLUGIN_SUPPORT)
+@@ -1,7 +1,7 @@
+ # Since these do not specify a specific PLUGIN_TOOL (which could be clang or
+ # clang-tidy), we cannot compile this unless the platform supports plugins with
+ # undefined symbols, and cannot use it unless the user has opted for clang plugins).
+-if(CLANG_ENABLE_STATIC_ANALYZER AND CLANG_PLUGIN_SUPPORT AND LLVM_ENABLE_PLUGINS)
 +if(CLANG_ENABLE_STATIC_ANALYZER AND LLVM_ENABLE_PLUGINS)
    add_subdirectory(SampleAnalyzer)
    add_subdirectory(CheckerDependencyHandling)
    add_subdirectory(CheckerOptionHandling)
 diff --git a/clang/test/CMakeLists.txt b/clang/test/CMakeLists.txt
-index 057797863f24..05e2d3901613 100644
+index 15b38478ded3..4f930d54bc70 100644
 --- a/clang/test/CMakeLists.txt
 +++ b/clang/test/CMakeLists.txt
 @@ -14,12 +14,12 @@ llvm_canonicalize_cmake_booleans(
@@ -176,9 +118,9 @@ index 057797863f24..05e2d3901613 100644
 @@ -146,7 +146,7 @@ if( NOT CLANG_BUILT_STANDALONE )
  endif()
  
- if (CLANG_ENABLE_STATIC_ANALYZER)
--  if (CLANG_PLUGIN_SUPPORT)
-+  if (LLVM_ENABLE_PLUGINS)
+ if(CLANG_ENABLE_STATIC_ANALYZER)
+-  if(CLANG_PLUGIN_SUPPORT AND LLVM_ENABLE_PLUGINS) # Determine if we built them
++  if(LLVM_ENABLE_PLUGINS) # Determine if we built them
      list(APPEND CLANG_TEST_DEPS
        SampleAnalyzerPlugin
        CheckerDependencyHandlingAnalyzerPlugin

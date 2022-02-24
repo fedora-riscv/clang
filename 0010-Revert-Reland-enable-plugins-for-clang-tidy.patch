@@ -1,4 +1,4 @@
-From 779993073e3bb0760b0133857ecc90ffe5e708cf Mon Sep 17 00:00:00 2001
+From bab5129993a2a03f9924d5a7a8a8e59448522c91 Mon Sep 17 00:00:00 2001
 From: Tom Stellard <tstellar@redhat.com>
 Date: Wed, 16 Feb 2022 16:32:28 -0800
 Subject: Revert "Reland "enable plugins for clang-tidy""
