@@ -121,10 +121,7 @@ Patch6:		0006-PATCH-Driver-Add-a-gcc-equivalent-triple-to-the-list.patch
 Patch7:		0007-PATCH-clang-Work-around-gcc-miscompile.patch
 Patch8:		0008-PATCH-clang-cmake-Allow-shared-libraries-to-customiz.patch
 Patch9:		0009-Revert-replace-clang-LLVM_ENABLE_PLUGINS-CLANG_PLUGI.patch
-
-# clang-tidy patches
-Patch201:	0201-Revert-replace-clang-LLVM_ENABLE_PLUGINS-CLANG_PLUGI.patch
-Patch202:	0202-Revert-Reland-enable-plugins-for-clang-tidy.patch
+Patch10:	0010-Revert-Reland-enable-plugins-for-clang-tidy.patch
 
 BuildRequires:	gcc
 BuildRequires:	gcc-c++

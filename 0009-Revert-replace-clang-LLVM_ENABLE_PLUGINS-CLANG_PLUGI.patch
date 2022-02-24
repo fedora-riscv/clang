@@ -1,10 +1,15 @@
+<<<<<<< HEAD
 From 0f36897c90043c19332e6f915da1841deb621bd9 Mon Sep 17 00:00:00 2001
+=======
+From 2b71961e5417bdf7a9dd8f0caceaa6ddadb70087 Mon Sep 17 00:00:00 2001
+>>>>>>> 9f4a94f (Update patches)
 From: Tom Stellard <tstellar@redhat.com>
 Date: Wed, 16 Feb 2022 16:31:51 -0800
 Subject: Revert "replace clang LLVM_ENABLE_PLUGINS -> CLANG_PLUGIN_SUPPORT in
  tests"
 
 This reverts commit 76cad51ba700233d6e3492eddcbb466b6adbc2eb.
+<<<<<<< HEAD
 ---
  clang/CMakeLists.txt                             | 4 ----
  clang/examples/AnnotateFunctions/CMakeLists.txt  | 2 +-
@@ -18,6 +23,72 @@ This reverts commit 76cad51ba700233d6e3492eddcbb466b6adbc2eb.
  clang/tools/driver/CMakeLists.txt                | 2 ++
  10 files changed, 11 insertions(+), 13 deletions(-)
 
+=======
+
+We don't install the LLVMHello plugin, so tests should not depend on it.
+---
+ clang-tools-extra/test/CMakeLists.txt            | 13 ++-----------
+ clang-tools-extra/test/lit.site.cfg.py.in        |  2 +-
+ clang/CMakeLists.txt                             |  4 ----
+ clang/examples/AnnotateFunctions/CMakeLists.txt  |  2 +-
+ clang/examples/Attribute/CMakeLists.txt          |  2 +-
+ clang/examples/CallSuperAttribute/CMakeLists.txt |  2 +-
+ clang/examples/PluginsOrder/CMakeLists.txt       |  2 +-
+ clang/examples/PrintFunctionNames/CMakeLists.txt |  2 +-
+ clang/lib/Analysis/plugins/CMakeLists.txt        |  2 +-
+ clang/test/CMakeLists.txt                        |  4 ++--
+ clang/test/lit.site.cfg.py.in                    |  2 +-
+ clang/tools/driver/CMakeLists.txt                |  2 ++
+ 12 files changed, 14 insertions(+), 25 deletions(-)
+
+diff --git a/clang-tools-extra/test/CMakeLists.txt b/clang-tools-extra/test/CMakeLists.txt
+index 170e5f8bd197..9321457ae1a3 100644
+--- a/clang-tools-extra/test/CMakeLists.txt
++++ b/clang-tools-extra/test/CMakeLists.txt
+@@ -17,7 +17,7 @@ string(REPLACE ${CMAKE_CFG_INTDIR} ${LLVM_BUILD_MODE} CLANG_TOOLS_DIR ${LLVM_RUN
+ 
+ llvm_canonicalize_cmake_booleans(
+   CLANG_TIDY_ENABLE_STATIC_ANALYZER
+-  CLANG_PLUGIN_SUPPORT
++  LLVM_ENABLE_PLUGINS
+   LLVM_INSTALL_TOOLCHAIN_ONLY
+   )
+ 
+@@ -87,19 +87,10 @@ if (NOT LLVM_INSTALL_TOOLCHAIN_ONLY)
+       PLUGIN_TOOL clang-tidy
+       DEPENDS clang-tidy-headers)
+ 
+-  if(CLANG_BUILT_STANDALONE)
+-    # LLVMHello library is needed below
+-    if (EXISTS ${LLVM_MAIN_SRC_DIR}/lib/Transforms/Hello
+-       AND NOT TARGET LLVMHello)
+-      add_subdirectory(${LLVM_MAIN_SRC_DIR}/lib/Transforms/Hello
+-        lib/Transforms/Hello)
+-    endif()
+-  endif()
+-
+   if(TARGET CTTestTidyModule)
+       list(APPEND CLANG_TOOLS_TEST_DEPS CTTestTidyModule LLVMHello)
+       target_include_directories(CTTestTidyModule PUBLIC BEFORE "${CLANG_TOOLS_SOURCE_DIR}")
+-      if(CLANG_PLUGIN_SUPPORT AND (WIN32 OR CYGWIN))
++      if(LLVM_ENABLE_PLUGINS AND (WIN32 OR CYGWIN))
+         set(LLVM_LINK_COMPONENTS
+           Support
+         )
+diff --git a/clang-tools-extra/test/lit.site.cfg.py.in b/clang-tools-extra/test/lit.site.cfg.py.in
+index d30e6664816b..e7db0e2ef2cb 100644
+--- a/clang-tools-extra/test/lit.site.cfg.py.in
++++ b/clang-tools-extra/test/lit.site.cfg.py.in
+@@ -12,7 +12,7 @@ config.clang_libs_dir = "@SHLIBDIR@"
+ config.python_executable = "@Python3_EXECUTABLE@"
+ config.target_triple = "@TARGET_TRIPLE@"
+ config.clang_tidy_staticanalyzer = @CLANG_TIDY_ENABLE_STATIC_ANALYZER@
+-config.has_plugins = @CLANG_PLUGIN_SUPPORT@ & ~@LLVM_INSTALL_TOOLCHAIN_ONLY@
++config.has_plugins = @LLVM_ENABLE_PLUGINS@ & ~@LLVM_INSTALL_TOOLCHAIN_ONLY@
+ 
+ # Support substitution of the tools and libs dirs with user parameters. This is
+ # used when we can't determine the tool dir at configuration time.
+>>>>>>> 9f4a94f (Update patches)
 diff --git a/clang/CMakeLists.txt b/clang/CMakeLists.txt
 index 3d42e5182df9..be0d82117aab 100644
 --- a/clang/CMakeLists.txt
@@ -158,5 +229,9 @@ index 6b3e159d1b64..52d439ce6a3b 100644
  if(CLANG_PLUGIN_SUPPORT)
    set(support_plugins SUPPORT_PLUGINS)
 -- 
+<<<<<<< HEAD
 2.27.0
+=======
+2.34.1
+>>>>>>> 9f4a94f (Update patches)
 
