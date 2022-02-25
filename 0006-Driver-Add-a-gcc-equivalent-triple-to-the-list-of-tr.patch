@@ -1,8 +1,7 @@
-From 60f8d80b366186d0ca5a75afb6acff659d4c82c1 Mon Sep 17 00:00:00 2001
+From 453e5af5763a6368dd5e77c87b0a808c092a50d2 Mon Sep 17 00:00:00 2001
 From: Tom Stellard <tstellar@redhat.com>
 Date: Thu, 11 Nov 2021 10:58:14 +0100
-Subject: [PATCH] Driver: Add a gcc equivalent triple to the list of triples to
- search
+Subject: Driver: Add a gcc equivalent triple to the list of triples to search
 
 There are some gcc triples, like x86_64-redhat-linux, that provide the
 same behavior as a clang triple with a similar name (e.g.

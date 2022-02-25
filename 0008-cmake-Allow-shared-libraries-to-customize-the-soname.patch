@@ -1,8 +1,8 @@
-From 2af211858807b2696b6f10fd156616838cbd2e58 Mon Sep 17 00:00:00 2001
+From 2dba3213cb907dba978a9c076ae3fb35583abbc0 Mon Sep 17 00:00:00 2001
 From: Tom Stellard <tstellar@redhat.com>
 Date: Wed, 4 Aug 2021 14:05:38 -0700
-Subject: [PATCH][clang] cmake: Allow shared libraries to customize the soname
- using LLVM_ABI_REVISION
+Subject: cmake: Allow shared libraries to customize the soname using
+ LLVM_ABI_REVISION
 
 The LLVM_ABI_REVISION variable is intended to be used for release
 candidates which introduce an ABI change to a shared library.  This

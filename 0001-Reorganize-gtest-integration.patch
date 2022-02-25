@@ -1,17 +1,17 @@
-From d23af8c946342a9b68f61c6f5b839a7650ac3920 Mon Sep 17 00:00:00 2001
+From cb7b3a4d8f15cd5d1546446656a5083f9fc826eb Mon Sep 17 00:00:00 2001
 From: serge-sans-paille <sguelton@redhat.com>
 Date: Thu, 25 Feb 2021 14:04:52 +0100
-Subject: [PATCH][clang] Reorganize gtest integration
+Subject: Reorganize gtest integration
 
 ---
  clang/CMakeLists.txt | 12 +++++-------
  1 file changed, 5 insertions(+), 7 deletions(-)
 
 diff --git a/clang/CMakeLists.txt b/clang/CMakeLists.txt
-index 49150fa7c561..2e12f4b06f98 100644
+index 937a8467df1d..9a304db5a2c6 100644
 --- a/clang/CMakeLists.txt
 +++ b/clang/CMakeLists.txt
-@@ -157,12 +157,6 @@ if(CLANG_BUILT_STANDALONE)
+@@ -159,12 +159,6 @@ if(CLANG_BUILT_STANDALONE)
          set(LLVM_UTILS_PROVIDED ON)
          set(CLANG_TEST_DEPS FileCheck count not)
        endif()
@@ -24,7 +24,7 @@ index 49150fa7c561..2e12f4b06f98 100644
      else()
        # Seek installed Lit.
        find_program(LLVM_LIT
-@@ -549,7 +543,11 @@ endif()
+@@ -563,7 +557,11 @@ endif()
  
  
  if( CLANG_INCLUDE_TESTS )

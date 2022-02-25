@@ -111,17 +111,18 @@ Source5:	macros.%{name}
 %endif
 
 # Patches for clang
-Patch1:		0001-PATCH-clang-Reorganize-gtest-integration.patch
-Patch2:		0002-PATCH-clang-ToolChain-Add-lgcc_s-to-the-linker-flags.patch
-Patch3:		0003-PATCH-clang-Make-funwind-tables-the-default-on-all-a.patch
-Patch4:		0004-PATCH-clang-Don-t-install-static-libraries.patch
-Patch5:		0005-PATCH-clang-Prefer-gcc-toolchains-with-libgcc_s.so-w.patch
-Patch6:		0006-PATCH-Driver-Add-a-gcc-equivalent-triple-to-the-list.patch
-# This patch can be dropped once gcc-12.0.1-0.5.fc36 is in the repo.
-Patch7:		0007-PATCH-clang-Work-around-gcc-miscompile.patch
-Patch8:		0008-PATCH-clang-cmake-Allow-shared-libraries-to-customiz.patch
+Patch1:		0001-Reorganize-gtest-integration.patch
+Patch2:		0002-ToolChain-Add-lgcc_s-to-the-linker-flags-when-using-.patch
+Patch3:		0003-Make-funwind-tables-the-default-on-all-archs.patch
+Patch4:		0004-Don-t-install-static-libraries.patch
+Patch5:		0005-Prefer-gcc-toolchains-with-libgcc_s.so-when-not-stat.patch
+Patch6:		0006-Driver-Add-a-gcc-equivalent-triple-to-the-list-of-tr.patch
+Patch7:		0007-Work-around-gcc-miscompile.patch
+Patch8:		0008-cmake-Allow-shared-libraries-to-customize-the-soname.patch
 Patch9:		0009-Revert-replace-clang-LLVM_ENABLE_PLUGINS-CLANG_PLUGI.patch
-Patch10:	0010-Revert-Reland-enable-plugins-for-clang-tidy.patch
+# Patches for clang-tools-extra (MUST NOT BE MIXED WITH CLANG PATCHES!!!!)
+Patch10:	0010-Revert-replace-clang-LLVM_ENABLE_PLUGINS-CLANG_PLUGI.patch
+Patch11:	0011-Revert-Reland-enable-plugins-for-clang-tidy.patch
 
 BuildRequires:	gcc
 BuildRequires:	gcc-c++
@@ -297,7 +298,7 @@ Requires:      python3
 %autosetup -n %{clang_srcdir} -p2
 %else
 
-%if ! %{with snapshot_build}
+%if %{without snapshot_build}
 %{gpgverify} --keyring='%{SOURCE4}' --signature='%{SOURCE2}' --data='%{SOURCE1}'
 %endif
 %setup -T -q -b 1 -n %{clang_tools_srcdir}

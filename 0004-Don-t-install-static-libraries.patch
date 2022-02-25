@@ -1,7 +1,7 @@
-From cf23ebf69a9a1827d601bc4dbfe9a4ab2db039ed Mon Sep 17 00:00:00 2001
+From 89f32fece081722e707eb413654d48b5f8b82d9b Mon Sep 17 00:00:00 2001
 From: Tom Stellard <tstellar@redhat.com>
 Date: Fri, 31 Jan 2020 11:04:57 -0800
-Subject: [PATCH][clang] Don't install static libraries
+Subject: Don't install static libraries
 
 ---
  clang/cmake/modules/AddClang.cmake | 2 +-
