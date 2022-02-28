@@ -303,7 +303,7 @@ Requires:      python3
 %endif
 %setup -T -q -b 1 -n %{clang_tools_srcdir}
 # See https://rpm-software-management.github.io/rpm/manual/autosetup.html#autopatch
-%autopatch -m200 -p2
+%autopatch -m200 -p2 -v
 
 # failing test case
 rm test/clang-tidy/checkers/altera-struct-pack-align.cpp
@@ -314,7 +314,7 @@ rm test/clang-tidy/checkers/altera-struct-pack-align.cpp
 
 %setup -q -n %{clang_srcdir}
 # See https://rpm-software-management.github.io/rpm/manual/autosetup.html#autopatch
-%autopatch -M200 -p2
+%autopatch -M200 -p2 -v
 
 # failing test case
 rm test/CodeGen/profile-filter.c
