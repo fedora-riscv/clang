@@ -121,8 +121,8 @@ Patch7:		0007-Work-around-gcc-miscompile.patch
 Patch8:		0008-cmake-Allow-shared-libraries-to-customize-the-soname.patch
 Patch9:		0009-Revert-replace-clang-LLVM_ENABLE_PLUGINS-CLANG_PLUGI.patch
 # Patches for clang-tools-extra (MUST NOT BE MIXED WITH CLANG PATCHES!!!!)
-Patch10:	0010-Revert-replace-clang-LLVM_ENABLE_PLUGINS-CLANG_PLUGI.patch
-Patch11:	0011-Revert-Reland-enable-plugins-for-clang-tidy.patch
+Patch10:	0210-Revert-replace-clang-LLVM_ENABLE_PLUGINS-CLANG_PLUGI.patch
+Patch11:	0211-Revert-Reland-enable-plugins-for-clang-tidy.patch
 
 BuildRequires:	gcc
 BuildRequires:	gcc-c++
@@ -302,6 +302,7 @@ Requires:      python3
 %{gpgverify} --keyring='%{SOURCE4}' --signature='%{SOURCE2}' --data='%{SOURCE1}'
 %endif
 %setup -T -q -b 1 -n %{clang_tools_srcdir}
+# See https://rpm-software-management.github.io/rpm/manual/autosetup.html#autopatch
 %autopatch -m200 -p2
 
 # failing test case
@@ -312,6 +313,7 @@ rm test/clang-tidy/checkers/altera-struct-pack-align.cpp
 	clang-include-fixer/find-all-symbols/tool/run-find-all-symbols.py
 
 %setup -q -n %{clang_srcdir}
+# See https://rpm-software-management.github.io/rpm/manual/autosetup.html#autopatch
 %autopatch -M200 -p2
 
 # failing test case
