@@ -121,8 +121,8 @@ Patch7:		0007-Work-around-gcc-miscompile.patch
 Patch8:		0008-cmake-Allow-shared-libraries-to-customize-the-soname.patch
 Patch9:		0009-Revert-replace-clang-LLVM_ENABLE_PLUGINS-CLANG_PLUGI.patch
 # Patches for clang-tools-extra (MUST NOT BE MIXED WITH CLANG PATCHES!!!!)
-Patch10:	0210-Revert-replace-clang-LLVM_ENABLE_PLUGINS-CLANG_PLUGI.patch
-Patch11:	0211-Revert-Reland-enable-plugins-for-clang-tidy.patch
+Patch210:	0210-Revert-replace-clang-LLVM_ENABLE_PLUGINS-CLANG_PLUGI.patch
+Patch211:	0211-Revert-Reland-enable-plugins-for-clang-tidy.patch
 
 BuildRequires:	gcc
 BuildRequires:	gcc-c++
