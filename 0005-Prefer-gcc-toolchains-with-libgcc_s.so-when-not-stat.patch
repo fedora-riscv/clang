@@ -1,4 +1,4 @@
-From f70ad66b2a85d2a6cca8a9a9d12fd174e40f00fc Mon Sep 17 00:00:00 2001
+From 57310cafc13eaa55f9ac2c41ce329bfda185e1a4 Mon Sep 17 00:00:00 2001
 From: serge-sans-paille <sguelton@redhat.com>
 Date: Wed, 23 Sep 2020 12:47:30 +0000
 Subject: Prefer gcc toolchains with libgcc_s.so when not static linking libgcc
@@ -32,7 +32,7 @@ toolchain.
  create mode 100644 clang/test/Driver/Inputs/fedora_28_tree/usr/lib/gcc/x86_64-redhat-linux/7/libgcc_s.so
 
 diff --git a/clang/lib/Driver/ToolChains/Gnu.cpp b/clang/lib/Driver/ToolChains/Gnu.cpp
-index a9ae51289190..6915857c424e 100644
+index f0dcae58f63d..19b39b7b2c81 100644
 --- a/clang/lib/Driver/ToolChains/Gnu.cpp
 +++ b/clang/lib/Driver/ToolChains/Gnu.cpp
 @@ -2528,6 +2528,8 @@ void Generic_GCC::GCCInstallationDetector::ScanLibDirForGCCTriple(
@@ -104,7 +104,7 @@ diff --git a/clang/test/Driver/Inputs/fedora_28_tree/usr/lib/gcc/x86_64-redhat-l
 new file mode 100644
 index 000000000000..e69de29bb2d1
 diff --git a/clang/test/Driver/linux-ld.c b/clang/test/Driver/linux-ld.c
-index fc0a40d0cbe6..6884bcdaa54a 100644
+index 4c40eb3583a0..5361bc5c6f2d 100644
 --- a/clang/test/Driver/linux-ld.c
 +++ b/clang/test/Driver/linux-ld.c
 @@ -687,6 +687,18 @@
@@ -123,7 +123,7 @@ index fc0a40d0cbe6..6884bcdaa54a 100644
 +// CHECK-FEDORA-28-X86_64: "[[SYSROOT]]/usr/lib/gcc/x86_64-redhat-linux/7/crtbegin.o"
 +// CHECK-FEDORA-28-X86_64: "-L[[SYSROOT]]/usr/lib/gcc/x86_64-redhat-linux/7"
 +//
- // RUN: %clang -no-canonical-prefixes %s -### -o %t.o 2>&1 \
+ // RUN: %clang -no-canonical-prefixes %s -no-pie -### -o %t.o 2>&1 \
  // RUN:     --target=arm-unknown-linux-gnueabi -rtlib=platform \
  // RUN:     --gcc-toolchain="" \
 -- 

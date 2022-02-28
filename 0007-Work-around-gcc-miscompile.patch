@@ -1,4 +1,4 @@
-From 0d58680446685445ab28c908198f6bcff660c6b7 Mon Sep 17 00:00:00 2001
+From d76d03e8784732fa2ec32f74376281ff8a971cf4 Mon Sep 17 00:00:00 2001
 From: Nikita Popov <npopov@redhat.com>
 Date: Thu, 3 Feb 2022 10:34:44 +0100
 Subject: Work around gcc miscompile

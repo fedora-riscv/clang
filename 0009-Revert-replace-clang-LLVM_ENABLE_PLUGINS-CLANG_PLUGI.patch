@@ -1,4 +1,4 @@
-From 6005ae94e5cbd3e320141ba6a81d1c8a9eaa775e Mon Sep 17 00:00:00 2001
+From 8df7f933aedc1319e2c6681641dc8f50d3e8ad25 Mon Sep 17 00:00:00 2001
 From: Tom Stellard <tstellar@redhat.com>
 Date: Wed, 16 Feb 2022 16:31:51 -0800
 Subject: Revert "replace clang LLVM_ENABLE_PLUGINS -> CLANG_PLUGIN_SUPPORT in

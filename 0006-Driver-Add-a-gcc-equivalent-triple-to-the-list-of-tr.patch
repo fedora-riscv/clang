@@ -1,4 +1,4 @@
-From 453e5af5763a6368dd5e77c87b0a808c092a50d2 Mon Sep 17 00:00:00 2001
+From d7e7658f44d5317783e01b821d3fe68ebeebab3e Mon Sep 17 00:00:00 2001
 From: Tom Stellard <tstellar@redhat.com>
 Date: Thu, 11 Nov 2021 10:58:14 +0100
 Subject: Driver: Add a gcc equivalent triple to the list of triples to search
@@ -14,7 +14,7 @@ https://reviews.llvm.org/D111207
  1 file changed, 22 insertions(+)
 
 diff --git a/clang/lib/Driver/ToolChains/Gnu.cpp b/clang/lib/Driver/ToolChains/Gnu.cpp
-index 6915857c424e..035ab5b338d2 100644
+index 19b39b7b2c81..76548f4d6888 100644
 --- a/clang/lib/Driver/ToolChains/Gnu.cpp
 +++ b/clang/lib/Driver/ToolChains/Gnu.cpp
 @@ -1876,6 +1876,18 @@ static llvm::StringRef getGCCToolchainDir(const ArgList &Args,
