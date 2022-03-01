@@ -347,6 +347,12 @@ rm test/CodeGen/profile-filter.c
 %global _lto_cflags %{nil}
 %endif
 
+# Avoid errors like this on i386
+# /usr/bin/ld: out of memory allocating 1000 bytes after a total of 772853760 bytes
+%ifarch %ix86
+%global _lto_cflags %{nil}
+%endif
+
 %if 0%{?__isa_bits} == 64
 sed -i 's/\@FEDORA_LLVM_LIB_SUFFIX\@/64/g' test/lit.cfg.py
 %else
