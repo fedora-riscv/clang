@@ -1,8 +1,8 @@
-From 6005ae94e5cbd3e320141ba6a81d1c8a9eaa775e Mon Sep 17 00:00:00 2001
+From 41d1ee3480de5676e2276306bce80e48586d7403 Mon Sep 17 00:00:00 2001
 From: Tom Stellard <tstellar@redhat.com>
 Date: Wed, 16 Feb 2022 16:31:51 -0800
-Subject: Revert "replace clang LLVM_ENABLE_PLUGINS -> CLANG_PLUGIN_SUPPORT in
- tests"
+Subject: [PATCH] Revert "replace clang LLVM_ENABLE_PLUGINS ->
+ CLANG_PLUGIN_SUPPORT in tests"
 
 This reverts commit 76cad51ba700233d6e3492eddcbb466b6adbc2eb.
 
@@ -47,12 +47,12 @@ index 170e5f8bd197..9321457ae1a3 100644
            Support
          )
 diff --git a/clang-tools-extra/test/lit.site.cfg.py.in b/clang-tools-extra/test/lit.site.cfg.py.in
-index d30e6664816b..e7db0e2ef2cb 100644
+index 59357f6cad06..2890d57eb1d3 100644
 --- a/clang-tools-extra/test/lit.site.cfg.py.in
 +++ b/clang-tools-extra/test/lit.site.cfg.py.in
 @@ -12,7 +12,7 @@ config.clang_libs_dir = "@SHLIBDIR@"
  config.python_executable = "@Python3_EXECUTABLE@"
- config.target_triple = "@TARGET_TRIPLE@"
+ config.target_triple = "@LLVM_TARGET_TRIPLE@"
  config.clang_tidy_staticanalyzer = @CLANG_TIDY_ENABLE_STATIC_ANALYZER@
 -config.has_plugins = @CLANG_PLUGIN_SUPPORT@ & ~@LLVM_INSTALL_TOOLCHAIN_ONLY@
 +config.has_plugins = @LLVM_ENABLE_PLUGINS@ & ~@LLVM_INSTALL_TOOLCHAIN_ONLY@
@@ -60,5 +60,5 @@ index d30e6664816b..e7db0e2ef2cb 100644
  # Support substitution of the tools and libs dirs with user parameters. This is
  # used when we can't determine the tool dir at configuration time.
 -- 
-2.34.1
+2.35.1
 

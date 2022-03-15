@@ -1,7 +1,7 @@
-From 5078a2cbc42266f35d19b491f75b1ff52a12227f Mon Sep 17 00:00:00 2001
+From b03b4b98108a5f23b39bc8ec9b7e1745c3acac22 Mon Sep 17 00:00:00 2001
 From: serge-sans-paille <sguelton@redhat.com>
 Date: Thu, 25 Feb 2021 14:09:29 +0100
-Subject: Make -funwind-tables the default on all archs
+Subject: [PATCH] Make -funwind-tables the default on all archs
 
 ---
  clang/lib/Driver/ToolChain.cpp      | 2 +-
@@ -9,7 +9,7 @@ Subject: Make -funwind-tables the default on all archs
  2 files changed, 2 insertions(+), 2 deletions(-)
 
 diff --git a/clang/lib/Driver/ToolChain.cpp b/clang/lib/Driver/ToolChain.cpp
-index ef95dd8b882d..b83bd6d3ca5d 100644
+index db13f4b7de98..fc19bb23d7bb 100644
 --- a/clang/lib/Driver/ToolChain.cpp
 +++ b/clang/lib/Driver/ToolChain.cpp
 @@ -258,7 +258,7 @@ std::string ToolChain::getInputFilename(const InputInfo &Input) const {
@@ -35,5 +35,5 @@ index bb3cba6dc4f7..f0dcae58f63d 100644
  }
  
 -- 
-2.34.1
+2.35.1
 

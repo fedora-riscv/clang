@@ -1,7 +1,7 @@
-From 870d7d18401f2d3680fd134266bf959e8bf0b56f Mon Sep 17 00:00:00 2001
+From 44e9ee3552707f03273bf7e6792cfefc90aae68e Mon Sep 17 00:00:00 2001
 From: serge-sans-paille <sguelton@redhat.com>
 Date: Thu, 25 Feb 2021 14:08:28 +0100
-Subject: ToolChain: Add -lgcc_s to the linker flags when using libc++
+Subject: [PATCH] ToolChain: Add -lgcc_s to the linker flags when using libc++
 
 The libc++ build for Fedora does not include an implementation of
 libunwind, so we need to explicitly link against something that
@@ -12,7 +12,7 @@ provides this implementation.
  2 files changed, 3 insertions(+), 2 deletions(-)
 
 diff --git a/clang/lib/Driver/ToolChain.cpp b/clang/lib/Driver/ToolChain.cpp
-index d657d21bfcdb..ef95dd8b882d 100644
+index 88e8ae76ccb2..db13f4b7de98 100644
 --- a/clang/lib/Driver/ToolChain.cpp
 +++ b/clang/lib/Driver/ToolChain.cpp
 @@ -966,6 +966,7 @@ void ToolChain::AddCXXStdlibLibArgs(const ArgList &Args,
@@ -46,5 +46,5 @@ index 4af7d8373d67..ff18c627f560 100644
  
  // S-AARCH64: clang{{.*}}" "-cc1" "-triple" "aarch64-unknown-netbsd"
 -- 
-2.34.1
+2.35.1
 

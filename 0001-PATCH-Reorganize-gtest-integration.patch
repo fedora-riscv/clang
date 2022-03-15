@@ -1,7 +1,7 @@
-From b2b005d7b75471e927a3b80561518a888f32f8f0 Mon Sep 17 00:00:00 2001
+From 058e29d0e53c7276dfddf84e1a97c4e482e73058 Mon Sep 17 00:00:00 2001
 From: serge-sans-paille <sguelton@redhat.com>
 Date: Thu, 25 Feb 2021 14:04:52 +0100
-Subject: Reorganize gtest integration
+Subject: [PATCH] Reorganize gtest integration
 
 ---
  clang/CMakeLists.txt | 12 +++++-------
@@ -38,5 +38,5 @@ index 937a8467df1d..9a304db5a2c6 100644
      list(APPEND CLANG_TEST_DEPS ClangUnitTests)
      list(APPEND CLANG_TEST_PARAMS
 -- 
-2.34.1
+2.35.1
 

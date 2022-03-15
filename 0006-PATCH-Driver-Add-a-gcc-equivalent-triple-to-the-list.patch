@@ -1,7 +1,8 @@
-From d7e7658f44d5317783e01b821d3fe68ebeebab3e Mon Sep 17 00:00:00 2001
+From aecdc1af70b3d01512c8ac9f712e7bdf31fa0c54 Mon Sep 17 00:00:00 2001
 From: Tom Stellard <tstellar@redhat.com>
 Date: Thu, 11 Nov 2021 10:58:14 +0100
-Subject: Driver: Add a gcc equivalent triple to the list of triples to search
+Subject: [PATCH] Driver: Add a gcc equivalent triple to the list of triples to
+ search
 
 There are some gcc triples, like x86_64-redhat-linux, that provide the
 same behavior as a clang triple with a similar name (e.g.
@@ -54,5 +55,5 @@ index 19b39b7b2c81..76548f4d6888 100644
                             CandidateTripleAliases, CandidateBiarchLibDirs,
                             CandidateBiarchTripleAliases);
 -- 
-2.34.1
+2.35.1
 

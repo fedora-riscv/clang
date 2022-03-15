@@ -111,18 +111,18 @@ Source5:	macros.%{name}
 %endif
 
 # Patches for clang
-Patch1:		0001-Reorganize-gtest-integration.patch
-Patch2:		0002-ToolChain-Add-lgcc_s-to-the-linker-flags-when-using-.patch
-Patch3:		0003-Make-funwind-tables-the-default-on-all-archs.patch
-Patch4:		0004-Don-t-install-static-libraries.patch
-Patch5:		0005-Prefer-gcc-toolchains-with-libgcc_s.so-when-not-stat.patch
-Patch6:		0006-Driver-Add-a-gcc-equivalent-triple-to-the-list-of-tr.patch
-Patch7:		0007-Work-around-gcc-miscompile.patch
-Patch8:		0008-cmake-Allow-shared-libraries-to-customize-the-soname.patch
-Patch9:		0009-Revert-replace-clang-LLVM_ENABLE_PLUGINS-CLANG_PLUGI.patch
+Patch1:		0001-PATCH-Reorganize-gtest-integration.patch
+Patch2:		0002-PATCH-ToolChain-Add-lgcc_s-to-the-linker-flags-when-.patch
+Patch3:		0003-PATCH-Make-funwind-tables-the-default-on-all-archs.patch
+Patch4:		0004-PATCH-Don-t-install-static-libraries.patch
+Patch5:		0005-PATCH-Prefer-gcc-toolchains-with-libgcc_s.so-when-no.patch
+Patch6:		0006-PATCH-Driver-Add-a-gcc-equivalent-triple-to-the-list.patch
+Patch7:		0007-PATCH-Work-around-gcc-miscompile.patch
+Patch8:		0008-PATCH-cmake-Allow-shared-libraries-to-customize-the-.patch
+Patch9:		0009-PATCH-Revert-replace-clang-LLVM_ENABLE_PLUGINS-CLANG.patch
 # Patches for clang-tools-extra (MUST NOT BE MIXED WITH CLANG PATCHES!!!!)
-Patch210:	0210-Revert-replace-clang-LLVM_ENABLE_PLUGINS-CLANG_PLUGI.patch
-Patch211:	0211-Revert-Reland-enable-plugins-for-clang-tidy.patch
+Patch210:	0210-PATCH-Revert-replace-clang-LLVM_ENABLE_PLUGINS-CLANG.patch
+Patch211:	0211-PATCH-Revert-Reland-enable-plugins-for-clang-tidy.patch
 
 BuildRequires:	gcc
 BuildRequires:	gcc-c++
@@ -365,6 +365,7 @@ sed -i 's/\@FEDORA_LLVM_LIB_SUFFIX\@//g' test/lit.cfg.py
 %endif
 
 # Test if we can default DWARF4 instead of 5
+# TODO(kkleine): NOT ONLY COMPILE WITH DWARF4 BUT MAKE IT THE DEFAULT: https://bugzilla.redhat.com/show_bug.cgi?id=2061057
 %global optflags %(echo %{optflags} " -gdwarf-4 ")
 
 # -DLLVM_ENABLE_NEW_PASS_MANAGER=ON can be removed once this patch is committed:

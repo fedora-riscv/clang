@@ -1,7 +1,8 @@
-From 57310cafc13eaa55f9ac2c41ce329bfda185e1a4 Mon Sep 17 00:00:00 2001
+From beb3e3ae91cea97f5fcc19aaadaaf14f93275ee8 Mon Sep 17 00:00:00 2001
 From: serge-sans-paille <sguelton@redhat.com>
 Date: Wed, 23 Sep 2020 12:47:30 +0000
-Subject: Prefer gcc toolchains with libgcc_s.so when not static linking libgcc
+Subject: [PATCH] Prefer gcc toolchains with libgcc_s.so when not static
+ linking libgcc
 
 Fedora ships cross-compilers on all platforms, so a user could end up
 with a gcc x86_64 cross-compiler installed on an x86_64 system. clang
@@ -127,5 +128,5 @@ index 4c40eb3583a0..5361bc5c6f2d 100644
  // RUN:     --target=arm-unknown-linux-gnueabi -rtlib=platform \
  // RUN:     --gcc-toolchain="" \
 -- 
-2.34.1
+2.35.1
 

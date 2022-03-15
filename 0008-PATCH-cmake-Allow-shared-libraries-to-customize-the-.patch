@@ -1,7 +1,7 @@
-From 4baaeba1f33517a54a327e1f532746ec4f98aeae Mon Sep 17 00:00:00 2001
+From 7600c8a40a3f5c550e904e6a50d201ba9fb40cb8 Mon Sep 17 00:00:00 2001
 From: Tom Stellard <tstellar@redhat.com>
 Date: Wed, 4 Aug 2021 14:05:38 -0700
-Subject: cmake: Allow shared libraries to customize the soname using
+Subject: [PATCH] cmake: Allow shared libraries to customize the soname using
  LLVM_ABI_REVISION
 
 The LLVM_ABI_REVISION variable is intended to be used for release
@@ -35,5 +35,5 @@ index 9c1f8ea452b3..4d785924e4bb 100644
  if (NOT LLVM_ENABLE_PIC)
    return()
 -- 
-2.34.1
+2.35.1
 

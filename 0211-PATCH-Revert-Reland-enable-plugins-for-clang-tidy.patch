@@ -1,7 +1,7 @@
-From bab5129993a2a03f9924d5a7a8a8e59448522c91 Mon Sep 17 00:00:00 2001
+From 4edeeeea75f6eb765d0afc0c1c1f318af6eef6bb Mon Sep 17 00:00:00 2001
 From: Tom Stellard <tstellar@redhat.com>
 Date: Wed, 16 Feb 2022 16:32:28 -0800
-Subject: Revert "Reland "enable plugins for clang-tidy""
+Subject: [PATCH] Revert "Reland "enable plugins for clang-tidy""
 
 This reverts commit 84f137a590e7de25c4105303e5938c40566c2dfb.
 
@@ -13,9 +13,9 @@ We don't install the LLVMHello plugin so tests should not depend on it.
  clang-tools-extra/docs/clang-tidy/index.rst   |  9 ---
  clang-tools-extra/test/CMakeLists.txt         | 20 ------
  .../test/clang-tidy/CTTestTidyModule.cpp      | 66 -------------------
- clang-tools-extra/test/lit.cfg.py             |  6 --
+ clang-tools-extra/test/lit.cfg.py             | 17 +++--
  clang-tools-extra/test/lit.site.cfg.py.in     |  2 -
- 8 files changed, 2 insertions(+), 140 deletions(-)
+ 8 files changed, 13 insertions(+), 140 deletions(-)
  delete mode 100644 clang-tools-extra/test/clang-tidy/CTTestTidyModule.cpp
 
 diff --git a/clang-tools-extra/clang-tidy/tool/CMakeLists.txt b/clang-tools-extra/clang-tidy/tool/CMakeLists.txt
@@ -77,10 +77,10 @@ index 1b0010bdd62a..6147d90eb10b 100644
        CommonOptionsParser::create(argc, argv, ClangTidyCategory,
                                    cl::ZeroOrMore);
 diff --git a/clang-tools-extra/docs/clang-tidy/Contributing.rst b/clang-tools-extra/docs/clang-tidy/Contributing.rst
-index b1771574950a..b9eb0e7627cc 100644
+index 5849353591cc..12f3aac0db43 100644
 --- a/clang-tools-extra/docs/clang-tidy/Contributing.rst
 +++ b/clang-tools-extra/docs/clang-tidy/Contributing.rst
-@@ -634,26 +634,6 @@ This keeps the test directory from getting cluttered.
+@@ -639,26 +639,6 @@ This keeps the test directory from getting cluttered.
  .. _FileCheck: https://llvm.org/docs/CommandGuide/FileCheck.html
  .. _test/clang-tidy/google-readability-casting.cpp: https://reviews.llvm.org/diffusion/L/browse/clang-tools-extra/trunk/test/clang-tidy/google-readability-casting.cpp
  
@@ -238,21 +238,32 @@ index c66a94f458cf..000000000000
 -// and thus register the CTTestModule.
 -volatile int CTTestModuleAnchorSource = 0;
 diff --git a/clang-tools-extra/test/lit.cfg.py b/clang-tools-extra/test/lit.cfg.py
-index 858e42ace2a8..24cabd823844 100644
+index 1c16cc73c744..63ad9603beb3 100644
 --- a/clang-tools-extra/test/lit.cfg.py
 +++ b/clang-tools-extra/test/lit.cfg.py
-@@ -149,9 +149,3 @@ clangd_benchmarks_dir = os.path.join(os.path.dirname(config.clang_tools_dir),
-                                      "clangd", "benchmarks")
- config.substitutions.append(('%clangd-benchmark-dir',
-                              '%s' % (clangd_benchmarks_dir)))
+@@ -91,9 +91,14 @@ config.substitutions.append(
+     ('%run_clang_tidy',
+      '%s %s' % (python_exec, run_clang_tidy)) )
+ 
 -config.substitutions.append(('%llvmshlibdir', config.clang_libs_dir))
 -config.substitutions.append(('%pluginext', config.llvm_plugin_ext))
 -
 -# Plugins (loadable modules)
 -if config.has_plugins and config.llvm_plugin_ext:
 -    config.available_features.add('plugins')
++# config.substitutions.append(('%llvmshlibdir', config.clang_libs_dir))
++# config.substitutions.append(('%pluginext', config.llvm_plugin_ext))
++
++# # Plugins (loadable modules)
++# if config.has_plugins and config.llvm_plugin_ext:
++#     config.available_features.add('plugins')
++clangd_benchmarks_dir = os.path.join(os.path.dirname(config.clang_tools_dir),
++                                     "tools", "clang", "tools", "extra",
++                                     "clangd", "benchmarks")
++config.substitutions.append(('%clangd-benchmark-dir',
++                             '%s' % (clangd_benchmarks_dir)))
 diff --git a/clang-tools-extra/test/lit.site.cfg.py.in b/clang-tools-extra/test/lit.site.cfg.py.in
-index e7db0e2ef2cb..f8300c1dd39d 100644
+index 2890d57eb1d3..527ea2785b6a 100644
 --- a/clang-tools-extra/test/lit.site.cfg.py.in
 +++ b/clang-tools-extra/test/lit.site.cfg.py.in
 @@ -4,7 +4,6 @@ import sys
@@ -265,12 +276,12 @@ index e7db0e2ef2cb..f8300c1dd39d 100644
  config.clang_tools_dir = "@CLANG_TOOLS_DIR@"
 @@ -12,7 +11,6 @@ config.clang_libs_dir = "@SHLIBDIR@"
  config.python_executable = "@Python3_EXECUTABLE@"
- config.target_triple = "@TARGET_TRIPLE@"
+ config.target_triple = "@LLVM_TARGET_TRIPLE@"
  config.clang_tidy_staticanalyzer = @CLANG_TIDY_ENABLE_STATIC_ANALYZER@
 -config.has_plugins = @LLVM_ENABLE_PLUGINS@ & ~@LLVM_INSTALL_TOOLCHAIN_ONLY@
  
  # Support substitution of the tools and libs dirs with user parameters. This is
  # used when we can't determine the tool dir at configuration time.
 -- 
-2.34.1
+2.35.1
 

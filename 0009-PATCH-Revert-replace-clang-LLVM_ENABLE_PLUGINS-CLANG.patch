@@ -1,8 +1,8 @@
-From 8df7f933aedc1319e2c6681641dc8f50d3e8ad25 Mon Sep 17 00:00:00 2001
+From 41d1ee3480de5676e2276306bce80e48586d7403 Mon Sep 17 00:00:00 2001
 From: Tom Stellard <tstellar@redhat.com>
 Date: Wed, 16 Feb 2022 16:31:51 -0800
-Subject: Revert "replace clang LLVM_ENABLE_PLUGINS -> CLANG_PLUGIN_SUPPORT in
- tests"
+Subject: [PATCH] Revert "replace clang LLVM_ENABLE_PLUGINS ->
+ CLANG_PLUGIN_SUPPORT in tests"
 
 This reverts commit 76cad51ba700233d6e3492eddcbb466b6adbc2eb.
 
@@ -76,7 +76,7 @@ index 15b38478ded3..4f930d54bc70 100644
        SampleAnalyzerPlugin
        CheckerDependencyHandlingAnalyzerPlugin
 diff --git a/clang/test/lit.site.cfg.py.in b/clang/test/lit.site.cfg.py.in
-index 1e2e331d54db..bc3022d2bee9 100644
+index 227262607911..90352f8d46a8 100644
 --- a/clang/test/lit.site.cfg.py.in
 +++ b/clang/test/lit.site.cfg.py.in
 @@ -34,7 +34,7 @@ config.enable_threads = @LLVM_ENABLE_THREADS@
@@ -102,5 +102,5 @@ index 6b3e159d1b64..52d439ce6a3b 100644
  if(CLANG_PLUGIN_SUPPORT)
    set(support_plugins SUPPORT_PLUGINS)
 -- 
-2.34.1
+2.35.1
 

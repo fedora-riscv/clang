@@ -1,7 +1,7 @@
-From d76d03e8784732fa2ec32f74376281ff8a971cf4 Mon Sep 17 00:00:00 2001
+From 013d181e2d1946da8776630d14404df57d2996cb Mon Sep 17 00:00:00 2001
 From: Nikita Popov <npopov@redhat.com>
 Date: Thu, 3 Feb 2022 10:34:44 +0100
-Subject: Work around gcc miscompile
+Subject: [PATCH] Work around gcc miscompile
 
 This works around https://gcc.gnu.org/bugzilla/show_bug.cgi?id=104334,
 which miscompiles clang on s390x and ppc64le. The issue is already
@@ -28,5 +28,5 @@ index d4dc790c008a..77a1e6c32c6f 100644
                 diag::err_invalid_vector_long_double_decl_spec);
        else if (!S.Context.getTargetInfo().hasFeature("vsx") &&
 -- 
-2.34.1
+2.35.1
 
