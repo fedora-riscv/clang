@@ -1,4 +1,4 @@
-From 41d1ee3480de5676e2276306bce80e48586d7403 Mon Sep 17 00:00:00 2001
+From ae2d229c7b3331d25aae4fb2bf70ab2b22ae227e Mon Sep 17 00:00:00 2001
 From: Tom Stellard <tstellar@redhat.com>
 Date: Wed, 16 Feb 2022 16:31:51 -0800
 Subject: [PATCH] Revert "replace clang LLVM_ENABLE_PLUGINS ->
@@ -49,7 +49,7 @@ index 157be7e4147b..ffd95e2886bf 100644
    add_subdirectory(CheckerDependencyHandling)
    add_subdirectory(CheckerOptionHandling)
 diff --git a/clang/test/CMakeLists.txt b/clang/test/CMakeLists.txt
-index 15b38478ded3..4f930d54bc70 100644
+index d7cc8d279096..82264ba9ebf7 100644
 --- a/clang/test/CMakeLists.txt
 +++ b/clang/test/CMakeLists.txt
 @@ -14,12 +14,12 @@ llvm_canonicalize_cmake_booleans(
@@ -66,7 +66,7 @@ index 15b38478ded3..4f930d54bc70 100644
    LLVM_ENABLE_THREADS
    LLVM_WITH_Z3
    )
-@@ -146,7 +146,7 @@ if( NOT CLANG_BUILT_STANDALONE )
+@@ -145,7 +145,7 @@ if( NOT CLANG_BUILT_STANDALONE )
  endif()
  
  if(CLANG_ENABLE_STATIC_ANALYZER)
@@ -76,7 +76,7 @@ index 15b38478ded3..4f930d54bc70 100644
        SampleAnalyzerPlugin
        CheckerDependencyHandlingAnalyzerPlugin
 diff --git a/clang/test/lit.site.cfg.py.in b/clang/test/lit.site.cfg.py.in
-index 227262607911..90352f8d46a8 100644
+index fde1a6222ea2..9fff0cbbdea0 100644
 --- a/clang/test/lit.site.cfg.py.in
 +++ b/clang/test/lit.site.cfg.py.in
 @@ -34,7 +34,7 @@ config.enable_threads = @LLVM_ENABLE_THREADS@
