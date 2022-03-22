@@ -1,4 +1,4 @@
-From 7fa23605405a9c8a291a703c4bf00f70cd82eee3 Mon Sep 17 00:00:00 2001
+From 377c37500f9c0acdb05666bac630593b6d9106c1 Mon Sep 17 00:00:00 2001
 From: Tom Stellard <tstellar@redhat.com>
 Date: Wed, 4 Aug 2021 14:05:38 -0700
 Subject: [PATCH] cmake: Allow shared libraries to customize the soname using

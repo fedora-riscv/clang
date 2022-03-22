@@ -1,4 +1,4 @@
-From c1e280e595b63d1634cf005c2b5b20b6deff7d6f Mon Sep 17 00:00:00 2001
+From d3c4e4f2aa24ea394bd300126d18e0ff8657306b Mon Sep 17 00:00:00 2001
 From: serge-sans-paille <sguelton@redhat.com>
 Date: Thu, 25 Feb 2021 14:09:29 +0100
 Subject: [PATCH] Make -funwind-tables the default on all archs

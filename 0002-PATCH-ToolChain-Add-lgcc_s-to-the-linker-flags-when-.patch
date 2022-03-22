@@ -1,4 +1,4 @@
-From c00aa03cf00724b0b645b969eab5005da2c057d6 Mon Sep 17 00:00:00 2001
+From ad0e161c5d5ecb5fb921bc9db533d3be93ceec25 Mon Sep 17 00:00:00 2001
 From: serge-sans-paille <sguelton@redhat.com>
 Date: Thu, 25 Feb 2021 14:08:28 +0100
 Subject: [PATCH] ToolChain: Add -lgcc_s to the linker flags when using libc++

@@ -1,4 +1,4 @@
-From fcfa4558e1b406a55f61965c9995d8e308cf0981 Mon Sep 17 00:00:00 2001
+From f7cfd671100d76f66c6d1a12085db141562c8e65 Mon Sep 17 00:00:00 2001
 From: serge-sans-paille <sguelton@redhat.com>
 Date: Wed, 23 Sep 2020 12:47:30 +0000
 Subject: [PATCH] Prefer gcc toolchains with libgcc_s.so when not static
