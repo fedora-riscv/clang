@@ -1,4 +1,4 @@
-From c969f30168516ae1b0a6f34cf38a885bf24cdfc4 Mon Sep 17 00:00:00 2001
+From a17ee11c23c2c321285e143487eb861f9f1dc6e7 Mon Sep 17 00:00:00 2001
 From: serge-sans-paille <sguelton@redhat.com>
 Date: Thu, 25 Feb 2021 14:04:52 +0100
 Subject: [PATCH] Reorganize gtest integration
@@ -8,7 +8,7 @@ Subject: [PATCH] Reorganize gtest integration
  1 file changed, 5 insertions(+), 7 deletions(-)
 
 diff --git a/clang/CMakeLists.txt b/clang/CMakeLists.txt
-index 937a8467df1d..9a304db5a2c6 100644
+index 78f584f18bac..90a7c84f3bd8 100644
 --- a/clang/CMakeLists.txt
 +++ b/clang/CMakeLists.txt
 @@ -159,12 +159,6 @@ if(CLANG_BUILT_STANDALONE)

@@ -120,6 +120,7 @@ Patch6:		0006-PATCH-Driver-Add-a-gcc-equivalent-triple-to-the-list.patch
 Patch7:		0007-PATCH-Work-around-gcc-miscompile.patch
 Patch8:		0008-PATCH-cmake-Allow-shared-libraries-to-customize-the-.patch
 Patch9:		0009-PATCH-Revert-replace-clang-LLVM_ENABLE_PLUGINS-CLANG.patch
+Patch10:	0010-PATCH-clang-Default-to-producing-DWARFv4-again.patch
 # Patches for clang-tools-extra (MUST NOT BE MIXED WITH CLANG PATCHES!!!!)
 Patch210:	0210-PATCH-Revert-replace-clang-LLVM_ENABLE_PLUGINS-CLANG.patch
 Patch211:	0211-PATCH-Revert-Reland-enable-plugins-for-clang-tidy.patch

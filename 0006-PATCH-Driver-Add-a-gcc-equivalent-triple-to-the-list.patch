@@ -1,4 +1,4 @@
-From 61527133acfe233531f43aac722d7d96700172eb Mon Sep 17 00:00:00 2001
+From b715eabcbd04c58041cfadfa6502ea524ceef236 Mon Sep 17 00:00:00 2001
 From: Tom Stellard <tstellar@redhat.com>
 Date: Thu, 11 Nov 2021 10:58:14 +0100
 Subject: [PATCH] Driver: Add a gcc equivalent triple to the list of triples to

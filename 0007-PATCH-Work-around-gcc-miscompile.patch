@@ -1,4 +1,4 @@
-From 224c53952f56d3c708bbd04c295a96ea17f9722d Mon Sep 17 00:00:00 2001
+From 9d2700dfb0b2e5a03f584eb21dd3336663dbb308 Mon Sep 17 00:00:00 2001
 From: Nikita Popov <npopov@redhat.com>
 Date: Thu, 3 Feb 2022 10:34:44 +0100
 Subject: [PATCH] Work around gcc miscompile
