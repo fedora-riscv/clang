@@ -1,4 +1,4 @@
-From d6f0f2ec8db32af04edd997c2ea40f8048ef3021 Mon Sep 17 00:00:00 2001
+From 170549a4f737e832d42a0fbf69666b87fc89d91b Mon Sep 17 00:00:00 2001
 From: Tom Stellard <tstellar@redhat.com>
 Date: Wed, 16 Feb 2022 16:31:51 -0800
 Subject: [PATCH] Revert "replace clang LLVM_ENABLE_PLUGINS ->
@@ -13,10 +13,10 @@ We don't install the LLVMHello plugin, so tests should not depend on it.
  2 files changed, 4 insertions(+), 12 deletions(-)
 
 diff --git a/clang-tools-extra/test/CMakeLists.txt b/clang-tools-extra/test/CMakeLists.txt
-index 26aece9..f1bdb31 100644
+index 2cdf186..acae3fd 100644
 --- a/clang-tools-extra/test/CMakeLists.txt
 +++ b/clang-tools-extra/test/CMakeLists.txt
-@@ -17,7 +17,7 @@ string(REPLACE ${CMAKE_CFG_INTDIR} ${LLVM_BUILD_MODE} CLANG_TOOLS_DIR ${LLVM_RUN
+@@ -9,7 +9,7 @@ set(CLANG_TOOLS_BINARY_DIR "${CMAKE_CURRENT_BINARY_DIR}/..")
  
  llvm_canonicalize_cmake_booleans(
    CLANG_TIDY_ENABLE_STATIC_ANALYZER
@@ -25,7 +25,7 @@ index 26aece9..f1bdb31 100644
    LLVM_INSTALL_TOOLCHAIN_ONLY
    )
  
-@@ -89,19 +89,10 @@ if (NOT LLVM_INSTALL_TOOLCHAIN_ONLY)
+@@ -81,19 +81,10 @@ if (NOT LLVM_INSTALL_TOOLCHAIN_ONLY)
          DEPENDS clang-tidy-headers)
    endif()
  
@@ -47,10 +47,10 @@ index 26aece9..f1bdb31 100644
            Support
          )
 diff --git a/clang-tools-extra/test/lit.site.cfg.py.in b/clang-tools-extra/test/lit.site.cfg.py.in
-index a784e12..a1dd8a1 100644
+index 4eb830a1..7b3abe7 100644
 --- a/clang-tools-extra/test/lit.site.cfg.py.in
 +++ b/clang-tools-extra/test/lit.site.cfg.py.in
-@@ -11,7 +11,8 @@ config.python_executable = "@Python3_EXECUTABLE@"
+@@ -10,7 +10,8 @@ config.python_executable = "@Python3_EXECUTABLE@"
  config.target_triple = "@LLVM_TARGET_TRIPLE@"
  config.host_triple = "@LLVM_HOST_TRIPLE@"
  config.clang_tidy_staticanalyzer = @CLANG_TIDY_ENABLE_STATIC_ANALYZER@

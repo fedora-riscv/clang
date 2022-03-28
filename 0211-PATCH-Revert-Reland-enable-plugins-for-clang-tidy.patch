@@ -1,4 +1,4 @@
-From 5248afe91193c0581f9385d2a679cc8574b9948f Mon Sep 17 00:00:00 2001
+From 994589e54a606646ac3eff9ac107dc65b29420ed Mon Sep 17 00:00:00 2001
 From: Tom Stellard <tstellar@redhat.com>
 Date: Wed, 16 Feb 2022 16:32:28 -0800
 Subject: [PATCH] Revert "Reland "enable plugins for clang-tidy""
@@ -128,10 +128,10 @@ index c76259e..3231b15 100644
      --quiet                        -
                                       Run clang-tidy in quiet mode. This suppresses
 diff --git a/clang-tools-extra/test/CMakeLists.txt b/clang-tools-extra/test/CMakeLists.txt
-index f1bdb31..06be000 100644
+index acae3fd..c07932b 100644
 --- a/clang-tools-extra/test/CMakeLists.txt
 +++ b/clang-tools-extra/test/CMakeLists.txt
-@@ -17,8 +17,6 @@ string(REPLACE ${CMAKE_CFG_INTDIR} ${LLVM_BUILD_MODE} CLANG_TOOLS_DIR ${LLVM_RUN
+@@ -9,8 +9,6 @@ set(CLANG_TOOLS_BINARY_DIR "${CMAKE_CURRENT_BINARY_DIR}/..")
  
  llvm_canonicalize_cmake_booleans(
    CLANG_TIDY_ENABLE_STATIC_ANALYZER
@@ -140,12 +140,12 @@ index f1bdb31..06be000 100644
    )
  
  configure_lit_site_cfg(
-@@ -80,26 +78,6 @@ foreach(dep ${LLVM_UTILS_DEPS})
+@@ -72,26 +70,6 @@ foreach(dep ${LLVM_UTILS_DEPS})
    endif()
  endforeach()
  
 -if (NOT LLVM_INSTALL_TOOLCHAIN_ONLY)
--  if (NOT WIN32 AND NOT LLVM_LINK_LLVM_DYLIB)
+-  if (NOT WIN32 OR NOT LLVM_LINK_LLVM_DYLIB)
 -    llvm_add_library(
 -        CTTestTidyModule
 -        MODULE clang-tidy/CTTestTidyModule.cpp
@@ -255,7 +255,7 @@ index f8fdfbd..79d7416 100644
 +     '%s %s' % (python_exec, run_clang_tidy)) )
 \ No newline at end of file
 diff --git a/clang-tools-extra/test/lit.site.cfg.py.in b/clang-tools-extra/test/lit.site.cfg.py.in
-index a1dd8a1..f2f277a 100644
+index 7b3abe7..ffc95cf 100644
 --- a/clang-tools-extra/test/lit.site.cfg.py.in
 +++ b/clang-tools-extra/test/lit.site.cfg.py.in
 @@ -2,7 +2,8 @@
@@ -267,8 +267,8 @@ index a1dd8a1..f2f277a 100644
 +config.llvm_libs_dir = "@LLVM_LIBS_DIR@"
  config.lit_tools_dir = "@LLVM_LIT_TOOLS_DIR@"
  config.clang_tools_binary_dir = "@CLANG_TOOLS_BINARY_DIR@"
- config.clang_tools_dir = "@CLANG_TOOLS_DIR@"
-@@ -11,7 +12,6 @@ config.python_executable = "@Python3_EXECUTABLE@"
+ config.llvm_shlib_dir = "@SHLIBDIR@"
+@@ -10,7 +11,6 @@ config.python_executable = "@Python3_EXECUTABLE@"
  config.target_triple = "@LLVM_TARGET_TRIPLE@"
  config.host_triple = "@LLVM_HOST_TRIPLE@"
  config.clang_tidy_staticanalyzer = @CLANG_TIDY_ENABLE_STATIC_ANALYZER@
