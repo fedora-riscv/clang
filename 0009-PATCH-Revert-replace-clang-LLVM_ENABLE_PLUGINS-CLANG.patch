@@ -1,4 +1,4 @@
-From a0a24ed55c37b11cf717be223b9c0d720fedce8b Mon Sep 17 00:00:00 2001
+From a561d2ba7a44c3878bdd4624e240e22551689d74 Mon Sep 17 00:00:00 2001
 From: Tom Stellard <tstellar@redhat.com>
 Date: Wed, 16 Feb 2022 16:31:51 -0800
 Subject: [PATCH] Revert "replace clang LLVM_ENABLE_PLUGINS ->
@@ -16,10 +16,10 @@ We don't install the LLVMHello plugin, so tests should not depend on it.
  5 files changed, 6 insertions(+), 13 deletions(-)
 
 diff --git a/clang/CMakeLists.txt b/clang/CMakeLists.txt
-index 90a7c84f3bd8..227bd77ecceb 100644
+index 7d8a2d0..b454832 100644
 --- a/clang/CMakeLists.txt
 +++ b/clang/CMakeLists.txt
-@@ -470,15 +470,6 @@ add_definitions( -D_GNU_SOURCE )
+@@ -481,15 +481,6 @@ add_definitions( -D_GNU_SOURCE )
  option(CLANG_BUILD_TOOLS
    "Build the Clang tools. If OFF, just generate build targets." ON)
  
@@ -36,7 +36,7 @@ index 90a7c84f3bd8..227bd77ecceb 100644
  option(CLANG_ENABLE_STATIC_ANALYZER
    "Include static analyzer in clang binary." ON)
 diff --git a/clang/lib/Analysis/plugins/CMakeLists.txt b/clang/lib/Analysis/plugins/CMakeLists.txt
-index 157be7e4147b..ffd95e2886bf 100644
+index 157be7e..ffd95e2 100644
 --- a/clang/lib/Analysis/plugins/CMakeLists.txt
 +++ b/clang/lib/Analysis/plugins/CMakeLists.txt
 @@ -1,7 +1,7 @@
@@ -49,24 +49,23 @@ index 157be7e4147b..ffd95e2886bf 100644
    add_subdirectory(CheckerDependencyHandling)
    add_subdirectory(CheckerOptionHandling)
 diff --git a/clang/test/CMakeLists.txt b/clang/test/CMakeLists.txt
-index d7cc8d279096..82264ba9ebf7 100644
+index 7d050b2..b715033 100644
 --- a/clang/test/CMakeLists.txt
 +++ b/clang/test/CMakeLists.txt
-@@ -14,12 +14,12 @@ llvm_canonicalize_cmake_booleans(
+@@ -6,11 +6,11 @@ llvm_canonicalize_cmake_booleans(
    CLANG_DEFAULT_PIE_ON_LINUX
    CLANG_ENABLE_ARCMT
    CLANG_ENABLE_STATIC_ANALYZER
 -  CLANG_PLUGIN_SUPPORT
    CLANG_SPAWN_CC1
    ENABLE_BACKTRACES
-   LLVM_ENABLE_NEW_PASS_MANAGER
    LLVM_ENABLE_ZLIB
    LLVM_ENABLE_PER_TARGET_RUNTIME_DIR
 +  LLVM_ENABLE_PLUGINS
    LLVM_ENABLE_THREADS
    LLVM_WITH_Z3
    )
-@@ -145,7 +145,7 @@ if( NOT CLANG_BUILT_STANDALONE )
+@@ -136,7 +136,7 @@ if( NOT CLANG_BUILT_STANDALONE )
  endif()
  
  if(CLANG_ENABLE_STATIC_ANALYZER)
@@ -76,10 +75,10 @@ index d7cc8d279096..82264ba9ebf7 100644
        SampleAnalyzerPlugin
        CheckerDependencyHandlingAnalyzerPlugin
 diff --git a/clang/test/lit.site.cfg.py.in b/clang/test/lit.site.cfg.py.in
-index fde1a6222ea2..9fff0cbbdea0 100644
+index 3725d84..ca4441e 100644
 --- a/clang/test/lit.site.cfg.py.in
 +++ b/clang/test/lit.site.cfg.py.in
-@@ -34,7 +34,7 @@ config.enable_threads = @LLVM_ENABLE_THREADS@
+@@ -33,7 +33,7 @@ config.enable_threads = @LLVM_ENABLE_THREADS@
  config.host_arch = "@HOST_ARCH@"
  config.python_executable = "@Python3_EXECUTABLE@"
  config.use_z3_solver = lit_config.params.get('USE_Z3_SOLVER', "@USE_Z3_SOLVER@")
@@ -89,7 +88,7 @@ index fde1a6222ea2..9fff0cbbdea0 100644
  config.llvm_external_lit = path(r"@LLVM_EXTERNAL_LIT@")
  
 diff --git a/clang/tools/driver/CMakeLists.txt b/clang/tools/driver/CMakeLists.txt
-index 6b3e159d1b64..52d439ce6a3b 100644
+index 6b3e159..52d439c 100644
 --- a/clang/tools/driver/CMakeLists.txt
 +++ b/clang/tools/driver/CMakeLists.txt
 @@ -17,6 +17,8 @@ set( LLVM_LINK_COMPONENTS
@@ -102,5 +101,5 @@ index 6b3e159d1b64..52d439ce6a3b 100644
  if(CLANG_PLUGIN_SUPPORT)
    set(support_plugins SUPPORT_PLUGINS)
 -- 
-2.35.1
+1.8.3.1
 

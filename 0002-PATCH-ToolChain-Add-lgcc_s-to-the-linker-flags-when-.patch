@@ -1,4 +1,4 @@
-From ad0e161c5d5ecb5fb921bc9db533d3be93ceec25 Mon Sep 17 00:00:00 2001
+From 870e89405800ca85c3c532a008d6cfa0b2bb5a4e Mon Sep 17 00:00:00 2001
 From: serge-sans-paille <sguelton@redhat.com>
 Date: Thu, 25 Feb 2021 14:08:28 +0100
 Subject: [PATCH] ToolChain: Add -lgcc_s to the linker flags when using libc++
@@ -12,7 +12,7 @@ provides this implementation.
  2 files changed, 3 insertions(+), 2 deletions(-)
 
 diff --git a/clang/lib/Driver/ToolChain.cpp b/clang/lib/Driver/ToolChain.cpp
-index f4415a30eb9d..8a497bb02fa6 100644
+index f4415a30..8a497bb 100644
 --- a/clang/lib/Driver/ToolChain.cpp
 +++ b/clang/lib/Driver/ToolChain.cpp
 @@ -967,6 +967,7 @@ void ToolChain::AddCXXStdlibLibArgs(const ArgList &Args,
@@ -24,7 +24,7 @@ index f4415a30eb9d..8a497bb02fa6 100644
  
    case ToolChain::CST_Libstdcxx:
 diff --git a/clang/test/Driver/netbsd.cpp b/clang/test/Driver/netbsd.cpp
-index 4af7d8373d67..ff18c627f560 100644
+index 4af7d83..ff18c62 100644
 --- a/clang/test/Driver/netbsd.cpp
 +++ b/clang/test/Driver/netbsd.cpp
 @@ -131,7 +131,7 @@
@@ -46,5 +46,5 @@ index 4af7d8373d67..ff18c627f560 100644
  
  // S-AARCH64: clang{{.*}}" "-cc1" "-triple" "aarch64-unknown-netbsd"
 -- 
-2.35.1
+1.8.3.1
 

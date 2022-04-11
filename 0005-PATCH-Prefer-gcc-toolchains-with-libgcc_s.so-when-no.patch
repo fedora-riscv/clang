@@ -1,4 +1,4 @@
-From f7cfd671100d76f66c6d1a12085db141562c8e65 Mon Sep 17 00:00:00 2001
+From 095a1950f388c45d82bd55a3b2572a2192ab9025 Mon Sep 17 00:00:00 2001
 From: serge-sans-paille <sguelton@redhat.com>
 Date: Wed, 23 Sep 2020 12:47:30 +0000
 Subject: [PATCH] Prefer gcc toolchains with libgcc_s.so when not static
@@ -21,22 +21,22 @@ This patch fixes this by checking for the existence of libgcc_s.so
 when it is required and taking that into account when selecting a
 toolchain.
 ---
- clang/lib/Driver/ToolChains/Gnu.cpp              | 16 ++++++++++++++--
- clang/lib/Driver/ToolChains/Gnu.h                |  4 +++-
- .../usr/lib/gcc/x86_64-linux-gnu/7/crtbegin.o    |  0
- .../usr/lib/gcc/x86_64-redhat-linux/7/crtbegin.o |  0
- .../lib/gcc/x86_64-redhat-linux/7/libgcc_s.so    |  0
- clang/test/Driver/linux-ld.c                     | 12 ++++++++++++
+ clang/lib/Driver/ToolChains/Gnu.cpp                      | 16 ++++++++++++++--
+ clang/lib/Driver/ToolChains/Gnu.h                        |  4 +++-
+ .../usr/lib/gcc/x86_64-linux-gnu/7/crtbegin.o            |  0
+ .../usr/lib/gcc/x86_64-redhat-linux/7/crtbegin.o         |  0
+ .../usr/lib/gcc/x86_64-redhat-linux/7/libgcc_s.so        |  0
+ clang/test/Driver/linux-ld.c                             | 12 ++++++++++++
  6 files changed, 29 insertions(+), 3 deletions(-)
  create mode 100644 clang/test/Driver/Inputs/fedora_28_tree/usr/lib/gcc/x86_64-linux-gnu/7/crtbegin.o
  create mode 100644 clang/test/Driver/Inputs/fedora_28_tree/usr/lib/gcc/x86_64-redhat-linux/7/crtbegin.o
  create mode 100644 clang/test/Driver/Inputs/fedora_28_tree/usr/lib/gcc/x86_64-redhat-linux/7/libgcc_s.so
 
 diff --git a/clang/lib/Driver/ToolChains/Gnu.cpp b/clang/lib/Driver/ToolChains/Gnu.cpp
-index f0dcae58f63d..19b39b7b2c81 100644
+index 23dca17..ccceae3 100644
 --- a/clang/lib/Driver/ToolChains/Gnu.cpp
 +++ b/clang/lib/Driver/ToolChains/Gnu.cpp
-@@ -2528,6 +2528,8 @@ void Generic_GCC::GCCInstallationDetector::ScanLibDirForGCCTriple(
+@@ -2603,6 +2603,8 @@ void Generic_GCC::GCCInstallationDetector::ScanLibDirForGCCTriple(
         TargetTriple.getVendor() == llvm::Triple::Freescale ||
             TargetTriple.getVendor() == llvm::Triple::OpenEmbedded}};
  
@@ -45,7 +45,7 @@ index f0dcae58f63d..19b39b7b2c81 100644
    for (auto &Suffix : Suffixes) {
      if (!Suffix.Active)
        continue;
-@@ -2545,8 +2547,17 @@ void Generic_GCC::GCCInstallationDetector::ScanLibDirForGCCTriple(
+@@ -2620,8 +2622,17 @@ void Generic_GCC::GCCInstallationDetector::ScanLibDirForGCCTriple(
            continue; // Saw this path before; no need to look at it again.
        if (CandidateVersion.isOlderThan(4, 1, 1))
          continue;
@@ -65,7 +65,7 @@ index f0dcae58f63d..19b39b7b2c81 100644
  
        if (!ScanGCCForMultilibs(TargetTriple, Args, LI->path(),
                                 NeedsBiarchSuffix))
-@@ -2560,6 +2571,7 @@ void Generic_GCC::GCCInstallationDetector::ScanLibDirForGCCTriple(
+@@ -2635,6 +2646,7 @@ void Generic_GCC::GCCInstallationDetector::ScanLibDirForGCCTriple(
        GCCInstallPath = (LibDir + "/" + LibSuffix + "/" + VersionText).str();
        GCCParentLibPath = (GCCInstallPath + "/../" + Suffix.ReversePath).str();
        IsValid = true;
@@ -74,7 +74,7 @@ index f0dcae58f63d..19b39b7b2c81 100644
    }
  }
 diff --git a/clang/lib/Driver/ToolChains/Gnu.h b/clang/lib/Driver/ToolChains/Gnu.h
-index 4eb7ab0215ab..d692fb031eb8 100644
+index 4eb7ab0..d692fb0 100644
 --- a/clang/lib/Driver/ToolChains/Gnu.h
 +++ b/clang/lib/Driver/ToolChains/Gnu.h
 @@ -190,6 +190,7 @@ public:
@@ -97,18 +97,18 @@ index 4eb7ab0215ab..d692fb031eb8 100644
  
 diff --git a/clang/test/Driver/Inputs/fedora_28_tree/usr/lib/gcc/x86_64-linux-gnu/7/crtbegin.o b/clang/test/Driver/Inputs/fedora_28_tree/usr/lib/gcc/x86_64-linux-gnu/7/crtbegin.o
 new file mode 100644
-index 000000000000..e69de29bb2d1
+index 0000000..e69de29
 diff --git a/clang/test/Driver/Inputs/fedora_28_tree/usr/lib/gcc/x86_64-redhat-linux/7/crtbegin.o b/clang/test/Driver/Inputs/fedora_28_tree/usr/lib/gcc/x86_64-redhat-linux/7/crtbegin.o
 new file mode 100644
-index 000000000000..e69de29bb2d1
+index 0000000..e69de29
 diff --git a/clang/test/Driver/Inputs/fedora_28_tree/usr/lib/gcc/x86_64-redhat-linux/7/libgcc_s.so b/clang/test/Driver/Inputs/fedora_28_tree/usr/lib/gcc/x86_64-redhat-linux/7/libgcc_s.so
 new file mode 100644
-index 000000000000..e69de29bb2d1
+index 0000000..e69de29
 diff --git a/clang/test/Driver/linux-ld.c b/clang/test/Driver/linux-ld.c
-index 4c40eb3583a0..5361bc5c6f2d 100644
+index ef3751d..3a0bd07 100644
 --- a/clang/test/Driver/linux-ld.c
 +++ b/clang/test/Driver/linux-ld.c
-@@ -687,6 +687,18 @@
+@@ -685,6 +685,18 @@
  // CHECK-FEDORA-31-RISCV64: "{{.*}}/usr/lib/gcc/riscv64-redhat-linux/9{{/|\\\\}}crtend.o"
  // CHECK-FEDORA-31-RISCV64: "{{.*}}/usr/lib/gcc/riscv64-redhat-linux/9{{/|\\\\}}crtn.o"
  //
@@ -128,5 +128,5 @@ index 4c40eb3583a0..5361bc5c6f2d 100644
  // RUN:     --target=arm-unknown-linux-gnueabi -rtlib=platform \
  // RUN:     --gcc-toolchain="" \
 -- 
-2.35.1
+1.8.3.1
 
