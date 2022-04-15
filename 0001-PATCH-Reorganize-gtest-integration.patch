@@ -1,4 +1,4 @@
-From 84cb2da3c78cd698afd25b29cc7ce79627495175 Mon Sep 17 00:00:00 2001
+From 326e01b344b31c0c62411d9166fe380aad7d9f89 Mon Sep 17 00:00:00 2001
 From: serge-sans-paille <sguelton@redhat.com>
 Date: Thu, 25 Feb 2021 14:04:52 +0100
 Subject: [PATCH] Reorganize gtest integration

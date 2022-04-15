@@ -87,7 +87,7 @@
 
 Name:		%pkg_name
 Version:	%{clang_version}%{?rc_ver:~rc%{rc_ver}}%{?llvm_snapshot_version_suffix:~%{llvm_snapshot_version_suffix}}
-Release:	1%{?dist}
+Release:	2%{?dist}
 Summary:	A C language family front-end for LLVM
 
 License:	NCSA
@@ -626,6 +626,9 @@ false
 
 %endif
 %changelog
+* Fri Apr 15 2022 Serge Guelton - 13.0.1-2
+- Rebase downstream patches
+
 %{?llvm_snapshot_changelog_entry}
 
 * Thu Feb 03 2022 Nikita Popov <npopov@redhat.com> - 13.0.1-1

@@ -1,4 +1,4 @@
-From 095a1950f388c45d82bd55a3b2572a2192ab9025 Mon Sep 17 00:00:00 2001
+From 76b8995180437856e7df69982b03db3a9d31779b Mon Sep 17 00:00:00 2001
 From: serge-sans-paille <sguelton@redhat.com>
 Date: Wed, 23 Sep 2020 12:47:30 +0000
 Subject: [PATCH] Prefer gcc toolchains with libgcc_s.so when not static
@@ -33,7 +33,7 @@ toolchain.
  create mode 100644 clang/test/Driver/Inputs/fedora_28_tree/usr/lib/gcc/x86_64-redhat-linux/7/libgcc_s.so
 
 diff --git a/clang/lib/Driver/ToolChains/Gnu.cpp b/clang/lib/Driver/ToolChains/Gnu.cpp
-index 23dca17..ccceae3 100644
+index fc07dfd..f405033 100644
 --- a/clang/lib/Driver/ToolChains/Gnu.cpp
 +++ b/clang/lib/Driver/ToolChains/Gnu.cpp
 @@ -2603,6 +2603,8 @@ void Generic_GCC::GCCInstallationDetector::ScanLibDirForGCCTriple(
