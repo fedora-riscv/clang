@@ -1,4 +1,4 @@
-From a0e43f806808b21b06b44143685ed51f791f5081 Mon Sep 17 00:00:00 2001
+From 229ed12bb804915057b91013bc992c4c67e65b17 Mon Sep 17 00:00:00 2001
 From: serge-sans-paille <sguelton@redhat.com>
 Date: Thu, 25 Feb 2021 14:08:28 +0100
 Subject: [PATCH] ToolChain: Add -lgcc_s to the linker flags when using libc++
@@ -12,10 +12,10 @@ provides this implementation.
  2 files changed, 3 insertions(+), 2 deletions(-)
 
 diff --git a/clang/lib/Driver/ToolChain.cpp b/clang/lib/Driver/ToolChain.cpp
-index f4415a30..8a497bb 100644
+index d45a9004..991ad56 100644
 --- a/clang/lib/Driver/ToolChain.cpp
 +++ b/clang/lib/Driver/ToolChain.cpp
-@@ -967,6 +967,7 @@ void ToolChain::AddCXXStdlibLibArgs(const ArgList &Args,
+@@ -968,6 +968,7 @@ void ToolChain::AddCXXStdlibLibArgs(const ArgList &Args,
    switch (Type) {
    case ToolChain::CST_Libcxx:
      CmdArgs.push_back("-lc++");

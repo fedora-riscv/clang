@@ -1,4 +1,4 @@
-From 7fde709b988a3a880d9b71825e204dac443f658e Mon Sep 17 00:00:00 2001
+From 66afc2320251cdc0647e27bcc84e3ca8ed9c93a1 Mon Sep 17 00:00:00 2001
 From: Tom Stellard <tstellar@redhat.com>
 Date: Fri, 31 Jan 2020 11:04:57 -0800
 Subject: [PATCH] Don't install static libraries

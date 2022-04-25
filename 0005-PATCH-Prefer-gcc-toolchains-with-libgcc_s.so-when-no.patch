@@ -1,4 +1,4 @@
-From 76b8995180437856e7df69982b03db3a9d31779b Mon Sep 17 00:00:00 2001
+From 8bddda88449a9deeb21e2813cb8ff1a5e944b18b Mon Sep 17 00:00:00 2001
 From: serge-sans-paille <sguelton@redhat.com>
 Date: Wed, 23 Sep 2020 12:47:30 +0000
 Subject: [PATCH] Prefer gcc toolchains with libgcc_s.so when not static
@@ -33,10 +33,10 @@ toolchain.
  create mode 100644 clang/test/Driver/Inputs/fedora_28_tree/usr/lib/gcc/x86_64-redhat-linux/7/libgcc_s.so
 
 diff --git a/clang/lib/Driver/ToolChains/Gnu.cpp b/clang/lib/Driver/ToolChains/Gnu.cpp
-index fc07dfd..f405033 100644
+index 47fef16..2a2ee70 100644
 --- a/clang/lib/Driver/ToolChains/Gnu.cpp
 +++ b/clang/lib/Driver/ToolChains/Gnu.cpp
-@@ -2603,6 +2603,8 @@ void Generic_GCC::GCCInstallationDetector::ScanLibDirForGCCTriple(
+@@ -2640,6 +2640,8 @@ void Generic_GCC::GCCInstallationDetector::ScanLibDirForGCCTriple(
         TargetTriple.getVendor() == llvm::Triple::Freescale ||
             TargetTriple.getVendor() == llvm::Triple::OpenEmbedded}};
  
@@ -45,7 +45,7 @@ index fc07dfd..f405033 100644
    for (auto &Suffix : Suffixes) {
      if (!Suffix.Active)
        continue;
-@@ -2620,8 +2622,17 @@ void Generic_GCC::GCCInstallationDetector::ScanLibDirForGCCTriple(
+@@ -2657,8 +2659,17 @@ void Generic_GCC::GCCInstallationDetector::ScanLibDirForGCCTriple(
            continue; // Saw this path before; no need to look at it again.
        if (CandidateVersion.isOlderThan(4, 1, 1))
          continue;
@@ -65,7 +65,7 @@ index fc07dfd..f405033 100644
  
        if (!ScanGCCForMultilibs(TargetTriple, Args, LI->path(),
                                 NeedsBiarchSuffix))
-@@ -2635,6 +2646,7 @@ void Generic_GCC::GCCInstallationDetector::ScanLibDirForGCCTriple(
+@@ -2672,6 +2683,7 @@ void Generic_GCC::GCCInstallationDetector::ScanLibDirForGCCTriple(
        GCCInstallPath = (LibDir + "/" + LibSuffix + "/" + VersionText).str();
        GCCParentLibPath = (GCCInstallPath + "/../" + Suffix.ReversePath).str();
        IsValid = true;
