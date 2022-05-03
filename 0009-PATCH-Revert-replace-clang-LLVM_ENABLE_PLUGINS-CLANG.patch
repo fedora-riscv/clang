@@ -1,4 +1,4 @@
-From ee281f26a416d9d293621ed8a9a114a2c0e312f1 Mon Sep 17 00:00:00 2001
+From d022552769305b1eeadfbda184de649fe1f33968 Mon Sep 17 00:00:00 2001
 From: Tom Stellard <tstellar@redhat.com>
 Date: Wed, 16 Feb 2022 16:31:51 -0800
 Subject: [PATCH] Revert "replace clang LLVM_ENABLE_PLUGINS ->
@@ -16,7 +16,7 @@ We don't install the LLVMHello plugin, so tests should not depend on it.
  5 files changed, 6 insertions(+), 13 deletions(-)
 
 diff --git a/clang/CMakeLists.txt b/clang/CMakeLists.txt
-index 7d8a2d0..b454832 100644
+index 7d8a2d0a9fce..b4548322ff59 100644
 --- a/clang/CMakeLists.txt
 +++ b/clang/CMakeLists.txt
 @@ -481,15 +481,6 @@ add_definitions( -D_GNU_SOURCE )
@@ -36,7 +36,7 @@ index 7d8a2d0..b454832 100644
  option(CLANG_ENABLE_STATIC_ANALYZER
    "Include static analyzer in clang binary." ON)
 diff --git a/clang/lib/Analysis/plugins/CMakeLists.txt b/clang/lib/Analysis/plugins/CMakeLists.txt
-index 157be7e..ffd95e2 100644
+index 157be7e4147b..ffd95e2886bf 100644
 --- a/clang/lib/Analysis/plugins/CMakeLists.txt
 +++ b/clang/lib/Analysis/plugins/CMakeLists.txt
 @@ -1,7 +1,7 @@
@@ -49,7 +49,7 @@ index 157be7e..ffd95e2 100644
    add_subdirectory(CheckerDependencyHandling)
    add_subdirectory(CheckerOptionHandling)
 diff --git a/clang/test/CMakeLists.txt b/clang/test/CMakeLists.txt
-index 9e8fa9c..58cb58b 100644
+index 9e8fa9c5c438..58cb58b08246 100644
 --- a/clang/test/CMakeLists.txt
 +++ b/clang/test/CMakeLists.txt
 @@ -7,11 +7,11 @@ llvm_canonicalize_cmake_booleans(
@@ -75,7 +75,7 @@ index 9e8fa9c..58cb58b 100644
        SampleAnalyzerPlugin
        CheckerDependencyHandlingAnalyzerPlugin
 diff --git a/clang/test/lit.site.cfg.py.in b/clang/test/lit.site.cfg.py.in
-index 8a9849f..5dc3bfa 100644
+index 8a9849fe4549..5dc3bfafbb24 100644
 --- a/clang/test/lit.site.cfg.py.in
 +++ b/clang/test/lit.site.cfg.py.in
 @@ -34,7 +34,7 @@ config.enable_threads = @LLVM_ENABLE_THREADS@
@@ -88,7 +88,7 @@ index 8a9849f..5dc3bfa 100644
  config.llvm_external_lit = path(r"@LLVM_EXTERNAL_LIT@")
  
 diff --git a/clang/tools/driver/CMakeLists.txt b/clang/tools/driver/CMakeLists.txt
-index 6b3e159..52d439c 100644
+index 6b3e159d1b64..52d439ce6a3b 100644
 --- a/clang/tools/driver/CMakeLists.txt
 +++ b/clang/tools/driver/CMakeLists.txt
 @@ -17,6 +17,8 @@ set( LLVM_LINK_COMPONENTS
@@ -101,5 +101,5 @@ index 6b3e159..52d439c 100644
  if(CLANG_PLUGIN_SUPPORT)
    set(support_plugins SUPPORT_PLUGINS)
 -- 
-1.8.3.1
+2.35.1
 

@@ -1,4 +1,4 @@
-From 86466e49127b8d712a78c83d7c90017365e8a9a3 Mon Sep 17 00:00:00 2001
+From 57916dbabd8305c970b7726fd641750bfb086a60 Mon Sep 17 00:00:00 2001
 From: Tom Stellard <tstellar@redhat.com>
 Date: Wed, 4 Aug 2021 14:05:38 -0700
 Subject: [PATCH] cmake: Allow shared libraries to customize the soname using
@@ -22,7 +22,7 @@ Differential Revision: https://reviews.llvm.org/D105594
  1 file changed, 5 insertions(+)
 
 diff --git a/clang/tools/clang-shlib/CMakeLists.txt b/clang/tools/clang-shlib/CMakeLists.txt
-index 9c1f8ea..4d78592 100644
+index 9c1f8ea452b3..4d785924e4bb 100644
 --- a/clang/tools/clang-shlib/CMakeLists.txt
 +++ b/clang/tools/clang-shlib/CMakeLists.txt
 @@ -1,3 +1,8 @@
@@ -35,5 +35,5 @@ index 9c1f8ea..4d78592 100644
  if (NOT LLVM_ENABLE_PIC)
    return()
 -- 
-1.8.3.1
+2.35.1
 

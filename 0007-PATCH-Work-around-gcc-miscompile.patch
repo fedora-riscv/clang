@@ -1,4 +1,4 @@
-From 9cfd393d5a811190faa696040f4dbcf37b65e06e Mon Sep 17 00:00:00 2001
+From 85a24eec4ca82cc18e71e288860c7ba442d8c152 Mon Sep 17 00:00:00 2001
 From: Nikita Popov <npopov@redhat.com>
 Date: Thu, 3 Feb 2022 10:34:44 +0100
 Subject: [PATCH] Work around gcc miscompile
@@ -12,7 +12,7 @@ to get a working build.
  1 file changed, 3 insertions(+), 2 deletions(-)
 
 diff --git a/clang/lib/Sema/DeclSpec.cpp b/clang/lib/Sema/DeclSpec.cpp
-index d4dc790..77a1e6c 100644
+index d4dc790c008a..77a1e6c32c6f 100644
 --- a/clang/lib/Sema/DeclSpec.cpp
 +++ b/clang/lib/Sema/DeclSpec.cpp
 @@ -1203,8 +1203,9 @@ void DeclSpec::Finish(Sema &S, const PrintingPolicy &Policy) {
@@ -28,5 +28,5 @@ index d4dc790..77a1e6c 100644
                 diag::err_invalid_vector_long_double_decl_spec);
        else if (!S.Context.getTargetInfo().hasFeature("vsx") &&
 -- 
-1.8.3.1
+2.35.1
 
