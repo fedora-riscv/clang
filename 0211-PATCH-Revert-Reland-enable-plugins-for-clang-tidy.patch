@@ -1,4 +1,4 @@
-From 994589e54a606646ac3eff9ac107dc65b29420ed Mon Sep 17 00:00:00 2001
+From 2a64caee77f67cb49109c29e364b1608bf8ab42b Mon Sep 17 00:00:00 2001
 From: Tom Stellard <tstellar@redhat.com>
 Date: Wed, 16 Feb 2022 16:32:28 -0800
 Subject: [PATCH] Revert "Reland "enable plugins for clang-tidy""
@@ -7,19 +7,19 @@ This reverts commit 84f137a590e7de25c4105303e5938c40566c2dfb.
 
 We don't install the LLVMHello plugin so tests should not depend on it.
 ---
- clang-tools-extra/clang-tidy/tool/CMakeLists.txt   | 13 +----
- .../clang-tidy/tool/ClangTidyMain.cpp              |  6 --
- clang-tools-extra/docs/clang-tidy/Contributing.rst | 20 -------
- clang-tools-extra/docs/clang-tidy/index.rst        |  9 ---
- clang-tools-extra/test/CMakeLists.txt              | 22 --------
- .../test/clang-tidy/CTTestTidyModule.cpp           | 66 ----------------------
- clang-tools-extra/test/lit.cfg.py                  |  6 +-
- clang-tools-extra/test/lit.site.cfg.py.in          |  4 +-
+ .../clang-tidy/tool/CMakeLists.txt            | 13 +---
+ .../clang-tidy/tool/ClangTidyMain.cpp         |  6 --
+ .../docs/clang-tidy/Contributing.rst          | 20 ------
+ clang-tools-extra/docs/clang-tidy/index.rst   |  9 ---
+ clang-tools-extra/test/CMakeLists.txt         | 22 -------
+ .../test/clang-tidy/CTTestTidyModule.cpp      | 66 -------------------
+ clang-tools-extra/test/lit.cfg.py             |  6 +-
+ clang-tools-extra/test/lit.site.cfg.py.in     |  4 +-
  8 files changed, 5 insertions(+), 141 deletions(-)
  delete mode 100644 clang-tools-extra/test/clang-tidy/CTTestTidyModule.cpp
 
 diff --git a/clang-tools-extra/clang-tidy/tool/CMakeLists.txt b/clang-tools-extra/clang-tidy/tool/CMakeLists.txt
-index 3ce5528..4b8c938 100644
+index 3ce552872015..4b8c93801501 100644
 --- a/clang-tools-extra/clang-tidy/tool/CMakeLists.txt
 +++ b/clang-tools-extra/clang-tidy/tool/CMakeLists.txt
 @@ -29,17 +29,11 @@ clang_target_link_libraries(clangTidyMain
@@ -53,7 +53,7 @@ index 3ce5528..4b8c938 100644
  install(PROGRAMS clang-tidy-diff.py
    DESTINATION "${CMAKE_INSTALL_DATADIR}/clang"
 diff --git a/clang-tools-extra/clang-tidy/tool/ClangTidyMain.cpp b/clang-tools-extra/clang-tidy/tool/ClangTidyMain.cpp
-index 1b0010b..6147d90 100644
+index 1b0010bdd62a..6147d90eb10b 100644
 --- a/clang-tools-extra/clang-tidy/tool/ClangTidyMain.cpp
 +++ b/clang-tools-extra/clang-tidy/tool/ClangTidyMain.cpp
 @@ -20,7 +20,6 @@
@@ -77,7 +77,7 @@ index 1b0010b..6147d90 100644
        CommonOptionsParser::create(argc, argv, ClangTidyCategory,
                                    cl::ZeroOrMore);
 diff --git a/clang-tools-extra/docs/clang-tidy/Contributing.rst b/clang-tools-extra/docs/clang-tidy/Contributing.rst
-index 5849353..12f3aac 100644
+index 5849353591cc..12f3aac0db43 100644
 --- a/clang-tools-extra/docs/clang-tidy/Contributing.rst
 +++ b/clang-tools-extra/docs/clang-tidy/Contributing.rst
 @@ -639,26 +639,6 @@ This keeps the test directory from getting cluttered.
@@ -108,7 +108,7 @@ index 5849353..12f3aac 100644
  Running clang-tidy on LLVM
  --------------------------
 diff --git a/clang-tools-extra/docs/clang-tidy/index.rst b/clang-tools-extra/docs/clang-tidy/index.rst
-index c76259e..3231b15 100644
+index c76259e02f8d..3231b1528efc 100644
 --- a/clang-tools-extra/docs/clang-tidy/index.rst
 +++ b/clang-tools-extra/docs/clang-tidy/index.rst
 @@ -218,15 +218,6 @@ An overview of all the command-line options:
@@ -128,7 +128,7 @@ index c76259e..3231b15 100644
      --quiet                        -
                                       Run clang-tidy in quiet mode. This suppresses
 diff --git a/clang-tools-extra/test/CMakeLists.txt b/clang-tools-extra/test/CMakeLists.txt
-index acae3fd..c07932b 100644
+index e72dae90d935..e742639bc056 100644
 --- a/clang-tools-extra/test/CMakeLists.txt
 +++ b/clang-tools-extra/test/CMakeLists.txt
 @@ -9,8 +9,6 @@ set(CLANG_TOOLS_BINARY_DIR "${CMAKE_CURRENT_BINARY_DIR}/..")
@@ -140,7 +140,7 @@ index acae3fd..c07932b 100644
    )
  
  configure_lit_site_cfg(
-@@ -72,26 +70,6 @@ foreach(dep ${LLVM_UTILS_DEPS})
+@@ -67,26 +65,6 @@ foreach(dep ${LLVM_UTILS_DEPS})
    endif()
  endforeach()
  
@@ -164,12 +164,12 @@ index acae3fd..c07932b 100644
 -  endif()
 -endif()
 -
- add_lit_testsuite(check-clang-tools "Running the Clang extra tools' regression tests"
-   ${CMAKE_CURRENT_BINARY_DIR}
-   DEPENDS ${CLANG_TOOLS_TEST_DEPS}
+ add_lit_testsuite(check-clang-extra "Running clang-tools-extra/test"
+    ${CMAKE_CURRENT_BINARY_DIR}
+    DEPENDS ${CLANG_TOOLS_TEST_DEPS}
 diff --git a/clang-tools-extra/test/clang-tidy/CTTestTidyModule.cpp b/clang-tools-extra/test/clang-tidy/CTTestTidyModule.cpp
 deleted file mode 100644
-index c66a94f..0000000
+index c66a94f458cf..000000000000
 --- a/clang-tools-extra/test/clang-tidy/CTTestTidyModule.cpp
 +++ /dev/null
 @@ -1,66 +0,0 @@
@@ -240,7 +240,7 @@ index c66a94f..0000000
 -// and thus register the CTTestModule.
 -volatile int CTTestModuleAnchorSource = 0;
 diff --git a/clang-tools-extra/test/lit.cfg.py b/clang-tools-extra/test/lit.cfg.py
-index f8fdfbd..79d7416 100644
+index f8fdfbd0a920..79d74160d563 100644
 --- a/clang-tools-extra/test/lit.cfg.py
 +++ b/clang-tools-extra/test/lit.cfg.py
 @@ -50,8 +50,4 @@ run_clang_tidy = os.path.join(
@@ -255,7 +255,7 @@ index f8fdfbd..79d7416 100644
 +     '%s %s' % (python_exec, run_clang_tidy)) )
 \ No newline at end of file
 diff --git a/clang-tools-extra/test/lit.site.cfg.py.in b/clang-tools-extra/test/lit.site.cfg.py.in
-index 7b3abe7..ffc95cf 100644
+index 7b3abe7259df..ffc95cf1f936 100644
 --- a/clang-tools-extra/test/lit.site.cfg.py.in
 +++ b/clang-tools-extra/test/lit.site.cfg.py.in
 @@ -2,7 +2,8 @@
@@ -277,5 +277,5 @@ index 7b3abe7..ffc95cf 100644
  # Support substitution of the tools and libs dirs with user parameters. This is
  # used when we can't determine the tool dir at configuration time.
 -- 
-1.8.3.1
+2.35.1
 
