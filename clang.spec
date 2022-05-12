@@ -31,6 +31,7 @@
 	%{_bindir}/clang-linker-wrapper \
 	%{_bindir}/clang-move \
 	%{_bindir}/clang-offload-bundler \
+	%{_bindir}/clang-offload-packager \
 	%{_bindir}/clang-offload-wrapper \
 	%{_bindir}/clang-query \
 	%{_bindir}/clang-refactor \
