@@ -184,6 +184,10 @@ BuildRequires: perl(Term::ANSIColor)
 BuildRequires: perl(Text::ParseWords)
 BuildRequires: perl(Sys::Hostname)
 
+%if %{with pgo_instrumented_build}
+BuildRequires: compiler-rt
+%endif
+
 Requires:	%{name}-libs%{?_isa} = %{version}-%{release}
 
 # clang requires gcc, clang++ requires libstdc++-devel
@@ -427,6 +431,12 @@ sed -i 's/\@FEDORA_LLVM_LIB_SUFFIX\@//g' test/lit.cfg.py
 	-DCLANG_REPOSITORY_STRING="%{?fedora:Fedora}%{?rhel:Red Hat} %{version}-%{release}" \
 %ifarch %{arm}
 	-DCLANG_DEFAULT_LINKER=lld \
+%endif
+%if %{with pgo_instrumented_build}
+	-DLLVM_BUILD_INSTRUMENTED=IR \
+	-DLLVM_BUILD_RUNTIME=No \
+	-DCMAKE_C_COMPILER=/usr/bin/clang \
+	-DCMAKE_CXX_COMPILER=/usr/bin/clang++ \
 %endif
 	-DCLANG_DEFAULT_UNWINDLIB=libgcc
 
