@@ -1,4 +1,4 @@
-From 85a24eec4ca82cc18e71e288860c7ba442d8c152 Mon Sep 17 00:00:00 2001
+From b4b2a67fc0de354733d9e6f6573be69560ddfd9b Mon Sep 17 00:00:00 2001
 From: Nikita Popov <npopov@redhat.com>
 Date: Thu, 3 Feb 2022 10:34:44 +0100
 Subject: [PATCH] Work around gcc miscompile
@@ -28,5 +28,5 @@ index d4dc790c008a..77a1e6c32c6f 100644
                 diag::err_invalid_vector_long_double_decl_spec);
        else if (!S.Context.getTargetInfo().hasFeature("vsx") &&
 -- 
-2.35.1
+2.35.3
 
