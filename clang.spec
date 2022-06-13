@@ -1,3 +1,11 @@
+%bcond_without snapshot_build
+
+%if %{with snapshot_build}
+# Unlock LLVM Snapshot LUA functions
+%{llvm_sb_verbose}
+%{llvm_sb}
+%endif
+
 %bcond_with compat_build
 %bcond_without check
 
