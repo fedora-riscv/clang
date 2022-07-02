@@ -320,7 +320,7 @@ Requires:      python3
 %autopatch -m200 -p2 -v
 
 # failing test case
-rm test/clang-tidy/checkers/altera-struct-pack-align.cpp
+rm test/clang-tidy/checkers/altera/struct-pack-align.cpp
 
 %py3_shebang_fix \
 	clang-tidy/tool/ \
