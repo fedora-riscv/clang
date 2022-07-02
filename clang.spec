@@ -132,8 +132,7 @@ Patch8:		0008-PATCH-cmake-Allow-shared-libraries-to-customize-the-.patch
 Patch9:		0009-PATCH-Revert-replace-clang-LLVM_ENABLE_PLUGINS-CLANG.patch
 Patch10:	0010-PATCH-clang-Produce-DWARF4-by-default.patch
 # Patches for clang-tools-extra (MUST NOT BE MIXED WITH CLANG PATCHES!!!!)
-Patch210:	0210-PATCH-Revert-replace-clang-LLVM_ENABLE_PLUGINS-CLANG.patch
-Patch211:	0211-PATCH-Revert-Reland-enable-plugins-for-clang-tidy.patch
+Patch210:	0001-clang-tools-extra-Make-test-dependency-on-LLVMHello-.patch
 
 BuildRequires:	gcc
 BuildRequires:	gcc-c++
