@@ -69,11 +69,13 @@ Patch5:     0001-Work-around-gcc-miscompile.patch
 Patch6:     m-branch-protection.patch
 Patch7:     0010-PATCH-clang-Produce-DWARF4-by-default.patch
 
+%if %{without compat_build}
 # Patches for clang-tools-extra
 # See https://reviews.llvm.org/D120301
 Patch201:   llvm-hello.patch
 # See https://github.com/llvm/llvm-project/issues/54116
 Patch202:   remove-test.patch
+%endif
 
 BuildRequires:	gcc
 BuildRequires:	gcc-c++
