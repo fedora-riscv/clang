@@ -646,10 +646,10 @@ false
 
 %endif
 %changelog
+%{?llvm_snapshot_changelog_entry}
+
 * Fri Apr 15 2022 Serge Guelton - 13.0.1-2
 - Rebase downstream patches
-
-%{?llvm_snapshot_changelog_entry}
 
 * Thu Feb 03 2022 Nikita Popov <npopov@redhat.com> - 13.0.1-1
 - Update to LLVM 13.0.1 final
