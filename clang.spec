@@ -3,7 +3,7 @@
 
 %global maj_ver 13
 %global min_ver 0
-%global patch_ver 0
+%global patch_ver 1
 #global rc_ver 4
 %global clang_version %{maj_ver}.%{min_ver}.%{patch_ver}
 
@@ -72,7 +72,7 @@
 
 Name:		%pkg_name
 Version:	%{clang_version}%{?rc_ver:~rc%{rc_ver}}
-Release:	3%{?dist}
+Release:	1%{?dist}
 Summary:	A C language family front-end for LLVM
 
 License:	NCSA
@@ -570,6 +570,9 @@ false
 
 %endif
 %changelog
+* Tue Jul 19 2022 Tom Stellard <tstellar@redhat.com> - 13.0.1-1
+- 13.0.1 Release
+
 * Wed Oct 06 2021 Tom Stellard <tstellar@redhat.com> - 13.0.0-3
 - Fix gcc detection with redhat triples
 
