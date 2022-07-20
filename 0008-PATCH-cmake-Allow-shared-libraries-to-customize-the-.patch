@@ -1,4 +1,4 @@
-From c06193e57d067817daeebec1e3dee90e02790f09 Mon Sep 17 00:00:00 2001
+From 0e19edc158d36414fc4027aa894244ab4d61d90c Mon Sep 17 00:00:00 2001
 From: Tom Stellard <tstellar@redhat.com>
 Date: Wed, 4 Aug 2021 14:05:38 -0700
 Subject: [PATCH] cmake: Allow shared libraries to customize the soname using
@@ -35,5 +35,5 @@ index 9c1f8ea452b3..4d785924e4bb 100644
  if (NOT LLVM_ENABLE_PIC)
    return()
 -- 
-2.35.3
+2.36.1
 

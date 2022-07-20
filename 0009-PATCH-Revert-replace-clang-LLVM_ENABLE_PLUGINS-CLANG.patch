@@ -1,4 +1,4 @@
-From 8442585bd1fba2e79ed91b5f87b84c54aa256c98 Mon Sep 17 00:00:00 2001
+From a823b7ea20be171757901732924794fb3752f466 Mon Sep 17 00:00:00 2001
 From: Tom Stellard <tstellar@redhat.com>
 Date: Wed, 16 Feb 2022 16:31:51 -0800
 Subject: [PATCH] Revert "replace clang LLVM_ENABLE_PLUGINS ->
@@ -101,5 +101,5 @@ index d05b71db13f2..235f9abbfd32 100644
  if(CLANG_PLUGIN_SUPPORT)
    set(support_plugins SUPPORT_PLUGINS)
 -- 
-2.35.3
+2.36.1
 

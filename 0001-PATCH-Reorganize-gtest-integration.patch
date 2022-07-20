@@ -1,4 +1,4 @@
-From 9b30d412f6260481a8ff6edd4f02c8370dcf1261 Mon Sep 17 00:00:00 2001
+From f82b66799788fedd57924f5dd2779a56bd19379f Mon Sep 17 00:00:00 2001
 From: serge-sans-paille <sguelton@redhat.com>
 Date: Thu, 25 Feb 2021 14:04:52 +0100
 Subject: [PATCH] Reorganize gtest integration
@@ -38,5 +38,5 @@ index 191f4f2af242..af86296ef4fc 100644
      list(APPEND CLANG_TEST_DEPS ClangUnitTests)
      list(APPEND CLANG_TEST_PARAMS
 -- 
-2.35.3
+2.36.1
 

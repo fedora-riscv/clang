@@ -1,4 +1,4 @@
-From ce9bc9a5c6e1345b756ee666fc3589a020bc9796 Mon Sep 17 00:00:00 2001
+From 3003afd66e4ccabdc5b53e3b7d29cc6c0eb0174d Mon Sep 17 00:00:00 2001
 From: serge-sans-paille <sguelton@redhat.com>
 Date: Thu, 25 Feb 2021 14:09:29 +0100
 Subject: [PATCH] Make -funwind-tables the default on all archs
@@ -9,7 +9,7 @@ Subject: [PATCH] Make -funwind-tables the default on all archs
  2 files changed, 2 insertions(+), 2 deletions(-)
 
 diff --git a/clang/lib/Driver/ToolChain.cpp b/clang/lib/Driver/ToolChain.cpp
-index 5fe812120641..f06813899014 100644
+index 6d9e31735843..c287384c11c1 100644
 --- a/clang/lib/Driver/ToolChain.cpp
 +++ b/clang/lib/Driver/ToolChain.cpp
 @@ -288,7 +288,7 @@ std::string ToolChain::getInputFilename(const InputInfo &Input) const {
@@ -22,10 +22,10 @@ index 5fe812120641..f06813899014 100644
  
  Tool *ToolChain::getClang() const {
 diff --git a/clang/lib/Driver/ToolChains/Gnu.cpp b/clang/lib/Driver/ToolChains/Gnu.cpp
-index c6ea1d026647..769ad2d20843 100644
+index 34396b0b59c2..22c6cc03a4f0 100644
 --- a/clang/lib/Driver/ToolChains/Gnu.cpp
 +++ b/clang/lib/Driver/ToolChains/Gnu.cpp
-@@ -2816,7 +2816,7 @@ bool Generic_GCC::IsUnwindTablesDefault(const ArgList &Args) const {
+@@ -2815,7 +2815,7 @@ bool Generic_GCC::IsUnwindTablesDefault(const ArgList &Args) const {
    case llvm::Triple::x86_64:
      return true;
    default:
@@ -35,5 +35,5 @@ index c6ea1d026647..769ad2d20843 100644
  }
  
 -- 
-2.35.3
+2.36.1
 
