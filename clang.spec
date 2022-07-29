@@ -379,10 +379,6 @@ sed -i 's/\@FEDORA_LLVM_LIB_SUFFIX\@//g' test/lit.cfg.py
 %global optflags %(echo %{optflags} | sed 's/-g /-g1 /')
 %endif
 
-# Test if we can default DWARF4 instead of 5
-# TODO(kkleine): NOT ONLY COMPILE WITH DWARF4 BUT MAKE IT THE DEFAULT: https://bugzilla.redhat.com/show_bug.cgi?id=2061057
-%global optflags %(echo %{optflags} " -gdwarf-4 ")
-
 # -DLLVM_ENABLE_NEW_PASS_MANAGER=ON can be removed once this patch is committed:
 # https://reviews.llvm.org/D107628
 %cmake  -G Ninja \

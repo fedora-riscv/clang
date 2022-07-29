@@ -1,7 +1,7 @@
-From 2792fb7902ab5766337b14e568503615345d4a78 Mon Sep 17 00:00:00 2001
+From a4eac2ddf9cfb4e4d9c5a740a190309580a6a137 Mon Sep 17 00:00:00 2001
 From: Konrad Kleine <kkleine@redhat.com>
 Date: Thu, 24 Mar 2022 09:44:21 +0100
-Subject: [PATCH][clang]Produce DWARF4 by default
+Subject: [PATCH] Produce DWARF4 by default
 
 Have a look at the following commit to see when the move from DWARF 4 to 5 first happened upstream:
 
@@ -10,9 +10,10 @@ https://github.com/llvm/llvm-project/commit/d3b26dea16108c427b19b5480c9edc76edf8
  clang/include/clang/Driver/ToolChain.h | 2 +-
  clang/test/CodeGen/dwarf-version.c     | 4 ++--
  clang/test/Driver/cl-options.c         | 2 +-
+ clang/test/Driver/clang-g-opts.c       | 2 +-
  clang/test/Driver/ve-toolchain.c       | 2 +-
  clang/test/Driver/ve-toolchain.cpp     | 2 +-
- 5 files changed, 6 insertions(+), 6 deletions(-)
+ 6 files changed, 7 insertions(+), 7 deletions(-)
 
 diff --git a/clang/include/clang/Driver/ToolChain.h b/clang/include/clang/Driver/ToolChain.h
 index f20ab164531b..53c86ee82936 100644
@@ -55,6 +56,19 @@ index a2e350a0a835..01889ba0bf9b 100644
  
  // RUN: %clang_cl -fmsc-version=1800 -TP -### -- %s 2>&1 | FileCheck -check-prefix=CXX11 %s
  // CXX11: -std=c++11
+diff --git a/clang/test/Driver/clang-g-opts.c b/clang/test/Driver/clang-g-opts.c
+index d982b1070cae..bb129e75769c 100644
+--- a/clang/test/Driver/clang-g-opts.c
++++ b/clang/test/Driver/clang-g-opts.c
+@@ -32,7 +32,7 @@
+ 
+ // CHECK-WITHOUT-G-NOT: -debug-info-kind
+ // CHECK-WITH-G: "-debug-info-kind=constructor"
+-// CHECK-WITH-G: "-dwarf-version=5"
++// CHECK-WITH-G: "-dwarf-version=4"
+ // CHECK-WITH-G-DWARF2: "-dwarf-version=2"
+ 
+ // CHECK-WITH-G-STANDALONE: "-debug-info-kind=standalone"
 diff --git a/clang/test/Driver/ve-toolchain.c b/clang/test/Driver/ve-toolchain.c
 index 32e25769b6da..b8a2852daba8 100644
 --- a/clang/test/Driver/ve-toolchain.c
@@ -82,5 +96,5 @@ index 5a33d5eceb61..cedf895b36dc 100644
  ///-----------------------------------------------------------------------------
  /// Checking include-path
 -- 
-2.36.1
+2.27.0
 
