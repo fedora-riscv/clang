@@ -1,4 +1,4 @@
-From a823b7ea20be171757901732924794fb3752f466 Mon Sep 17 00:00:00 2001
+From 0e1f9978a7d3af69de5d75d53914080bd67d4ff8 Mon Sep 17 00:00:00 2001
 From: Tom Stellard <tstellar@redhat.com>
 Date: Wed, 16 Feb 2022 16:31:51 -0800
 Subject: [PATCH] Revert "replace clang LLVM_ENABLE_PLUGINS ->
@@ -16,10 +16,10 @@ We don't install the LLVMHello plugin, so tests should not depend on it.
  5 files changed, 6 insertions(+), 13 deletions(-)
 
 diff --git a/clang/CMakeLists.txt b/clang/CMakeLists.txt
-index af86296ef4fc..d3609149ba5a 100644
+index 82207fae0c01..74517eae75cf 100644
 --- a/clang/CMakeLists.txt
 +++ b/clang/CMakeLists.txt
-@@ -483,15 +483,6 @@ add_definitions( -D_GNU_SOURCE )
+@@ -495,15 +495,6 @@ add_definitions( -D_GNU_SOURCE )
  option(CLANG_BUILD_TOOLS
    "Build the Clang tools. If OFF, just generate build targets." ON)
  
@@ -32,9 +32,9 @@ index af86296ef4fc..d3609149ba5a 100644
 -  "Build clang with plugin support" ON
 -  "HAVE_CLANG_PLUGIN_SUPPORT" OFF)
 -
- option(CLANG_ENABLE_ARCMT "Build ARCMT." ON)
- option(CLANG_ENABLE_STATIC_ANALYZER
-   "Include static analyzer in clang binary." ON)
+ # If libstdc++ is statically linked, clang-repl needs to statically link libstdc++
+ # itself, which is not possible in many platforms because of current limitations in 
+ # JIT stack. (more platforms need to be supported by JITLink)
 diff --git a/clang/lib/Analysis/plugins/CMakeLists.txt b/clang/lib/Analysis/plugins/CMakeLists.txt
 index 157be7e4147b..ffd95e2886bf 100644
 --- a/clang/lib/Analysis/plugins/CMakeLists.txt
@@ -49,7 +49,7 @@ index 157be7e4147b..ffd95e2886bf 100644
    add_subdirectory(CheckerDependencyHandling)
    add_subdirectory(CheckerOptionHandling)
 diff --git a/clang/test/CMakeLists.txt b/clang/test/CMakeLists.txt
-index 5b604b2a3eeb..8cd145e3cb37 100644
+index a05c372fbd34..39bbf0c8324c 100644
 --- a/clang/test/CMakeLists.txt
 +++ b/clang/test/CMakeLists.txt
 @@ -7,11 +7,11 @@ llvm_canonicalize_cmake_booleans(
@@ -65,7 +65,7 @@ index 5b604b2a3eeb..8cd145e3cb37 100644
    LLVM_ENABLE_THREADS
    LLVM_WITH_Z3
    )
-@@ -138,7 +138,7 @@ if( NOT CLANG_BUILT_STANDALONE )
+@@ -137,7 +137,7 @@ if( NOT CLANG_BUILT_STANDALONE )
  endif()
  
  if(CLANG_ENABLE_STATIC_ANALYZER)
@@ -101,5 +101,5 @@ index d05b71db13f2..235f9abbfd32 100644
  if(CLANG_PLUGIN_SUPPORT)
    set(support_plugins SUPPORT_PLUGINS)
 -- 
-2.36.1
+2.27.0
 
