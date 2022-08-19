@@ -3,7 +3,7 @@
 
 %global maj_ver 14
 %global min_ver 0
-%global patch_ver 0
+%global patch_ver 5
 #global rc_ver 4
 %global clang_version %{maj_ver}.%{min_ver}.%{patch_ver}
 
@@ -65,8 +65,6 @@ Patch3:     0001-Driver-Add-a-gcc-equivalent-triple-to-the-list-of-tr.patch
 Patch4:     0001-cmake-Allow-shared-libraries-to-customize-the-soname.patch
 # This patch can be dropped once gcc-12.0.1-0.5.fc36 is in the repo.
 Patch5:     0001-Work-around-gcc-miscompile.patch
-# https://github.com/llvm/llvm-project/commit/fed96f31bb5b68f77dd617ee8e698dd8171ee71b
-Patch6:     m-branch-protection.patch
 Patch7:     0010-PATCH-clang-Produce-DWARF4-by-default.patch
 
 %if %{without compat_build}
@@ -597,6 +595,9 @@ false
 
 %endif
 %changelog
+* Thu Aug 18 2022 Tom Stellard <tstellar@redhat.com> - 14.0.5-1
+- 14.0.5 Release
+
 * Wed Mar 23 2022 Timm Bäder <tbaeder@redhat.com> - 14.0.0-1
 - Update to 14.0.0
 
