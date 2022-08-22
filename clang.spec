@@ -39,7 +39,7 @@
 
 Name:		%pkg_name
 Version:	%{clang_version}%{?rc_ver:~rc%{rc_ver}}
-Release:	6%{?dist}
+Release:	6.0.riscv64%{?dist}
 Summary:	A C language family front-end for LLVM
 
 License:	NCSA
@@ -281,7 +281,7 @@ rm test/CodeGen/profile-filter.c
 
 %build
 # We run the builders out of memory on armv7 and i686 when LTO is enabled
-%ifarch %{arm} i686
+%ifarch %{arm} i686 riscv64
 %define _lto_cflags %{nil}
 %else
 # This package does not ship any object files or static libraries, so we
@@ -298,7 +298,7 @@ sed -i 's/\@FEDORA_LLVM_LIB_SUFFIX\@/64/g' test/lit.cfg.py
 sed -i 's/\@FEDORA_LLVM_LIB_SUFFIX\@//g' test/lit.cfg.py
 %endif
 
-%ifarch s390 s390x %{arm} %ix86 ppc64le
+%ifarch s390 s390x %{arm} %ix86 ppc64le riscv64
 # Decrease debuginfo verbosity to reduce memory consumption during final library linking
 %global optflags %(echo %{optflags} | sed 's/-g /-g1 /')
 %endif
@@ -316,7 +316,7 @@ CFLAGS="$CFLAGS -Wno-address -Wno-nonnull -Wno-maybe-uninitialized"
 	-DCMAKE_BUILD_TYPE=RelWithDebInfo \
 	-DPYTHON_EXECUTABLE=%{__python3} \
 	-DCMAKE_SKIP_RPATH:BOOL=ON \
-%ifarch s390 s390x %{arm} %ix86 ppc64le
+%ifarch s390 s390x %{arm} %ix86 ppc64le riscv64
 	-DCMAKE_C_FLAGS_RELWITHDEBINFO="%{optflags} -DNDEBUG" \
 	-DCMAKE_CXX_FLAGS_RELWITHDEBINFO="%{optflags} -DNDEBUG" \
 %endif
@@ -591,6 +591,9 @@ false
 
 %endif
 %changelog
+* Mon Aug 22 2022 David Abdurachmanov <davidlt@rivosinc.com> - 14.0.5-6.0.riscv64
+- Prepare for riscv64
+
 * Wed Aug 10 2022 Nikita Popov <npopov@redhat.com> - 14.0.5-6
 - Revert powerpc -mabi=ieeelongdouble default
 
