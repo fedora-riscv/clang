@@ -41,7 +41,7 @@
 
 Name:		%pkg_name
 Version:	%{clang_version}%{?rc_ver:~rc%{rc_ver}}
-Release:	2%{?dist}
+Release:	3%{?dist}
 Summary:	A C language family front-end for LLVM
 
 License:	NCSA
@@ -307,12 +307,9 @@ sed -i 's/\@FEDORA_LLVM_LIB_SUFFIX\@//g' test/lit.cfg.py
 %define _find_debuginfo_dwz_opts %{nil}
 %endif
 
-# TODO: Drop the HAVE_CXX_ATOMICS64_WITHOUT_LIB once clang15 is in the buildroot. It looks like
-# previously clang emitted __atomic_load for std::atomic<double>, which is not detected by cmake.
+# We set CLANG_DEFAULT_PIE_ON_LINUX=OFF to match the default used by Fedora's GCC.
 %cmake  -G Ninja \
-%ifarch %ix86
-	-DHAVE_CXX_ATOMICS64_WITHOUT_LIB=OFF \
-%endif
+	-DCLANG_DEFAULT_PIE_ON_LINUX=OFF \
 	-DLLVM_PARALLEL_LINK_JOBS=1 \
 	-DLLVM_LINK_LLVM_DYLIB:BOOL=ON \
 	-DCMAKE_BUILD_TYPE=RelWithDebInfo \
@@ -596,6 +593,9 @@ false
 
 %endif
 %changelog
+* Thu Oct 13 2022 Nikita Popov <npopov@redhat.com> - 15.0.0-3
+- Default to non-pie, fix rhbz#2134146
+
 * Wed Sep 14 2022 Nikita Popov <npopov@redhat.com> - 15.0.0-2
 - Downgrade implicit int and implicit function declaration to warning only
 
