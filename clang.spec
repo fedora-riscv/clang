@@ -5,7 +5,7 @@
 
 %global maj_ver 15
 %global min_ver 0
-%global patch_ver 0
+%global patch_ver 4
 #global rc_ver 3
 %global clang_version %{maj_ver}.%{min_ver}.%{patch_ver}
 
@@ -41,7 +41,7 @@
 
 Name:		%pkg_name
 Version:	%{clang_version}%{?rc_ver:~rc%{rc_ver}}
-Release:	3%{?dist}
+Release:	1%{?dist}
 Summary:	A C language family front-end for LLVM
 
 License:	NCSA
@@ -67,10 +67,6 @@ Patch5:     0010-PATCH-clang-Produce-DWARF4-by-default.patch
 
 # TODO: Can be dropped in LLVM 16: https://reviews.llvm.org/D133316
 Patch6:     0001-Mark-fopenmp-implicit-rpath-as-NoArgumentUnused.patch
-
-# Backport of https://reviews.llvm.org/D133800 to the 15.0.0 release.
-# TODO: Drop once updating to 15.0.1 or newer.
-Patch7:     0001-Clang-15.0.1-Downgrade-implicit-int-and-implicit-fun.patch
 
 %if %{without compat_build}
 # Patches for clang-tools-extra
@@ -461,6 +457,10 @@ ln -s %{_datadir}/clang/clang-format-diff.py %{buildroot}%{_bindir}/clang-format
 %check
 %if %{without compat_build}
 %if %{with check}
+# Build test dependencies separately, to prevent invocations of host clang from being affected
+# by LD_LIBRARY_PATH below.
+%cmake_build --target clang-test-depends \
+    ExtraToolsUnitTests ClangdUnitTests ClangIncludeCleanerUnitTests ClangPseudoUnitTests
 # requires lit.py from LLVM utilities
 # FIXME: Fix failing ARM tests
 LD_LIBRARY_PATH=%{buildroot}/%{_libdir} %{__ninja} check-all -C %{__cmake_builddir} || \
@@ -593,8 +593,8 @@ false
 
 %endif
 %changelog
-* Thu Oct 13 2022 Nikita Popov <npopov@redhat.com> - 15.0.0-3
-- Default to non-pie, fix rhbz#2134146
+* Tue Nov 08 2022 Nikita Popov <npopov@redhat.com> - 15.0.4-1
+- Update to LLVM 15.0.4
 
 * Wed Sep 14 2022 Nikita Popov <npopov@redhat.com> - 15.0.0-2
 - Downgrade implicit int and implicit function declaration to warning only
