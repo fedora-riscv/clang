@@ -1,66 +1,26 @@
 %bcond_without snapshot_build
 
 %if %{with snapshot_build}
-# Unlock LLVM Snapshot LUA functions
-%{llvm_sb_verbose}
 %{llvm_sb}
 %endif
+
+%global toolchain clang
 
 %bcond_with compat_build
 %bcond_without check
 
-%global maj_ver 13
+%global maj_ver 15
 %global min_ver 0
-%global patch_ver 1
-#global rc_ver 3
-%global clang_version %{maj_ver}.%{min_ver}.%{patch_ver}
-
-%global clang_srcdir clang-%{version}%{?rc_ver:rc%{rc_ver}}.src
-%global clang_tools_srcdir clang-tools-extra-%{version}%{?rc_ver:rc%{rc_ver}}.src
+%global patch_ver 4
 
 %if %{with snapshot_build}
-%undefine rc_ver
-%global clang_srcdir clang-%{llvm_snapshot_version_major}.%{llvm_snapshot_version_minor}.%{llvm_snapshot_version_patch}.src
-%global clang_tools_srcdir clang-tools-extra-%{llvm_snapshot_version_major}.%{llvm_snapshot_version_minor}.%{llvm_snapshot_version_patch}.src
 %global maj_ver %{llvm_snapshot_version_major}
 %global min_ver %{llvm_snapshot_version_minor}
 %global patch_ver %{llvm_snapshot_version_patch}
-%global clang_version %{llvm_snapshot_version_major}.%{llvm_snapshot_version_minor}.%{llvm_snapshot_version_patch}
 %endif
 
-%global clang_tools_binaries \
-	%{_bindir}/clang-apply-replacements \
-	%{_bindir}/clang-change-namespace \
-	%{_bindir}/clang-check \
-	%{_bindir}/clang-doc \
-	%{_bindir}/clang-extdef-mapping \
-	%{_bindir}/clang-format \
-	%{_bindir}/clang-include-fixer \
-	%{_bindir}/clang-linker-wrapper \
-	%{_bindir}/clang-move \
-	%{_bindir}/clang-offload-bundler \
-	%{_bindir}/clang-offload-packager \
-	%{_bindir}/clang-offload-wrapper \
-	%{_bindir}/clang-query \
-	%{_bindir}/clang-refactor \
-	%{_bindir}/clang-rename \
-	%{_bindir}/clang-reorder-fields \
-	%{_bindir}/clang-repl \
-	%{_bindir}/clang-pseudo \
-	%{_bindir}/clang-scan-deps \
-	%{_bindir}/clang-tidy \
-	%{_bindir}/clangd \
-	%{_bindir}/diagtool \
-	%{_bindir}/hmaptool \
-	%{_bindir}/pp-trace
-
-%global clang_binaries \
-	%{_bindir}/clang \
-	%{_bindir}/clang++ \
-	%{_bindir}/clang-%{maj_ver} \
-	%{_bindir}/clang++-%{maj_ver} \
-	%{_bindir}/clang-cl \
-	%{_bindir}/clang-cpp \
+#global rc_ver 3
+%global clang_version %{maj_ver}.%{min_ver}.%{patch_ver}
 
 %if %{with compat_build}
 %global pkg_name clang%{maj_ver}
@@ -80,8 +40,6 @@
 %global pkg_libdir %{_libdir}
 %endif
 
-%global build_install_prefix %{buildroot}%{install_prefix}
-
 %ifarch ppc64le
 # Too many threads on ppc64 systems causes OOM errors.
 %global _smp_mflags -j8
@@ -95,8 +53,8 @@
 %endif
 
 Name:		%pkg_name
-Version:	%{clang_version}%{?rc_ver:~rc%{rc_ver}}%{?llvm_snapshot_version_suffix:~%{llvm_snapshot_version_suffix}}
-Release:	2%{?dist}
+Version:	%{clang_version}%{?rc_ver:~rc%{rc_ver}}
+Release:	1%{?dist}
 Summary:	A C language family front-end for LLVM
 
 License:	NCSA
@@ -112,31 +70,28 @@ Source3:	https://github.com/llvm/llvm-project/releases/download/llvmorg-%{clang_
 Source1:	https://github.com/llvm/llvm-project/releases/download/llvmorg-%{clang_version}%{?rc_ver:-rc%{rc_ver}}/%{clang_tools_srcdir}.tar.xz
 Source2:	https://github.com/llvm/llvm-project/releases/download/llvmorg-%{clang_version}%{?rc_ver:-rc%{rc_ver}}/%{clang_tools_srcdir}.tar.xz.sig
 %endif
-%endif
-%if %{without snapshot_build}
-Source4:	tstellar-gpg-key.asc
+Source4:	release-keys.asc
 %endif
 %if %{without compat_build}
 Source5:	macros.%{name}
 %endif
 
 # Patches for clang
-Patch1:		0001-PATCH-Reorganize-gtest-integration.patch
-Patch2:		0002-PATCH-ToolChain-Add-lgcc_s-to-the-linker-flags-when-.patch
-Patch3:		0003-PATCH-Make-funwind-tables-the-default-on-all-archs.patch
-Patch4:		0004-PATCH-Don-t-install-static-libraries.patch
-Patch5:		0005-PATCH-Prefer-gcc-toolchains-with-libgcc_s.so-when-no.patch
-Patch6:		0006-PATCH-Driver-Add-a-gcc-equivalent-triple-to-the-list.patch
-Patch7:		0007-PATCH-Work-around-gcc-miscompile.patch
-Patch8:		0008-PATCH-cmake-Allow-shared-libraries-to-customize-the-.patch
-Patch9:		0009-PATCH-Revert-replace-clang-LLVM_ENABLE_PLUGINS-CLANG.patch
-Patch10:	0010-PATCH-clang-Produce-DWARF4-by-default.patch
-# Patches for clang-tools-extra (MUST NOT BE MIXED WITH CLANG PATCHES!!!!)
-# https://reviews.llvm.org/D120301
-Patch210:	0001-clang-tools-extra-Make-test-dependency-on-LLVMHello-.patch
+Patch0:     0001-PATCH-clang-Reorganize-gtest-integration.patch
+Patch1:     0003-PATCH-Make-funwind-tables-the-default-on-all-archs.patch
+Patch2:     0003-PATCH-clang-Don-t-install-static-libraries.patch
+Patch3:     0001-Driver-Add-a-gcc-equivalent-triple-to-the-list-of-tr.patch
+Patch4:     0001-cmake-Allow-shared-libraries-to-customize-the-soname.patch
+Patch5:     0010-PATCH-clang-Produce-DWARF4-by-default.patch
+Patch6:     0001-Take-into-account-Fedora-Specific-install-dir-for-li.patch
 
-BuildRequires:	gcc
-BuildRequires:	gcc-c++
+%if %{without compat_build}
+# Patches for clang-tools-extra
+# See https://reviews.llvm.org/D120301
+Patch201:   0001-clang-tools-extra-Make-test-dependency-on-LLVMHello-.patch
+%endif
+
+BuildRequires:	clang
 BuildRequires:	cmake
 BuildRequires:	ninja-build
 %if %{with compat_build}
@@ -161,17 +116,19 @@ BuildRequires:	emacs
 # The testsuite uses /usr/bin/lit which is part of the python3-lit package.
 BuildRequires:	python3-lit
 
-BuildRequires:	python3-recommonmark
 BuildRequires:	python3-sphinx
+BuildRequires:	python3-recommonmark
 BuildRequires:	libatomic
 
 # We need python3-devel for %%py3_shebang_fix
 BuildRequires:	python3-devel
 
+%if %{without compat_build}
 # For reproducible pyc file generation
 # See https://docs.fedoraproject.org/en-US/packaging-guidelines/Python_Appendix/#_byte_compilation_reproducibility
 BuildRequires: /usr/bin/marshalparser
 %global py_reproducible_pyc_path %{buildroot}%{python3_sitelib}
+%endif
 
 # Needed for %%multilib_fix_c_header
 BuildRequires:	multilib-rpm-config
@@ -192,10 +149,6 @@ BuildRequires: perl(lib)
 BuildRequires: perl(Term::ANSIColor)
 BuildRequires: perl(Text::ParseWords)
 BuildRequires: perl(Sys::Hostname)
-
-%if %{with pgo_instrumented_build}
-BuildRequires: compiler-rt
-%endif
 
 Requires:	%{name}-libs%{?_isa} = %{version}-%{release}
 
@@ -227,6 +180,8 @@ libomp-devel to enable -fopenmp.
 Summary: Runtime library for clang
 Requires: %{name}-resource-filesystem%{?_isa} = %{version}
 Recommends: compiler-rt%{?_isa} = %{version}
+# atomic support is not part of compiler-rt
+Recommends: libatomic%{?_isa}
 # libomp-devel is required, so clang can find the omp.h header when compiling
 # with -fopenmp.
 Recommends: libomp-devel%{_isa} = %{version}
@@ -242,11 +197,11 @@ Runtime library for clang.
 
 %package devel
 Summary: Development header files for clang
+Requires: %{name}-libs = %{version}-%{release}
 %if %{without compat_build}
 Requires: %{name}%{?_isa} = %{version}-%{release}
 # The clang CMake files reference tools from clang-tools-extra.
 Requires: %{name}-tools-extra%{?_isa} = %{version}-%{release}
-Requires: %{name}-libs = %{version}-%{release}
 %endif
 
 %description devel
@@ -279,6 +234,13 @@ Requires:	emacs-filesystem
 
 %description tools-extra
 A set of extra tools built using Clang's tooling API.
+
+%package tools-extra-devel
+Summary: Development header files for clang tools
+Requires: %{name}-tools-extra = %{version}-%{release}
+
+%description tools-extra-devel
+Development header files for clang tools.
 
 # Put git-clang-format in its own package, because it Requires git
 # and we don't want to force users to install all those dependenices if they
@@ -317,8 +279,8 @@ Requires:      python3
 %{gpgverify} --keyring='%{SOURCE4}' --signature='%{SOURCE2}' --data='%{SOURCE1}'
 %endif
 %setup -T -q -b 1 -n %{clang_tools_srcdir}
-# See https://rpm-software-management.github.io/rpm/manual/autosetup.html#autopatch
-%autopatch -m200 -p2 -v
+%autopatch -m200 -p2
+
 
 # failing test case
 rm test/clang-tidy/checkers/altera/struct-pack-align.cpp
@@ -328,8 +290,7 @@ rm test/clang-tidy/checkers/altera/struct-pack-align.cpp
 	clang-include-fixer/find-all-symbols/tool/run-find-all-symbols.py
 
 %setup -q -n %{clang_srcdir}
-# See https://rpm-software-management.github.io/rpm/manual/autosetup.html#autopatch
-%autopatch -M200 -p2 -v
+%autopatch -M200 -p2
 
 # failing test case
 rm test/CodeGen/profile-filter.c
@@ -339,33 +300,19 @@ rm test/CodeGen/profile-filter.c
 	tools/clang-format/git-clang-format \
 	utils/hmaptool/hmaptool \
 	tools/scan-view/bin/scan-view \
+	tools/scan-view/share/Reporter.py \
+	tools/scan-view/share/startfile.py \
 	tools/scan-build-py/bin/* \
 	tools/scan-build-py/libexec/*
 %endif
 
 %build
 
-# We run the builders out of memory on armv7 and i686 when LTO is enabled
-%ifarch %{arm} i686
+# Use ThinLTO to limit build time.
+%define _lto_cflags -flto=thin
+# And disable LTO on AArch64 entirely.
+%ifarch aarch64
 %define _lto_cflags %{nil}
-%else
-# This package does not ship any object files or static libraries, so we
-# don't need -ffat-lto-objects.
-%global _lto_cflags %(echo %{_lto_cflags} | sed 's/-ffat-lto-objects//')
-%endif
-
-# lto builds with gcc 11 fail while running the lit tests.
-%define _lto_cflags %{nil}
-
-# Disable LTO when building snapshots for Fedora 34 or lower
-%if 0%{?fedora} <= 34
-%global _lto_cflags %{nil}
-%endif
-
-# Avoid errors like this on i386
-# /usr/bin/ld: out of memory allocating 1000 bytes after a total of 772853760 bytes
-%ifarch %ix86
-%global _lto_cflags %{nil}
 %endif
 
 %if 0%{?__isa_bits} == 64
@@ -374,14 +321,23 @@ sed -i 's/\@FEDORA_LLVM_LIB_SUFFIX\@/64/g' test/lit.cfg.py
 sed -i 's/\@FEDORA_LLVM_LIB_SUFFIX\@//g' test/lit.cfg.py
 %endif
 
-%ifarch s390 s390x %{arm} %ix86 ppc64le
+%ifarch s390 s390x %{arm} aarch64 %ix86 ppc64le
 # Decrease debuginfo verbosity to reduce memory consumption during final library linking
 %global optflags %(echo %{optflags} | sed 's/-g /-g1 /')
 %endif
 
-# -DLLVM_ENABLE_NEW_PASS_MANAGER=ON can be removed once this patch is committed:
-# https://reviews.llvm.org/D107628
+# Disable dwz on aarch64, because it takes a huge amount of time to decide not to optimize things.
+%ifarch aarch64
+%define _find_debuginfo_dwz_opts %{nil}
+%endif
+
+# We set CLANG_DEFAULT_PIE_ON_LINUX=OFF and PPC_LINUX_DEFAULT_IEEELONGDOUBLE=ON to match the
+# defaults used by Fedora's GCC.
 %cmake  -G Ninja \
+	-DCLANG_DEFAULT_PIE_ON_LINUX=OFF \
+%if 0%{?fedora}
+	-DPPC_LINUX_DEFAULT_IEEELONGDOUBLE=ON \
+%endif
 	-DLLVM_PARALLEL_LINK_JOBS=1 \
 	-DLLVM_LINK_LLVM_DYLIB:BOOL=ON \
 	-DCMAKE_BUILD_TYPE=RelWithDebInfo \
@@ -393,11 +349,12 @@ sed -i 's/\@FEDORA_LLVM_LIB_SUFFIX\@//g' test/lit.cfg.py
 %endif
 %if %{with compat_build}
 	-DCLANG_BUILD_TOOLS:BOOL=OFF \
-	-DLLVM_CONFIG:FILEPATH=%{_bindir}/llvm-config-%{maj_ver} \
+	-DLLVM_CONFIG:FILEPATH=%{pkg_bindir}/llvm-config-%{maj_ver}-%{__isa_bits} \
 	-DCMAKE_INSTALL_PREFIX=%{install_prefix} \
 	-DCLANG_INCLUDE_TESTS:BOOL=OFF \
 %else
 	-DCLANG_INCLUDE_TESTS:BOOL=ON \
+	-DLLVM_BUILD_UTILS:BOOL=ON \
 	-DLLVM_EXTERNAL_CLANG_TOOLS_EXTRA_SOURCE_DIR=../%{clang_tools_srcdir} \
 	-DLLVM_EXTERNAL_LIT=%{_bindir}/lit \
 	-DLLVM_MAIN_SRC_DIR=%{_datadir}/llvm/src \
@@ -425,7 +382,6 @@ sed -i 's/\@FEDORA_LLVM_LIB_SUFFIX\@//g' test/lit.cfg.py
 	-DLLVM_ENABLE_EH=ON \
 	-DLLVM_ENABLE_RTTI=ON \
 	-DLLVM_BUILD_DOCS=ON \
-	-DLLVM_ENABLE_NEW_PASS_MANAGER=ON \
 	-DLLVM_ENABLE_SPHINX=ON \
 	-DCLANG_LINK_CLANG_DYLIB=ON \
 	%{?abi_revision:-DLLVM_ABI_REVISION=%{abi_revision}} \
@@ -433,15 +389,9 @@ sed -i 's/\@FEDORA_LLVM_LIB_SUFFIX\@//g' test/lit.cfg.py
 	\
 	-DCLANG_BUILD_EXAMPLES:BOOL=OFF \
 	-DBUILD_SHARED_LIBS=OFF \
-	-DCLANG_REPOSITORY_STRING="%{?fedora:Fedora}%{?rhel:Red Hat} %{version}-%{release}" \
+	-DCLANG_REPOSITORY_STRING="%{?dist_vendor} %{version}-%{release}" \
 %ifarch %{arm}
 	-DCLANG_DEFAULT_LINKER=lld \
-%endif
-%if %{with pgo_instrumented_build}
-	-DLLVM_BUILD_INSTRUMENTED=IR \
-	-DLLVM_BUILD_RUNTIME=No \
-	-DCMAKE_C_COMPILER=/usr/bin/clang \
-	-DCMAKE_CXX_COMPILER=/usr/bin/clang++ \
 %endif
 	-DCLANG_DEFAULT_UNWINDLIB=libgcc
 
@@ -457,6 +407,8 @@ sed -i 's/\@FEDORA_LLVM_LIB_SUFFIX\@//g' test/lit.cfg.py
 rm -Rf %{buildroot}%{install_bindir}
 rm -Rf %{buildroot}%{install_prefix}/share
 rm -Rf %{buildroot}%{install_prefix}/libexec
+# Remove scanview-py helper libs
+rm -Rf %{buildroot}%{install_prefix}/lib/{libear,libscanbuild}
 
 %else
 
@@ -478,6 +430,9 @@ install -p -m644 bindings/python/clang/* %{buildroot}%{python3_sitelib}/clang/
 mv %{buildroot}%{_prefix}/lib/{libear,libscanbuild} %{buildroot}%{python3_sitelib}
 %py_byte_compile %{__python3} %{buildroot}%{python3_sitelib}/{libear,libscanbuild}
 
+# Fix permissions of scan-view scripts
+chmod a+x %{buildroot}%{_datadir}/scan-view/{Reporter.py,startfile.py}
+
 # multilib fix
 %multilib_fix_c_header --file %{_includedir}/clang/Config/config.h
 
@@ -492,7 +447,6 @@ rm -vf %{buildroot}%{_datadir}/clang/clang-format-bbedit.applescript
 rm -vf %{buildroot}%{_datadir}/clang/clang-format-sublime.py*
 
 # TODO: Package html docs
-rm -Rvf %{buildroot}%{_docdir}/clang/html
 rm -Rvf %{buildroot}%{_docdir}/Clang/clang/html
 rm -Rvf %{buildroot}%{_datadir}/clang/clang-doc-default-stylesheet.css
 rm -Rvf %{buildroot}%{_datadir}/clang/index.js
@@ -528,17 +482,18 @@ popd
 mkdir -p %{buildroot}%{pkg_libdir}/clang/%{version}/{include,lib,share}/
 
 
-# Remove clang-tidy headers.  We don't ship the libraries for these.
-rm -Rvf %{buildroot}%{_includedir}/clang-tidy/
-
-# Add a symlink in /usr/bin to clang-format-diff
 %if %{without compat_build}
+# Add a symlink in /usr/bin to clang-format-diff
 ln -s %{_datadir}/clang/clang-format-diff.py %{buildroot}%{_bindir}/clang-format-diff
 %endif
 
 %check
 %if %{without compat_build}
 %if %{with check}
+# Build test dependencies separately, to prevent invocations of host clang from being affected
+# by LD_LIBRARY_PATH below.
+%cmake_build --target clang-test-depends \
+    ExtraToolsUnitTests ClangdUnitTests ClangIncludeCleanerUnitTests ClangPseudoUnitTests
 # requires lit.py from LLVM utilities
 # FIXME: Fix failing ARM tests
 LD_LIBRARY_PATH=%{buildroot}/%{_libdir} %{__ninja} check-all -C %{__cmake_builddir} || \
@@ -554,7 +509,12 @@ false
 %if %{without compat_build}
 %files
 %license LICENSE.TXT
-%{clang_binaries}
+%{_bindir}/clang
+%{_bindir}/clang++
+%{_bindir}/clang-%{maj_ver}
+%{_bindir}/clang++-%{maj_ver}
+%{_bindir}/clang-cl
+%{_bindir}/clang-cpp
 %{_mandir}/man1/clang.1.gz
 %{_mandir}/man1/clang++.1.gz
 %{_mandir}/man1/clang-%{maj_ver}.1.gz
@@ -576,6 +536,7 @@ false
 %{_includedir}/clang/
 %{_includedir}/clang-c/
 %{_libdir}/cmake/*
+%{_bindir}/clang-tblgen
 %dir %{_datadir}/clang/
 %{_rpmmacrodir}/macros.%{name}
 %else
@@ -588,9 +549,9 @@ false
 %files resource-filesystem
 %dir %{pkg_libdir}/clang/%{version}/
 %dir %{pkg_libdir}/clang/%{version}/include/
-%if %{without compat_build}
 %dir %{pkg_libdir}/clang/%{version}/lib/
 %dir %{pkg_libdir}/clang/%{version}/share/
+%if %{without compat_build}
 %{pkg_libdir}/clang/%{maj_ver}
 %endif
 
@@ -615,12 +576,35 @@ false
 
 
 %files tools-extra
-%{clang_tools_binaries}
+%{_bindir}/clang-apply-replacements
+%{_bindir}/clang-change-namespace
+%{_bindir}/clang-check
+%{_bindir}/clang-doc
+%{_bindir}/clang-extdef-mapping
+%{_bindir}/clang-format
+%{_bindir}/clang-include-fixer
+%{_bindir}/clang-move
+%{_bindir}/clang-offload-bundler
+%{_bindir}/clang-offload-packager
+%{_bindir}/clang-offload-wrapper
+%{_bindir}/clang-linker-wrapper
+%{_bindir}/clang-nvlink-wrapper
+%{_bindir}/clang-pseudo
+%{_bindir}/clang-query
+%{_bindir}/clang-refactor
+%{_bindir}/clang-rename
+%{_bindir}/clang-reorder-fields
+%{_bindir}/clang-repl
+%{_bindir}/clang-scan-deps
+%{_bindir}/clang-tidy
+%{_bindir}/clangd
+%{_bindir}/diagtool
+%{_bindir}/hmaptool
+%{_bindir}/pp-trace
 %{_bindir}/c-index-test
 %{_bindir}/find-all-symbols
 %{_bindir}/modularize
 %{_bindir}/clang-format-diff
-%{_bindir}/clang-nvlink-wrapper
 %{_mandir}/man1/diagtool.1.gz
 %{_emacs_sitestartdir}/clang-format.el
 %{_emacs_sitestartdir}/clang-rename.el
@@ -633,6 +617,9 @@ false
 %{_datadir}/clang/run-find-all-symbols.py*
 %{_datadir}/clang/clang-rename.py*
 
+%files tools-extra-devel
+%{_includedir}/clang-tidy/
+
 %files -n git-clang-format
 %{_bindir}/git-clang-format
 
@@ -644,8 +631,65 @@ false
 %changelog
 %{?llvm_snapshot_changelog_entry}
 
-* Fri Apr 15 2022 Serge Guelton - 13.0.1-2
-- Rebase downstream patches
+* Thu Nov 03 2022 Nikita Popov <npopov@redhat.com> - 15.0.4-1
+- Update to LLVM 15.0.4
+
+* Wed Oct 19 2022 Nikita Popov <npopov@redhat.com> - 15.0.0-6
+- Enable ieeelongdouble for ppc64le, fix rhbz#2136099
+
+* Thu Oct 13 2022 Nikita Popov <npopov@redhat.com> - 15.0.0-5
+- Default to non-pie, fix rhbz#2134146
+
+* Wed Oct 05 2022 sguelton@redhat.com - 15.0.0-4
+- Package clang-tidy headers in clang-tools-extra-devel, fix rhbz#2123479
+
+* Thu Sep 22 2022 Nikita Popov <npopov@redhat.com> - 15.0.0-3
+- Add patch for inline builtins with asm label
+
+* Sat Sep 17 2022 sguelton@redhat.com - 15.0.0-3
+- Improve integration of llvm's libunwind
+
+* Wed Sep 14 2022 Nikita Popov <npopov@redhat.com> - 15.0.0-2
+- Downgrade implicit int and implicit function declaration to warning only
+
+* Tue Sep 06 2022 Nikita Popov <npopov@redhat.com> - 15.0.0-1
+- Update to LLVM 15.0.0
+
+* Mon Aug 29 2022 sguelton@redhat.com - 14.0.5-7
+- Add a Recommends on libatomic, see rhbz#2118592
+
+* Wed Aug 10 2022 Nikita Popov <npopov@redhat.com> - 14.0.5-6
+- Revert powerpc -mabi=ieeelongdouble default
+
+* Thu Aug 04 2022 Tom Stellard <tstellar@redhat.com> - 14.0.5-5
+- Re-enable ieee128 as the default long double format on ppc64le
+
+* Thu Jul 28 2022 Amit Shah <amitshah@fedoraproject.org> - 14.0.5-4
+- Use the dist_vendor macro to identify the distribution
+
+* Wed Jul 20 2022 Fedora Release Engineering <releng@fedoraproject.org> - 14.0.5-3
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_37_Mass_Rebuild
+
+* Thu Jun 30 2022 Miro Hrončok <mhroncok@redhat.com> - 14.0.5-2
+- Revert "Use the ieee128 format for long double on ppc64le" until rhbz#2100546 is fixed
+
+* Tue Jun 14 2022 Timm Bäder <tbaeder@redhat.com> - 14.0.5-1
+- Update to 14.0.5
+
+* Mon Jun 13 2022 Python Maint <python-maint@redhat.com> - 14.0.0-4
+- Rebuilt for Python 3.11
+
+* Thu May 19 2022 Tom Stellard <tstellar@redhat.com> - 14.0.0-3
+- Use the ieee128 format for long double on ppc64le
+
+* Mon Apr 04 2022 Jeremy Newton <alexjnewt AT hotmail DOT com> - 14.0.0-2
+- Add patch for HIP (cherry-picked from llvm trunk, to be LLVM15)
+
+* Wed Mar 23 2022 Timm Bäder <tbaeder@redhat.com> - 14.0.0-1
+- Update to 14.0.0
+
+* Wed Feb 16 2022 Tom Stellard <tstellar@redhat.com> - 13.0.1-2
+- Fix some rpmlinter errors
 
 * Thu Feb 03 2022 Nikita Popov <npopov@redhat.com> - 13.0.1-1
 - Update to LLVM 13.0.1 final

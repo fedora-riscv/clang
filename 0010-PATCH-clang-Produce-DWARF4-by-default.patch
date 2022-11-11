@@ -1,4 +1,4 @@
-From a4eac2ddf9cfb4e4d9c5a740a190309580a6a137 Mon Sep 17 00:00:00 2001
+From 1f68d73910ddee1beaf3582480b8a9738c941a43 Mon Sep 17 00:00:00 2001
 From: Konrad Kleine <kkleine@redhat.com>
 Date: Thu, 24 Mar 2022 09:44:21 +0100
 Subject: [PATCH] Produce DWARF4 by default
@@ -96,5 +96,5 @@ index 5a33d5eceb61..cedf895b36dc 100644
  ///-----------------------------------------------------------------------------
  /// Checking include-path
 -- 
-2.27.0
+2.37.1
 
