@@ -47,13 +47,15 @@
 
 %global clang_srcdir clang-%{clang_version}%{?rc_ver:rc%{rc_ver}}.src
 %global clang_tools_srcdir clang-tools-extra-%{clang_version}%{?rc_ver:rc%{rc_ver}}.src
+%global third_party_srcdir third-party-%{clang_version}%{?rc_ver:rc%{rc_ver}}.src
+%global cmake_srcdir cmake-%{clang_version}%{?rc_ver:rc%{rc_ver}}.src
 
 %if !%{maj_ver} && 0%{?rc_ver}
 %global abi_revision 2
 %endif
 
 Name:		%pkg_name
-Version:	%{clang_version}%{?rc_ver:~rc%{rc_ver}}
+Version:	%{clang_version}%{?rc_ver:~rc%{rc_ver}}%{?llvm_snapshot_version_suffix:~%{llvm_snapshot_version_suffix}}
 Release:	1%{?dist}
 Summary:	A C language family front-end for LLVM
 
@@ -62,6 +64,9 @@ URL:		http://llvm.org
 %if %{with snapshot_build}
 Source0:    %{llvm_snapshot_source_prefix}clang-%{llvm_snapshot_yyyymmdd}.src.tar.xz
 Source1:    %{llvm_snapshot_source_prefix}clang-tools-extra-%{llvm_snapshot_yyyymmdd}.src.tar.xz
+Source7:    %{llvm_snapshot_source_prefix}third-party-%{llvm_snapshot_yyyymmdd}.src.tar.xz
+Source8:    %{llvm_snapshot_source_prefix}cmake-%{llvm_snapshot_yyyymmdd}.src.tar.xz
+
 %{llvm_snapshot_extra_source_tags}
 %else
 Source0:	https://github.com/llvm/llvm-project/releases/download/llvmorg-%{clang_version}%{?rc_ver:-rc%{rc_ver}}/%{clang_srcdir}.tar.xz
@@ -77,12 +82,11 @@ Source5:	macros.%{name}
 %endif
 
 # Patches for clang
-Patch0:     0001-PATCH-clang-Reorganize-gtest-integration.patch
-Patch1:     0003-PATCH-Make-funwind-tables-the-default-on-all-archs.patch
+Patch1:     0001-PATCH-clang-Make-funwind-tables-the-default-on-all-a.patch
 Patch2:     0003-PATCH-clang-Don-t-install-static-libraries.patch
 Patch3:     0001-Driver-Add-a-gcc-equivalent-triple-to-the-list-of-tr.patch
 Patch4:     0001-cmake-Allow-shared-libraries-to-customize-the-soname.patch
-Patch5:     0010-PATCH-clang-Produce-DWARF4-by-default.patch
+Patch5:     0001-PATCH-Produce-DWARF4-by-default.patch
 Patch6:     0001-Take-into-account-Fedora-Specific-install-dir-for-li.patch
 
 %if %{without compat_build}
@@ -278,6 +282,16 @@ Requires:      python3
 %if %{without snapshot_build}
 %{gpgverify} --keyring='%{SOURCE4}' --signature='%{SOURCE2}' --data='%{SOURCE1}'
 %endif
+
+%if %{with snapshot_build}
+%setup -T -q -b 7 -n %{third_party_srcdir}
+cd ..
+mv %{third_party_srcdir} third-party
+%setup -T -q -b 8 -n %{cmake_srcdir}
+cd ..
+mv %{cmake_srcdir} cmake
+%endif
+
 %setup -T -q -b 1 -n %{clang_tools_srcdir}
 %autopatch -m200 -p2
 

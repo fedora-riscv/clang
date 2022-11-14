@@ -1,7 +1,7 @@
-From 581300e447602b9b7a505b0f07e8461d58d041ca Mon Sep 17 00:00:00 2001
+From 947c2b35069cc7472fe3563a50492a3d78254965 Mon Sep 17 00:00:00 2001
 From: Tom Stellard <tstellar@redhat.com>
-Date: Fri, 1 Jul 2022 21:24:17 -0700
-Subject: [PATCH] clang-tools-extra: Make test dependency on LLVMHello optional
+Date: Mon, 14 Nov 2022 09:38:41 +0000
+Subject: clang-tools-extra: Make test dependency on LLVMHello optional
 
 This fixes clang + clang-tools-extra standalone build after
 36892727e4f19a60778e371d78f8fb09d8122c85.
@@ -55,16 +55,19 @@ index c66a94f458cf..b4e7a5d691e5 100644
  // CHECK-LIST: Enabled checks:
  // CHECK-LIST-NEXT:    mytest1
 diff --git a/clang-tools-extra/test/lit.cfg.py b/clang-tools-extra/test/lit.cfg.py
-index 9b99bfd93440..3fca9f25fb48 100644
+index 871596ac8585..7ade0d1d6cba 100644
 --- a/clang-tools-extra/test/lit.cfg.py
 +++ b/clang-tools-extra/test/lit.cfg.py
-@@ -59,3 +59,6 @@ config.substitutions.append(
- # Plugins (loadable modules)
+@@ -60,6 +60,9 @@ config.substitutions.append(
  if config.has_plugins and config.llvm_plugin_ext:
      config.available_features.add('plugins')
-+
+ 
 +if config.has_llvm_hello:
 +    config.available_features.add("llvm-hello")
++
+ # It is not realistically possible to account for all options that could
+ # possibly be present in system and user configuration files, so disable
+ # default configs for the test runs.
 diff --git a/clang-tools-extra/test/lit.site.cfg.py.in b/clang-tools-extra/test/lit.site.cfg.py.in
 index 4eb830a1baf1..6e5559348454 100644
 --- a/clang-tools-extra/test/lit.site.cfg.py.in
@@ -78,5 +81,5 @@ index 4eb830a1baf1..6e5559348454 100644
  # used when we can't determine the tool dir at configuration time.
  config.llvm_tools_dir = lit_config.substitute("@LLVM_TOOLS_DIR@")
 -- 
-2.27.0
+2.34.3
 
