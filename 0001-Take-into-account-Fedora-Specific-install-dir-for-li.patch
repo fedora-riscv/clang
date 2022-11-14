@@ -20,7 +20,7 @@ index 443725f..c1401a6 100644
 +  case ToolChain::UNW_CompilerRT: {
 +    SmallString<256> DefaultLibPath =
 +        llvm::sys::path::parent_path(TC.getDriver().Dir);
-+    llvm::sys::path::append(DefaultLibPath, Twine("lib") + CLANG_LIBDIR_SUFFIX);
++    llvm::sys::path::append(DefaultLibPath, CLANG_INSTALL_LIBDIR_BASENAME);
 +    CmdArgs.push_back(
 +        strdup(("-L" + DefaultLibPath + "/llvm-unwind").str().c_str()));
 +  }
