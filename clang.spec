@@ -68,6 +68,8 @@ Patch5:     0010-PATCH-clang-Produce-DWARF4-by-default.patch
 # TODO: Can be dropped in LLVM 16: https://reviews.llvm.org/D133316
 Patch6:     0001-Mark-fopenmp-implicit-rpath-as-NoArgumentUnused.patch
 
+Patch10:    0001-Bring-back-riscv64-redhat-linux-triplet.patch
+
 %if %{without compat_build}
 # Patches for clang-tools-extra
 # See https://reviews.llvm.org/D120301
@@ -599,6 +601,11 @@ false
 
 * Mon Dec 05 2022 Nikita Popov <npopov@redhat.com> - 15.0.6-1
 - Update to LLVM 15.0.6
+
+* Thu Nov 24 2022 David Abdurachmanov <davidlt@rivosinc.com> - 15.0.4-1.0.riscv64
+- Ignore test suite failures on riscv64 for now
+- Prepare for riscv64
+- Add riscv64-redhat-linux triplet
 
 * Tue Nov 08 2022 Nikita Popov <npopov@redhat.com> - 15.0.4-1
 - Update to LLVM 15.0.4
