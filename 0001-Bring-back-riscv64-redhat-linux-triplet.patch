@@ -1,0 +1,27 @@
+From 2dcf8703706e0a5b7b45991e5cd10dd38f1d8c4b Mon Sep 17 00:00:00 2001
+From: David Abdurachmanov <davidlt@rivosinc.com>
+Date: Thu, 24 Nov 2022 06:26:46 +0200
+Subject: [PATCH] Bring back riscv64-redhat-linux triplet
+
+Signed-off-by: David Abdurachmanov <davidlt@rivosinc.com>
+---
+ clang/lib/Driver/ToolChains/Gnu.cpp | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/clang/lib/Driver/ToolChains/Gnu.cpp b/clang/lib/Driver/ToolChains/Gnu.cpp
+index e955835b..e5c17544 100644
+--- a/clang/lib/Driver/ToolChains/Gnu.cpp
++++ b/clang/lib/Driver/ToolChains/Gnu.cpp
+@@ -2302,7 +2302,8 @@ void Generic_GCC::GCCInstallationDetector::AddDefaultGCCPrefixes(
+   static const char *const RISCV64LibDirs[] = {"/lib64", "/lib"};
+   static const char *const RISCV64Triples[] = {"riscv64-unknown-linux-gnu",
+                                                "riscv64-linux-gnu",
+-                                               "riscv64-unknown-elf"};
++                                               "riscv64-unknown-elf",
++                                               "riscv64-redhat-linux"};
+ 
+   static const char *const SPARCv8LibDirs[] = {"/lib32", "/lib"};
+   static const char *const SPARCv8Triples[] = {"sparc-linux-gnu",
+-- 
+2.37.1
+

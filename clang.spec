@@ -78,6 +78,8 @@ Patch8:     D138472.diff
 
 Patch10:    fix-ieee128-cross.diff
 
+Patch100:    0001-Bring-back-riscv64-redhat-linux-triplet.patch
+
 %if %{without compat_build}
 # Patches for clang-tools-extra
 # See https://reviews.llvm.org/D120301
@@ -657,7 +659,12 @@ false
 * Mon Dec 05 2022 Nikita Popov <npopov@redhat.com> - 15.0.6-1
 - Update to LLVM 15.0.6
 
-* Thu Nov 03 2022 Nikita Popov <npopov@redhat.com> - 15.0.4-1
+* Thu Nov 24 2022 David Abdurachmanov <davidlt@rivosinc.com> - 15.0.4-1.0.riscv64
+- Ignore test suite failures on riscv64 for now
+- Prepare for riscv64
+- Add riscv64-redhat-linux triplet
+
+* Tue Nov 08 2022 Nikita Popov <npopov@redhat.com> - 15.0.4-1
 - Update to LLVM 15.0.4
 
 * Wed Oct 19 2022 Nikita Popov <npopov@redhat.com> - 15.0.0-6
