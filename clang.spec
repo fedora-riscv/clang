@@ -41,7 +41,7 @@
 
 Name:		%pkg_name
 Version:	%{clang_version}%{?rc_ver:~rc%{rc_ver}}
-Release:	1%{?dist}
+Release:	2%{?dist}
 Summary:	A C language family front-end for LLVM
 
 License:	NCSA
@@ -66,6 +66,7 @@ Patch4:     0001-cmake-Allow-shared-libraries-to-customize-the-soname.patch
 # This patch can be dropped once gcc-12.0.1-0.5.fc36 is in the repo.
 Patch5:     0001-Work-around-gcc-miscompile.patch
 Patch7:     0010-PATCH-clang-Produce-DWARF4-by-default.patch
+Patch8:     0001-clang-Enforce-instantiation-of-constexpr-template-fu.patch
 
 %if %{without compat_build}
 # Patches for clang-tools-extra
@@ -595,6 +596,9 @@ false
 
 %endif
 %changelog
+* Thu Dec 01 2022 Nicolas Chauvet <kwizart@gmail.com> - 14.0.5-2
+- Apply patch for llvm#55560
+
 * Thu Aug 18 2022 Tom Stellard <tstellar@redhat.com> - 14.0.5-1
 - 14.0.5 Release
 
