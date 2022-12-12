@@ -41,7 +41,7 @@
 
 Name:		%pkg_name
 Version:	%{clang_version}%{?rc_ver:~rc%{rc_ver}}
-Release:	1%{?dist}
+Release:	2%{?dist}
 Summary:	A C language family front-end for LLVM
 
 License:	NCSA
@@ -67,6 +67,10 @@ Patch5:     0010-PATCH-clang-Produce-DWARF4-by-default.patch
 
 # TODO: Can be dropped in LLVM 16: https://reviews.llvm.org/D133316
 Patch6:     0001-Mark-fopenmp-implicit-rpath-as-NoArgumentUnused.patch
+
+# TODO: Can be dropped in LLVM 16.
+Patch9:     0001-clang-MinGW-Improve-extend-the-gcc-sysroot-detection.patch
+Patch10:    0002-clang-MinGW-Improve-detection-of-libstdc-headers-on-.patch
 
 %if %{without compat_build}
 # Patches for clang-tools-extra
@@ -593,6 +597,9 @@ false
 
 %endif
 %changelog
+* Mon Dec 12 2022 Nikita Popov <npopov@redhat.com> - 15.0.6-2
+- Backport patches for ucrt64 toolchain detection
+
 * Mon Dec 05 2022 Nikita Popov <npopov@redhat.com> - 15.0.6-1
 - Update to LLVM 15.0.6
 
