@@ -41,7 +41,7 @@
 
 Name:		%pkg_name
 Version:	%{clang_version}%{?rc_ver:~rc%{rc_ver}}
-Release:	3%{?dist}
+Release:	4%{?dist}
 Summary:	A C language family front-end for LLVM
 
 License:	NCSA
@@ -494,11 +494,11 @@ false
 
 %files libs
 %if %{without compat_build}
-%{_libdir}/clang/
+%{_libdir}/clang/%{version}/include/*
 %{_libdir}/*.so.*
 %else
 %{pkg_libdir}/*.so.*
-%{pkg_libdir}/clang/%{version}
+%{pkg_libdir}/clang/%{version}/include/*
 %endif
 
 %files devel
@@ -518,6 +518,7 @@ false
 %endif
 
 %files resource-filesystem
+%dir %{pkg_libdir}/clang/
 %dir %{pkg_libdir}/clang/%{version}/
 %dir %{pkg_libdir}/clang/%{version}/include/
 %dir %{pkg_libdir}/clang/%{version}/lib/
@@ -597,6 +598,9 @@ false
 
 %endif
 %changelog
+* Thu Jan 12 2023 Nikita Popov <npopov@redhat.com> - 15.0.6-4
+- Fix resource-filesystem ownership conflict
+
 * Wed Dec 21 2022 Nikita Popov <npopov@redhat.com> - 15.0.6-3
 - Add clang-devel dep to python3-clang
 
