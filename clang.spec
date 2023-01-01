@@ -55,7 +55,7 @@
 
 Name:		%pkg_name
 Version:	%{clang_version}%{?rc_ver:~rc%{rc_ver}}%{?llvm_snapshot_version_suffix:~%{llvm_snapshot_version_suffix}}
-Release:	1%{?dist}
+Release:	1.rv64%{?dist}
 Summary:	A C language family front-end for LLVM
 
 License:	Apache-2.0 WITH LLVM-exception OR NCSA
@@ -330,7 +330,7 @@ rm test/CodeGen/profile-filter.c
 # Use ThinLTO to limit build time.
 %define _lto_cflags -flto=thin
 # And disable LTO on AArch64 entirely.
-%ifarch aarch64
+%ifarch aarch64 riscv64
 %define _lto_cflags %{nil}
 %endif
 
@@ -346,7 +346,7 @@ sed -i 's/\@FEDORA_LLVM_LIB_SUFFIX\@/64/g' test/lit.cfg.py
 sed -i 's/\@FEDORA_LLVM_LIB_SUFFIX\@//g' test/lit.cfg.py
 %endif
 
-%ifarch s390 s390x %{arm} aarch64 %ix86 ppc64le
+%ifarch s390 s390x %{arm} aarch64 %ix86 ppc64le riscv64
 # Decrease debuginfo verbosity to reduce memory consumption during final library linking
 %global optflags %(echo %{optflags} | sed 's/-g /-g1 /')
 %endif
@@ -368,7 +368,7 @@ sed -i 's/\@FEDORA_LLVM_LIB_SUFFIX\@//g' test/lit.cfg.py
 	-DCMAKE_BUILD_TYPE=RelWithDebInfo \
 	-DPYTHON_EXECUTABLE=%{__python3} \
 	-DCMAKE_SKIP_RPATH:BOOL=ON \
-%ifarch s390 s390x %{arm} %ix86 ppc64le
+%ifarch s390 s390x %{arm} %ix86 ppc64le riscv64
 	-DCMAKE_C_FLAGS_RELWITHDEBINFO="%{optflags} -DNDEBUG" \
 	-DCMAKE_CXX_FLAGS_RELWITHDEBINFO="%{optflags} -DNDEBUG" \
 %endif
@@ -516,7 +516,7 @@ ln -s %{_datadir}/clang/clang-format-diff.py %{buildroot}%{_bindir}/clang-format
 # requires lit.py from LLVM utilities
 # FIXME: Fix failing ARM tests
 LD_LIBRARY_PATH=%{buildroot}/%{_libdir} %{__ninja} check-all -C %{__cmake_builddir} || \
-%ifarch %{arm}
+%ifarch %{arm} riscv64
 :
 %else
 false
@@ -643,8 +643,12 @@ false
 
 
 %endif
+
 %changelog
 %{?llvm_snapshot_changelog_entry}
+
+* Thu Nov 16 2023 Liu Yang <Yang.Liu.sn@gmail.com> - 17.0.4-1.rv64
+- Add riscv64 support.
 
 * Wed Nov 01 2023 Tulio Magno Quites Machado Filho <tuliom@redhat.com> - 17.0.4-1
 - Update to LLVM 17.0.4
@@ -687,6 +691,10 @@ false
 
 * Wed Jul 19 2023 Fedora Release Engineering <releng@fedoraproject.org> - 16.0.6-3
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_39_Mass_Rebuild
+
+* Thu Aug 24 2023 Kefu Chai <kefu.chai@scylladb.com> - 16.0.6-3
+- Fix the stack-use-after-return when using coroutine
+  See https://github.com/llvm/llvm-project/issues/59723
 
 * Wed Jul 12 2023 Tulio Magno Quites Machado Filho <tuliom@redhat.com> - 16.0.6-2
 - Fix rhbz#2221585
