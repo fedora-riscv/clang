@@ -41,7 +41,7 @@
 
 Name:		%pkg_name
 Version:	%{clang_version}%{?rc_ver:~rc%{rc_ver}}
-Release:	1.rv64%{?dist}
+Release:	1.0.rv64%{?dist}
 Summary:	A C language family front-end for LLVM
 
 License:	NCSA
