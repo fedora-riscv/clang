@@ -1,4 +1,4 @@
-%global toolchain gcc
+%global toolchain clang
 
 %bcond_with compat_build
 %bcond_without check
