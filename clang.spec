@@ -41,7 +41,7 @@
 
 Name:		%pkg_name
 Version:	%{clang_version}%{?rc_ver:~rc%{rc_ver}}
-Release:	2%{?dist}
+Release:	3%{?dist}
 Summary:	A C language family front-end for LLVM
 
 License:	Apache-2.0 WITH LLVM-exception OR NCSA
@@ -77,6 +77,9 @@ Patch11:    0001-Change-LLVM_COMMON_CMAKE_UTILS-usage.patch
 
 # https://reviews.llvm.org/D155192
 Patch12:    D155192.diff
+
+# https://reviews.llvm.org/rG7037331a2f05990cd59f35a7c0f6ce87c0f3cb5f
+Patch13:    PR59723.diff
 
 # RHEL specific patches
 # Avoid unwanted dependency on python-recommonmark
@@ -611,6 +614,10 @@ false
 
 %endif
 %changelog
+* Thu Aug 24 2023 Kefu Chai <kefu.chai@scylladb.com> - 16.0.6-3
+- Fix the stack-use-after-return when using coroutine
+  See https://github.com/llvm/llvm-project/issues/59723
+
 * Wed Jul 12 2023 Tulio Magno Quites Machado Filho <tuliom@redhat.com> - 16.0.6-2
 - Fix rhbz#2221585
 
