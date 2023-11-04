@@ -108,7 +108,7 @@ Patch101:  0009-disable-recommonmark.patch
 Patch201:   0001-clang-tools-extra-Make-test-dependency-on-LLVMHello-.patch
 %endif
 
-BuildRequires:	clang
+#BuildRequires:	clang
 BuildRequires:	cmake
 BuildRequires:	ninja-build
 
