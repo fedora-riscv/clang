@@ -1,0 +1,23 @@
+diff --git a/lib/Driver/ToolChains/Gnu.cpp b/lib/Driver/ToolChains/Gnu.cpp
+index 4325cbb4..86ae0f21 100644
+--- a/lib/Driver/ToolChains/Gnu.cpp
++++ b/lib/Driver/ToolChains/Gnu.cpp
+@@ -2065,6 +2065,7 @@ static llvm::StringRef getGCCToolchainDir(const ArgList &Args,
+ /// triple.
+ static const char *ConvertToGccTriple(StringRef CandidateTriple) {
+   return llvm::StringSwitch<const char *>(CandidateTriple)
++      .Case("riscv64-redhat-linux-gnu", "riscv64-redhat-linux")
+       .Case("aarch64-redhat-linux-gnu", "aarch64-redhat-linux")
+       .Case("i686-redhat-linux-gnu", "i686-redhat-linux")
+       .Case("ppc64le-redhat-linux-gnu", "ppc64le-redhat-linux")
+@@ -2426,7 +2427,9 @@ void Generic_GCC::GCCInstallationDetector::AddDefaultGCCPrefixes(
+   static const char *const RISCV64LibDirs[] = {"/lib64", "/lib"};
+   static const char *const RISCV64Triples[] = {"riscv64-unknown-linux-gnu",
+                                                "riscv64-linux-gnu",
+-                                               "riscv64-unknown-elf"};
++                                               "riscv64-unknown-elf",
++                                               "riscv64-redhat-linux-gnu",
++                                               "riscv64-redhat-linux"};
+ 
+   static const char *const SPARCv8LibDirs[] = {"/lib32", "/lib"};
+   static const char *const SPARCv8Triples[] = {"sparc-linux-gnu",
