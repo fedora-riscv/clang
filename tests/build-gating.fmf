@@ -50,12 +50,19 @@ adjust:
 discover:
     - name: clang-tests
       how: fmf
+      url: https://src.fedoraproject.org/tests/clang.git
+      ref: main
       filter: "tag:-not-in-default"
     - name: upstream-llvm-integration-testsuite
       how: fmf
-      url: https://src.fedoraproject.org/rpms/llvm.git
-      ref: rawhide
+      url: https://src.fedoraproject.org/tests/llvm.git
+      ref: main
       test: integration-test-suite
+    - name: redhat-rpm-config
+      how: fmf
+      url: https://src.fedoraproject.org/rpms/redhat-rpm-config.git
+      ref: rawhide
+      test: brp-llvm-compile-lto-elf
 execute:
     how: tmt
 provision:
