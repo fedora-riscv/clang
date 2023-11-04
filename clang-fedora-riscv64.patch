@@ -1,7 +1,7 @@
 diff --git a/lib/Driver/ToolChains/Gnu.cpp b/lib/Driver/ToolChains/Gnu.cpp
 index 4325cbb4..86ae0f21 100644
---- a/lib/Driver/ToolChains/Gnu.cpp
-+++ b/lib/Driver/ToolChains/Gnu.cpp
+--- a/clang/lib/Driver/ToolChains/Gnu.cpp
++++ b/clang/lib/Driver/ToolChains/Gnu.cpp
 @@ -2065,6 +2065,7 @@ static llvm::StringRef getGCCToolchainDir(const ArgList &Args,
  /// triple.
  static const char *ConvertToGccTriple(StringRef CandidateTriple) {
