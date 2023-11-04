@@ -109,6 +109,8 @@ Patch201:   0001-clang-tools-extra-Make-test-dependency-on-LLVMHello-.patch
 %endif
 
 #BuildRequires:	clang
+BuildRequires:	gcc
+BuildRequires:	gcc-c++
 BuildRequires:	cmake
 BuildRequires:	ninja-build
 
