@@ -4,9 +4,7 @@
 %{llvm_sb}
 %endif
 
-%ifnarch riscv64
 %global toolchain clang
-%endif
 
 # Opt out of https://fedoraproject.org/wiki/Changes/fno-omit-frame-pointer
 # https://bugzilla.redhat.com/show_bug.cgi?id=2158587
@@ -57,7 +55,7 @@
 
 Name:		%pkg_name
 Version:	%{clang_version}%{?rc_ver:~rc%{rc_ver}}%{?llvm_snapshot_version_suffix:~%{llvm_snapshot_version_suffix}}
-Release:	1.0.riscv64%{?dist}
+Release:	1.1.riscv64%{?dist}
 Summary:	A C language family front-end for LLVM
 
 License:	Apache-2.0 WITH LLVM-exception OR NCSA
@@ -108,9 +106,7 @@ Patch101:  0009-disable-recommonmark.patch
 Patch201:   0001-clang-tools-extra-Make-test-dependency-on-LLVMHello-.patch
 %endif
 
-#BuildRequires:	clang
-BuildRequires:	gcc
-BuildRequires:	gcc-c++
+BuildRequires:	clang
 BuildRequires:	cmake
 BuildRequires:	ninja-build
 
@@ -358,7 +354,7 @@ sed -i 's/\@FEDORA_LLVM_LIB_SUFFIX\@//g' test/lit.cfg.py
 %endif
 
 # Disable dwz on aarch64, because it takes a huge amount of time to decide not to optimize things.
-%ifarch aarch64 riscv64
+%ifarch aarch64
 %define _find_debuginfo_dwz_opts %{nil}
 %endif
 
@@ -651,6 +647,9 @@ false
 %endif
 %changelog
 %{?llvm_snapshot_changelog_entry}
+
+* Mon Nov 06 2023 David Abdurachmanov <davidlt@rivosinc.com> - 17.0.4-1.1.riscv64
+- Rebuild with Clang
 
 * Sat Nov 04 2023 David Abdurachmanov <davidlt@rivosinc.com> - 17.0.4-1.0.riscv64
 - Add support for riscv64
