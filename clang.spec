@@ -15,7 +15,7 @@
 
 %global maj_ver 17
 %global min_ver 0
-%global patch_ver 4
+%global patch_ver 6
 #global rc_ver 4
 
 %if %{with snapshot_build}
@@ -55,7 +55,7 @@
 
 Name:		%pkg_name
 Version:	%{clang_version}%{?rc_ver:~rc%{rc_ver}}%{?llvm_snapshot_version_suffix:~%{llvm_snapshot_version_suffix}}
-Release:	1.rv64%{?dist}
+Release:	2.rv64%{?dist}
 Summary:	A C language family front-end for LLVM
 
 License:	Apache-2.0 WITH LLVM-exception OR NCSA
@@ -92,6 +92,7 @@ Patch5:     0001-Workaround-a-bug-in-ORC-on-ppc64le.patch
 # Remove in clang 18.
 Patch6:     cfg.patch
 Patch7:     tsa.patch
+Patch9:     0001-Clang-Defer-the-instantiation-of-explicit-specifier-.patch
 
 
 # RHEL specific patches
@@ -649,8 +650,18 @@ false
 %changelog
 %{?llvm_snapshot_changelog_entry}
 
+* Fri Jan 26 2024 Kefu Chai <kefu.chai@scylladb.com> - 17.0.6-2
+- Fix the too-early instantiation of conditional "explict" by applying the patch
+  of https://github.com/llvm/llvm-project/commit/128b3b61fe6768c724975fd1df2be0abec848cf6
+
+* Tue Nov 28 2023 Tulio Magno Quites Machado Filho <tuliom@redhat.com> - 17.0.6-1
+- Update to LLVM 17.0.6
+
 * Thu Nov 16 2023 Liu Yang <Yang.Liu.sn@gmail.com> - 17.0.4-1.rv64
 - Add riscv64 support.
+
+* Tue Nov 14 2023 Tulio Magno Quites Machado Filho <tuliom@redhat.com> - 17.0.5-1
+- Update to LLVM 17.0.5
 
 * Wed Nov 01 2023 Tulio Magno Quites Machado Filho <tuliom@redhat.com> - 17.0.4-1
 - Update to LLVM 17.0.4
