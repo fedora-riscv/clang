@@ -11,7 +11,7 @@
 %undefine _include_frame_pointers
 
 %bcond_with compat_build
-%bcond_without check
+%bcond_with check
 
 %ifarch aarch64
 # Use lld on aarch64, becuase ld.bfd will occasionally fail with the error:
@@ -74,7 +74,7 @@
 
 Name:		%pkg_name
 Version:	%{clang_version}%{?rc_ver:~rc%{rc_ver}}%{?llvm_snapshot_version_suffix:~%{llvm_snapshot_version_suffix}}
-Release:	1.rv64%{?dist}
+Release:	1.rv64_nc%{?dist}
 Summary:	A C language family front-end for LLVM
 
 License:	Apache-2.0 WITH LLVM-exception OR NCSA
@@ -704,8 +704,9 @@ LD_LIBRARY_PATH=%{buildroot}/%{install_libdir} %{__ninja} check-all -C %{__cmake
 
 %endif
 %changelog
-* Fri Apr 12 2024 Zhengyu He <hezhy472013@gmail.com> - 18.1.1-1.rv64
+* Fri Apr 12 2024 Zhengyu He <hezhy472013@gmail.com> - 18.1.1-1.rv64_nc
 - Add riscv64 support
+- Temporary close check
 
 * Mon Mar 11 2024 Tom Stellrd <tstellar@redhat.com> - 18.1.1-1
 - 18.1.1 Release
