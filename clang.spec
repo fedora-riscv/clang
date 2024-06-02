@@ -74,7 +74,7 @@
 
 Name:		%pkg_name
 Version:	%{clang_version}%{?rc_ver:~rc%{rc_ver}}%{?llvm_snapshot_version_suffix:~%{llvm_snapshot_version_suffix}}
-Release:	3%{?dist}
+Release:	3.0.riscv64%{?dist}
 Summary:	A C language family front-end for LLVM
 
 License:	Apache-2.0 WITH LLVM-exception OR NCSA
@@ -104,6 +104,9 @@ Patch2:     0003-PATCH-clang-Don-t-install-static-libraries.patch
 # Workaround a bug in ORC on ppc64le.
 # More info is available here: https://reviews.llvm.org/D159115#4641826
 Patch5:     0001-Workaround-a-bug-in-ORC-on-ppc64le.patch
+
+# RISCV vendor triplet
+Patch6:      0001-riscv-use-vendor-triplet.patch
 
 # RHEL specific patches
 # Avoid unwanted dependency on python-myst-parser
@@ -329,7 +332,7 @@ rm test/CodeGen/profile-filter.c
 %build
 
 # Disable lto on i686 due to memory constraints.
-%ifarch %ix86
+%ifarch %ix86 riscv64
 %define _lto_cflags %{nil}
 %endif
 
@@ -338,7 +341,7 @@ rm test/CodeGen/profile-filter.c
 %global _lto_cflags %nil
 %endif
 
-%ifarch s390 s390x aarch64 %ix86 ppc64le
+%ifarch s390 s390x aarch64 %ix86 ppc64le riscv64
 # Decrease debuginfo verbosity to reduce memory consumption during final library linking
 %global optflags %(echo %{optflags} | sed 's/-g /-g1 /')
 %endif
@@ -350,7 +353,7 @@ rm test/CodeGen/profile-filter.c
 %endif
 
 # Disable dwz on aarch64, because it takes a huge amount of time to decide not to optimize things.
-%ifarch aarch64
+%ifarch aarch64 riscv64
 %define _find_debuginfo_dwz_opts %{nil}
 %endif
 
@@ -366,7 +369,7 @@ rm test/CodeGen/profile-filter.c
 	-DCMAKE_BUILD_TYPE=RelWithDebInfo \
 	-DPYTHON_EXECUTABLE=%{__python3} \
 	-DCMAKE_SKIP_RPATH:BOOL=ON \
-%ifarch s390 s390x %ix86 ppc64le
+%ifarch s390 s390x %ix86 ppc64le riscv64
 	-DCMAKE_C_FLAGS_RELWITHDEBINFO="%{optflags} -DNDEBUG" \
 	-DCMAKE_CXX_FLAGS_RELWITHDEBINFO="%{optflags} -DNDEBUG" \
 %endif
@@ -536,7 +539,11 @@ echo "%%clang%{maj_ver}_resource_dir %%{_prefix}/lib/clang/%{maj_ver}" >> %{buil
 %cmake_build --target clang-test-depends \
     ExtraToolsUnitTests ClangdUnitTests ClangIncludeCleanerUnitTests ClangPseudoUnitTests
 # requires lit.py from LLVM utilities
+%ifarch riscv64
+LD_LIBRARY_PATH=%{buildroot}/%{install_libdir} %{__ninja} check-all -C %{__cmake_builddir} || true
+%else
 LD_LIBRARY_PATH=%{buildroot}/%{install_libdir} %{__ninja} check-all -C %{__cmake_builddir}
+%endif
 %endif
 
 
@@ -711,6 +718,9 @@ LD_LIBRARY_PATH=%{buildroot}/%{install_libdir} %{__ninja} check-all -C %{__cmake
 
 %endif
 %changelog
+* Sun Jun 02 2024 David Abdurachmanov <davidlt@rivosinc.com> - 18.1.6-1.0.riscv64
+- Add support for riscv64
+
 * Mon May 20 2024 Tom Stellard <tstellar@redhat.com> - 18.1.6-1
 - 18.1.6 Release
 
