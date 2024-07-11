@@ -23,7 +23,7 @@
 
 %global maj_ver 18
 %global min_ver 1
-%global patch_ver 7
+%global patch_ver 8
 #global rc_ver 4
 
 %if %{with snapshot_build}
@@ -711,6 +711,9 @@ LD_LIBRARY_PATH=%{buildroot}/%{install_libdir} %{__ninja} check-all -C %{__cmake
 
 %endif
 %changelog
+* Thu Jul 11 2024 Jesus Checa Hidalgo <jchecahi@redhat.com> - 18.1.8-1
+- 18.1.8 Release
+
 * Mon Jun 10 2024 Tom Stellard <tstellar@redhat.com> - 18.1.7-1
 - 18.1.7 Release
 
