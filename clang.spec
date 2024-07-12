@@ -74,7 +74,7 @@
 
 Name:		%pkg_name
 Version:	%{clang_version}%{?rc_ver:~rc%{rc_ver}}%{?llvm_snapshot_version_suffix:~%{llvm_snapshot_version_suffix}}
-Release:	3.0.riscv64%{?dist}
+Release:	3.1.riscv64%{?dist}
 Summary:	A C language family front-end for LLVM
 
 License:	Apache-2.0 WITH LLVM-exception OR NCSA
@@ -718,6 +718,9 @@ LD_LIBRARY_PATH=%{buildroot}/%{install_libdir} %{__ninja} check-all -C %{__cmake
 
 %endif
 %changelog
+* Fri Jul 12 2024 David Abdurachmanov <davidlt@rivosinc.com> - 18.1.6-1.1.riscv64
+- Rebuild for Python 3.13 (riscv64)
+
 * Sun Jun 02 2024 David Abdurachmanov <davidlt@rivosinc.com> - 18.1.6-1.0.riscv64
 - Add support for riscv64
 
