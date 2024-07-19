@@ -37,6 +37,7 @@
 
 %if %{with compat_build}
 %global pkg_name clang%{maj_ver}
+%global llvm_pkg_name llvm%{maj_ver}
 # Install clang to same prefix as llvm, so that apps that use llvm-config
 # will also be able to find clang libs.
 %global install_prefix %{_libdir}/llvm%{maj_ver}
@@ -50,6 +51,7 @@
 %global pkg_includedir %{install_includedir}
 %else
 %global pkg_name clang
+%global llvm_pkg_name llvm
 %global install_prefix %{_prefix}
 %global install_bindir %{_bindir}
 %global install_datadir %{_datadir}
@@ -74,7 +76,7 @@
 
 Name:		%pkg_name
 Version:	%{clang_version}%{?rc_ver:~rc%{rc_ver}}%{?llvm_snapshot_version_suffix:~%{llvm_snapshot_version_suffix}}
-Release:	2%{?dist}
+Release:	3%{?dist}
 Summary:	A C language family front-end for LLVM
 
 License:	Apache-2.0 WITH LLVM-exception OR NCSA
@@ -120,10 +122,7 @@ BuildRequires:	lld
 BuildRequires:	cmake
 BuildRequires:	ninja-build
 
-%if %{with compat_build}
-%global llvm_pkg_name llvm%{maj_ver}
-%else
-%global llvm_pkg_name llvm
+%if %{without compat_build}
 BuildRequires:  %{llvm_pkg_name}-test = %{version}
 BuildRequires:  %{llvm_pkg_name}-googletest = %{version}
 %endif
@@ -209,6 +208,7 @@ libomp-devel to enable -fopenmp.
 %package libs
 Summary: Runtime library for clang
 Requires: %{name}-resource-filesystem = %{version}
+Requires: %{llvm_pkg_name}-libs = %{version}
 Recommends: compiler-rt%{?_isa} = %{version}
 # atomic support is not part of compiler-rt
 Recommends: libatomic%{?_isa}
@@ -711,6 +711,9 @@ LD_LIBRARY_PATH=%{buildroot}/%{install_libdir} %{__ninja} check-all -C %{__cmake
 
 %endif
 %changelog
+* Fri Jul 19 2024 Timm Bäder <tbaeder@redhat.com> - 18.1.8-3
+- Explicitly require llvm-libs from clang-libs
+
 * Wed Jul 17 2024 Fedora Release Engineering <releng@fedoraproject.org> - 18.1.8-2
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_41_Mass_Rebuild
 
