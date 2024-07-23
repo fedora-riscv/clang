@@ -23,7 +23,7 @@
 
 %global maj_ver 18
 %global min_ver 1
-%global patch_ver 6
+%global patch_ver 8
 #global rc_ver 4
 
 %if %{with snapshot_build}
@@ -37,6 +37,7 @@
 
 %if %{with compat_build}
 %global pkg_name clang%{maj_ver}
+%global llvm_pkg_name llvm%{maj_ver}
 # Install clang to same prefix as llvm, so that apps that use llvm-config
 # will also be able to find clang libs.
 %global install_prefix %{_libdir}/llvm%{maj_ver}
@@ -50,6 +51,7 @@
 %global pkg_includedir %{install_includedir}
 %else
 %global pkg_name clang
+%global llvm_pkg_name llvm
 %global install_prefix %{_prefix}
 %global install_bindir %{_bindir}
 %global install_datadir %{_datadir}
@@ -74,7 +76,7 @@
 
 Name:		%pkg_name
 Version:	%{clang_version}%{?rc_ver:~rc%{rc_ver}}%{?llvm_snapshot_version_suffix:~%{llvm_snapshot_version_suffix}}
-Release:	3.1.riscv64%{?dist}
+Release:	3.riscv64%{?dist}
 Summary:	A C language family front-end for LLVM
 
 License:	Apache-2.0 WITH LLVM-exception OR NCSA
@@ -123,10 +125,7 @@ BuildRequires:	lld
 BuildRequires:	cmake
 BuildRequires:	ninja-build
 
-%if %{with compat_build}
-%global llvm_pkg_name llvm%{maj_ver}
-%else
-%global llvm_pkg_name llvm
+%if %{without compat_build}
 BuildRequires:  %{llvm_pkg_name}-test = %{version}
 BuildRequires:  %{llvm_pkg_name}-googletest = %{version}
 %endif
@@ -212,6 +211,7 @@ libomp-devel to enable -fopenmp.
 %package libs
 Summary: Runtime library for clang
 Requires: %{name}-resource-filesystem = %{version}
+Requires: %{llvm_pkg_name}-libs = %{version}
 Recommends: compiler-rt%{?_isa} = %{version}
 # atomic support is not part of compiler-rt
 Recommends: libatomic%{?_isa}
@@ -718,6 +718,21 @@ LD_LIBRARY_PATH=%{buildroot}/%{install_libdir} %{__ninja} check-all -C %{__cmake
 
 %endif
 %changelog
+* Fri Jul 19 2024 Timm Bäder <tbaeder@redhat.com> - 18.1.8-3
+- Explicitly require llvm-libs from clang-libs
+
+* Wed Jul 17 2024 Fedora Release Engineering <releng@fedoraproject.org> - 18.1.8-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_41_Mass_Rebuild
+
+* Thu Jul 11 2024 Jesus Checa Hidalgo <jchecahi@redhat.com> - 18.1.8-1
+- 18.1.8 Release
+
+* Mon Jun 10 2024 Tom Stellard <tstellar@redhat.com> - 18.1.7-1
+- 18.1.7 Release
+
+* Sun Jun 09 2024 Python Maint <python-maint@redhat.com> - 18.1.6-4
+- Rebuilt for Python 3.13
+
 * Fri Jul 12 2024 David Abdurachmanov <davidlt@rivosinc.com> - 18.1.6-1.1.riscv64
 - Rebuild for Python 3.13 (riscv64)
 
